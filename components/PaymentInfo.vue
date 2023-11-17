@@ -8,14 +8,19 @@
       <el-form :model="paymentDetails" label-position="top">
         <div>
           <el-form-item label="Amount to pay">
-            <el-input v-model="paymentDetails.amount" type="text" placeholder="0.00" />
+            <el-input
+              v-model="paymentDetails.amount"
+              type="text"
+              placeholder="0.00"
+            />
           </el-form-item>
         </div>
 
         <el-form-item label="Reference">
           <el-input
             v-model="paymentDetails.reference"
-            placeholder="eg. paying for service" />
+            placeholder="eg. paying for service"
+          />
         </el-form-item>
       </el-form>
 
@@ -26,26 +31,38 @@
           v-loading="pageLoading"
           element-loading-text="Loading..."
           class="mt-20"
-          :gutter="20">
+          :gutter="20"
+        >
           <el-col
             v-for="(method, index) in paymentMethods"
             :key="index"
             :md="8"
             :sm="12"
             :xs="12"
-            class="mb-20">
+            class="mb-20"
+          >
             <div
-              :class="isActive === method.channel ? 'active payment_div' : 'payment_div'"
-              @click="selectedPayment(method)">
+              :class="
+                isActive === method.channel
+                  ? 'active payment_div'
+                  : 'payment_div'
+              "
+              @click="selectedPayment(method)"
+            >
               <div class="d-flex justify_end px-10 pt-10 vector">
                 <img
                   v-show="isActive == method.channel"
                   src="/icons/check.svg"
-                  alt="check" />
+                  alt="check"
+                />
               </div>
 
               <div class="pay_img">
-                <img :src="method.icon_url" width="40px" :alt="method.channel" />
+                <img
+                  :src="method.icon_url"
+                  width="40px"
+                  :alt="method.channel"
+                />
                 <span class="d-block label">{{ method.name }}</span>
               </div>
             </div>
@@ -82,6 +99,13 @@ const selectedPayment = cashInMethod => {
     country_abbr: cashInMethod.country_abbreviations[0],
   };
 };
+
+const { data } = await apiService('/paymentlinks/paymentmethods', {
+  method: 'GET',
+  query: { currency: 'GHS' },
+});
+
+console.log(data);
 </script>
 
 <style lang="scss" scoped>
@@ -89,10 +113,12 @@ const selectedPayment = cashInMethod => {
   width: 100vw;
   max-width: 100%;
   margin: 0 auto;
+
   @media (min-width: 1200px) {
     width: 400px;
     padding-top: 200px;
   }
+
   padding-top: 50px;
 
   h2 {

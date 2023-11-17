@@ -1,10 +1,15 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-export default defineNuxtConfig( {
+export default defineNuxtConfig({
   devtools: { enabled: true },
+  runtimeConfig: {
+    public: {
+      baseURL: process.env.BASE_URL || 'https://api.example.com/',
+    },
+  },
   components: [
     { path: '~/components', pathPrefix: false }
   ],
-  modules: [ '@element-plus/nuxt' ],
+  modules: ['@element-plus/nuxt'],
   css: [
     '~/assets/css/element/index.scss',
     '~/assets/css/index.scss',
@@ -14,4 +19,4 @@ export default defineNuxtConfig( {
     icon: 'ElIcon',
     importStyle: 'scss',
   },
-} )
+})
