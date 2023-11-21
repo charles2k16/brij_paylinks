@@ -27,54 +27,14 @@
       <div>
         <label>How would you like to pay?</label>
 
-        <el-row
-          v-loading="pageLoading"
-          element-loading-text="Loading..."
-          class="mt-20"
-          :gutter="20"
-        >
-          <el-col
-            v-for="(method, index) in paymentMethods"
-            :key="index"
-            :md="8"
-            :sm="12"
-            :xs="12"
-            class="mb-20"
-          >
-            <div
-              :class="
-                isActive === method.channel
-                  ? 'active payment_div'
-                  : 'payment_div'
-              "
-              @click="selectedPayment(method)"
-            >
-              <div class="d-flex justify_end px-10 pt-10 vector">
-                <img
-                  v-show="isActive == method.channel"
-                  src="/icons/check.svg"
-                  alt="check"
-                />
-              </div>
-
-              <div class="pay_img">
-                <img
-                  :src="method.icon_url"
-                  width="40px"
-                  :alt="method.channel"
-                />
-                <span class="d-block label">{{ method.name }}</span>
-              </div>
-            </div>
-          </el-col>
-        </el-row>
+        <PaymentMethods @onSelectMethods="selectedPayment" />
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue';
+import { reactive } from 'vue';
 
 const paymentDetails = reactive({
   amount: '',
@@ -82,30 +42,9 @@ const paymentDetails = reactive({
   channel: '',
 });
 
-const pageLoading = ref(true);
-let isActive = ref('');
-const paymentMethods = [];
-const cashinDetails = reactive({});
-
 const selectedPayment = cashInMethod => {
-  isActive = cashInMethod.channel;
-  cashinDetails = {
-    channel: cashInMethod.channel,
-    fund_type: cashInMethod.fund_type,
-    name: cashInMethod.name,
-    walletCurrency: this.wallet.currency,
-    cash_out_method_id: cashInMethod.id,
-    wallet_id: this.wallet.id,
-    country_abbr: cashInMethod.country_abbreviations[0],
-  };
+  console.log('actt', cashInMethod);
 };
-
-const { data } = await apiService('/paymentlinks/paymentmethods', {
-  method: 'GET',
-  query: { currency: 'GHS' },
-});
-
-console.log(data);
 </script>
 
 <style lang="scss" scoped>
@@ -124,6 +63,50 @@ console.log(data);
   h2 {
     color: var(--color-primary);
     font-size: 25px;
+  }
+
+  .payment_div {
+    border: 1px solid #e6e6ea;
+    box-sizing: border-box;
+    border-radius: 8px;
+    height: 110px;
+    display: flex;
+    flex-direction: column;
+
+    .vector {
+      height: 25px;
+    }
+
+    .pay_img {
+      margin-top: -5px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+      img {
+        width: 40px;
+      }
+
+      span {
+        line-height: 20px !important;
+        text-align: center;
+      }
+    }
+
+    .label {
+      font-family: var(--font-primary-light), sans-serif;
+      font-size: 14px;
+    }
+
+    &:hover {
+      border: 1px solid var(--color-primary);
+    }
+  }
+
+  .active {
+    border: 1px solid var(--color-primary);
+    background-color: rgb(223, 233, 236);
   }
 }
 </style>
