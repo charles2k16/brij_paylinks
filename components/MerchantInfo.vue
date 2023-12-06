@@ -21,6 +21,7 @@
               <div class="align_center">
                 <el-icon-phone />
                 <span class="ml-10">+233540571511</span>
+                <el-icon-arrow-down />
               </div>
 
               <div class="align_center mt-10">

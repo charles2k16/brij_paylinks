@@ -14,6 +14,12 @@
               placeholder="0.00"
             />
           </el-form-item>
+
+          <CountryDropdown
+            country-list="default"
+            :current-country="defaultFromCountry"
+            :show-icon="true"
+          />
         </div>
 
         <el-form-item label="Reference">
@@ -36,10 +42,15 @@
 <script setup>
 import { reactive } from 'vue';
 
+const defaultFromCountry = reactive({
+  name: 'Ghana',
+  flag_url: 'https://api.brij.money/media/icons/flags/ghana_flag.png',
+  currency_symbol: 'GHS',
+});
 const paymentDetails = reactive({
   amount: '',
   reference: '',
-  channel: '',
+  currency: '',
 });
 
 const selectedPayment = cashInMethod => {

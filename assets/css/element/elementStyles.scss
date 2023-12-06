@@ -341,6 +341,10 @@
 }
 
 /* dropdown */
+.el-dropdown {
+        --el-dropdown-menuItem-hover-color: var(--el-color-warning);
+        --el-dropdown-menu-index: 10;
+}
 .el-dropdown-menu__item {
   padding: 0px 12px;
   font-family: var(--font-primary);

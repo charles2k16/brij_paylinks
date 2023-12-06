@@ -3,9 +3,9 @@
     <el-dropdown class="countryList" :disabled="disabled">
       <span
         v-if="defaultCountry"
-        v-loading="countryLoading"
-        class="el-dropdown-link align_center mt-5 country_selector">
-        <img :src="defaultCountry.flag_url" alt="flag" width="24px" class="mr-5" />
+        class="el-dropdown-link align_center mt-5 country_selector"
+      >
+        <img :src="defaultCountry.flag_url" alt="flag" class="mr-5" />
         <span v-if="list === 'custom'" class="cty_name">
           {{ defaultCountry.name }}
         </span>
@@ -13,159 +13,121 @@
           {{ defaultCountry.currency_symbol }}
           <span v-if="walletBalance"> ({{ walletBalance }})</span>
         </span>
-        <i v-if="showIcon" class="el-icon-arrow-down el-icon--right"></i>
+
+        <el-icon-arrow-down v-if="showIcon" />
       </span>
-      <span v-else class="el-dropdown-link align_center mt-5 country_selector"
-        >Select Country <i v-if="showIcon" class="el-icon-arrow-down el-icon--right"></i
-      ></span>
-      <el-dropdown-menu
-        v-if="list !== 'none'"
-        slot="dropdown"
-        :class="fixedHeight ? 'auto-height' : 'all'">
-        <el-dropdown-item v-for="(country, index) in countries" :key="index" class="mt-5">
-          <span class="align_center py-5" style="font-size: 18px">
-            <img :src="country.flag_url" alt="flag" width="24px" class="mr-10" />{{
-              country.name
-            }}
-          </span>
-        </el-dropdown-item>
-      </el-dropdown-menu>
+      <span v-else class="el-dropdown-link align_center mt-5 country_selector">
+        Select Country
+
+        <el-icon-arrow-down v-if="showIcon" />
+      </span>
+      <template #dropdown>
+        <el-dropdown-menu
+          v-if="list !== 'none'"
+          :class="fixedHeight ? 'auto-height' : 'all'"
+        >
+          <el-dropdown-item
+            v-for="(country, index) in countries"
+            :key="index"
+            class="mt-5"
+          >
+            <span
+              class="align_center py-5"
+              style="font-size: 18px"
+              @click="selectedCountry(country)"
+            >
+              <img
+                :src="country.flag_url"
+                alt="flag"
+                class="mr-10"
+                style="width: 24px"
+              />{{ country.name }}
+            </span>
+          </el-dropdown-item>
+        </el-dropdown-menu>
+      </template>
     </el-dropdown>
   </div>
 </template>
 
 <script setup>
-import { ref, reactive, watch, onMounted } from 'vue';
-import { IMixinState } from '~/types/mixinsTypes';
+import { ref, watch, onMounted, defineEmits, toRefs } from 'vue';
 import { supportedCountries } from '@/assets/data/index.js';
+const emit = defineEmits(['selected']);
 
-const currentCountry = reactive({
-  name: 'Ghana',
-  flag_url: '/flags/GHS.png',
-  currency_symbol: 'GHS',
+const props = defineProps({
+  fixedHeight: {
+    type: Boolean,
+    default: true,
+  },
+  showIcon: {
+    type: Boolean,
+    default: true,
+  },
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
+  selectFirst: {
+    type: Boolean,
+    default: false,
+  },
+  currentCountry: {
+    type: [Object, Function],
+    required: false,
+    default: () => ({
+      name: 'Ghana',
+      flag_url: 'https://api.brij.money/media/icons/flags/ghana_flag.png',
+      currency_symbol: 'GHS',
+    }),
+  },
+  countryList: {
+    type: String,
+    default: 'custom',
+  },
 });
 
-const countryList = ref('custom');
-const fixedHeight = ref(false);
-const showIcon = ref(true);
-const disabled = ref(false);
-const selectFirst = ref(false);
-
-const mixins = this.IMixinState;
 const defaultCountry = ref({});
 const countries = ref([{}]);
-const list = countryList.value;
+const list = ref('');
 const countryLoading = ref(false);
 const walletBalance = ref('');
 
-const setCountries = async () => {
-  countryLoading.value = true;
+list.value = props.countryList;
 
-  if (list === 'inbound') {
-    checkCountryProps();
-    const countriesData = await mixins.$quickSendApi.getInboundCountries('/');
-    countries.value = countriesData.data;
-    const defaultSelected = countries.value.filter(
-      country => currentCountry.value.name === country.name
-    );
-    countryLoading.value = false;
-    emit('selected', defaultSelected[0]);
-  } else if (list === 'outbound') {
-    checkCountryProps();
-    const countriesData = await mixins.$quickSendApi.getOutBoundCountries('/');
-    const ng = {
-      name: 'Nigeria',
-      flag_url: `${mixins.$config.flagsUrl}/nigeria_flag.png`,
-      country_code: 'NG',
-      code: '+234',
-      abbreviation: 'NG',
-      currency_symbol: 'NGN',
-      currency: 'Naira',
-    };
-    const ke = {
-      name: 'Kenya',
-      flag_url: `${mixins.$config.flagsUrl}/kenya_flag.png`,
-      country_code: 'KE',
-      code: '+254',
-      abbreviation: 'KE',
-      currency_symbol: 'KSH',
-      currency: 'Kenyan Shilling',
-    };
-    countries.value = countriesData.data;
-    countries.value.unshift(ng);
-    countries.value.unshift(ke);
-    const defaultSelected = countries.value.filter(
-      country => currentCountry.value.name === country.name
-    );
-    countryLoading.value = false;
-    emit('selected', defaultSelected[0]);
-  } else if (list === 'default') {
+const { currentCountry: currentCountryRef } = toRefs(props);
+
+const setCountries = async () => {
+  if (list.value === 'default') {
     checkCountryProps();
     countries.value = supportedCountries;
     countryLoading.value = false;
-    if (!selectFirst.value) {
+    if (!props.selectFirst) {
       emit('selected', defaultCountry.value);
     }
-  } else if (list === 'custom') {
-    checkCountryProps();
-    countries.value = [
-      {
-        name: 'Nigeria',
-        flag_url: `${mixins.$config.flagsUrl}/nigeria_flag.png`,
-        country_code: 'NG',
-        dialing_code: '+234',
-      },
-      {
-        name: 'Ghana',
-        flag_url: `${mixins.$config.flagsUrl}/ghana_flag.png`,
-        country_code: 'GH',
-        dialing_code: '+233',
-      },
-      {
-        name: 'Kenya',
-        flag_url: `${mixins.$config.flagsUrl}/kenya_flag.png`,
-        country_code: 'KE',
-        dialing_code: '+254',
-      },
-    ];
-    countryLoading.value = false;
-  } else if (list === 'wallet') {
-    const walletCountries = await mixins.getUserWalletsCountries();
-    countries.value = supportedCountries.filter(country =>
-      walletCountries.includes(country.name)
-    );
-    if (Object.keys(currentCountry.value).length === 0) {
-      defaultCountry.value = countries.value[0];
-    } else {
-      checkCountryProps();
-    }
-    walletBalance.value = '0.00';
-    await selectedCountry(defaultCountry.value);
-  } else {
-    checkCountryProps();
-    countryLoading.value = false;
   }
 };
 
 const checkCountryProps = () => {
-  if (typeof currentCountry.value === 'function') {
-    defaultCountry.value = currentCountry.value();
+  console.log('default c', typeof currentCountryRef.value);
+  console.log('default refc', currentCountryRef);
+  if (typeof currentCountryRef.value === 'function') {
+    defaultCountry.value = currentCountryRef.value;
   } else {
-    defaultCountry.value = currentCountry.value;
+    defaultCountry.value = currentCountryRef.value;
   }
 };
 
 const selectedCountry = async country => {
   defaultCountry.value = country;
-  if (walletBalance.value) {
-    walletBalance.value = await mixins.getWalletBalance(country.name);
-  }
   countryLoading.value = false;
   emit('selected', country);
 };
 
+onMounted(setCountries);
+
 watch(
-  () => countryList.value,
+  () => list,
   newVal => {
     list = newVal;
     setCountries();
@@ -173,15 +135,41 @@ watch(
   { deep: true }
 );
 
-watch(
-  () => currentCountry.value,
-  newVal => {
-    defaultCountry.value = newVal;
-  },
-  { deep: true }
-);
-
-onMounted(() => {
-  setCountries();
+watch(currentCountryRef, (newValue, oldValue) => {
+  defaultCountry.value = newVal;
 });
+
+// watch(
+//   () => currentCountry.value,
+//   newVal => {
+//     defaultCountry.value = newVal;
+//   },
+//   { deep: true }
+// );
 </script>
+
+<style lang="scss" scoped>
+.country_selector {
+  border: 1.3px solid #dcdfe6;
+  padding: 0 10px;
+  height: 50px;
+  border-radius: 4px;
+  font-size: 18px;
+
+  img {
+    border-radius: 50px;
+    width: 24px;
+  }
+
+  i {
+    margin-left: 10px;
+    font-weight: bold;
+  }
+
+  .cty_name {
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+}
+</style>

@@ -29,7 +29,7 @@
 
         <div class="pay_img">
           <img :src="method.icon_url" :alt="method.channel" />
-          <span class="d-block label">{{ method.name }}</span>
+          <span class="d-block label mt-5">{{ method.name }}</span>
         </div>
       </div>
     </el-col>
@@ -82,7 +82,7 @@ pageLoading.value = false;
     }
 
     span {
-      line-height: 20px !important;
+      line-height: 18px !important;
       text-align: center;
     }
   }
