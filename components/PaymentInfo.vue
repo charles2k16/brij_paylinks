@@ -6,19 +6,14 @@
 
     <div class="mt-40">
       <el-form :model="paymentDetails" label-position="top">
-        <div>
-          <el-form-item label="Amount to pay">
-            <el-input
-              v-model="paymentDetails.amount"
-              type="text"
-              placeholder="0.00"
-            />
+        <div class="align_center">
+          <el-form-item label="Amount to pay" class="mr-10 full_width">
+            <el-input v-model="paymentDetails.reference" placeholder="0.00" />
           </el-form-item>
-
           <CountryDropdown
             country-list="default"
             :current-country="defaultFromCountry"
-            :show-icon="true"
+            @selected="onCountryChanged"
           />
         </div>
 
@@ -33,28 +28,46 @@
       <div>
         <label>How would you like to pay?</label>
 
-        <PaymentMethods @onSelectMethods="selectedPayment" />
+        <PaymentMethods
+          @onSelectMethods="selectedPayment"
+          :currency="paymentDetails.currency"
+        />
+      </div>
+
+      <div class="mt-20">
+        <el-button type="primary" size="large" class="full_width"
+          >Proceed to Payment</el-button
+        >
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { reactive } from 'vue';
+import { reactive, ref } from 'vue';
 
 const defaultFromCountry = reactive({
   name: 'Ghana',
   flag_url: 'https://api.brij.money/media/icons/flags/ghana_flag.png',
   currency_symbol: 'GHS',
 });
+
 const paymentDetails = reactive({
+  payment_method_id: '',
   amount: '',
   reference: '',
-  currency: '',
+  currency: 'GHS',
 });
 
-const selectedPayment = cashInMethod => {
-  console.log('actt', cashInMethod);
+const centerDialogVisible = ref(false);
+
+const selectedPayment = paymentMethod => {
+  console.log('actt', paymentMethod);
+  paymentDetails.payment_method_id = paymentMethod;
+};
+
+const onCountryChanged = country => {
+  paymentDetails.currency = country.currency_symbol;
 };
 </script>
 

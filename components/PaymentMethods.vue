@@ -37,24 +37,41 @@
 </template>
 
 <script setup>
-import { ref, defineEmits } from 'vue';
+import { ref, defineEmits, toRefs } from 'vue';
 
 const emit = defineEmits(['onSelectMethods']);
+const props = defineProps({
+  currency: {
+    type: String,
+    default: 'GHS',
+  },
+});
+
 let pageLoading = ref(true);
 let isActive = ref('');
 let paymentMethods = [];
+
+const { currency: currencyRef } = toRefs(props);
 
 const selectedPayment = payMethod => {
   isActive.value = payMethod.channel;
   emit('onSelectMethods', payMethod);
 };
 
-const { data } = await apiService('/paymentlinks/paymentmethods', {
-  method: 'GET',
-  query: { currency: 'GHS' },
+const getPaymentMethods = async curr => {
+  pageLoading.value = true;
+  const { data } = await apiService('/paymentlinks/paymentmethods', {
+    method: 'GET',
+    query: { currency: curr },
+  });
+  paymentMethods = data._rawValue.data;
+  pageLoading.value = false;
+};
+
+onMounted(getPaymentMethods('GHS'));
+watch(currencyRef, newValue => {
+  getPaymentMethods(newValue);
 });
-paymentMethods = data._rawValue.data;
-pageLoading.value = false;
 </script>
 
 <style lang="scss" scoped>

@@ -1,6 +1,10 @@
 <template>
   <div>
-    <el-dropdown class="countryList" :disabled="disabled">
+    <el-dropdown
+      class="countryList"
+      :disabled="disabled"
+      v-loading="countryLoading"
+    >
       <span
         v-if="defaultCountry"
         class="el-dropdown-link align_center mt-5 country_selector"
@@ -13,19 +17,15 @@
           {{ defaultCountry.currency_symbol }}
           <span v-if="walletBalance"> ({{ walletBalance }})</span>
         </span>
-
-        <el-icon-arrow-down v-if="showIcon" />
+        <el-icon-arrow-down />
       </span>
       <span v-else class="el-dropdown-link align_center mt-5 country_selector">
         Select Country
 
-        <el-icon-arrow-down v-if="showIcon" />
+        <el-icon-arrow-down />
       </span>
       <template #dropdown>
-        <el-dropdown-menu
-          v-if="list !== 'none'"
-          :class="fixedHeight ? 'auto-height' : 'all'"
-        >
+        <el-dropdown-menu>
           <el-dropdown-item
             v-for="(country, index) in countries"
             :key="index"
@@ -51,8 +51,9 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, defineEmits, toRefs } from 'vue';
+import { ref, watch, onMounted, toRefs } from 'vue';
 import { supportedCountries } from '@/assets/data/index.js';
+
 const emit = defineEmits(['selected']);
 
 const props = defineProps({
@@ -90,7 +91,7 @@ const props = defineProps({
 const defaultCountry = ref({});
 const countries = ref([{}]);
 const list = ref('');
-const countryLoading = ref(false);
+const countryLoading = ref(true);
 const walletBalance = ref('');
 
 list.value = props.countryList;
@@ -99,7 +100,8 @@ const { currentCountry: currentCountryRef } = toRefs(props);
 
 const setCountries = async () => {
   if (list.value === 'default') {
-    checkCountryProps();
+    defaultCountry.value = currentCountryRef.value;
+    // checkCountryProps();
     countries.value = supportedCountries;
     countryLoading.value = false;
     if (!props.selectFirst) {
@@ -108,15 +110,13 @@ const setCountries = async () => {
   }
 };
 
-const checkCountryProps = () => {
-  console.log('default c', typeof currentCountryRef.value);
-  console.log('default refc', currentCountryRef);
-  if (typeof currentCountryRef.value === 'function') {
-    defaultCountry.value = currentCountryRef.value;
-  } else {
-    defaultCountry.value = currentCountryRef.value;
-  }
-};
+// const checkCountryProps = () => {
+//   if (typeof currentCountryRef.value === 'function') {
+//     defaultCountry.value = currentCountryRef.value;
+//   } else {
+//     defaultCountry.value = currentCountryRef.value;
+//   }
+// };
 
 const selectedCountry = async country => {
   defaultCountry.value = country;
@@ -171,5 +171,9 @@ watch(currentCountryRef, (newValue, oldValue) => {
     font-weight: bold;
     text-transform: uppercase;
   }
+}
+
+svg {
+  width: 22px;
 }
 </style>
