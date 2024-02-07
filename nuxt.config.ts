@@ -9,14 +9,25 @@ export default defineNuxtConfig({
   components: [
     { path: '~/components', pathPrefix: false }
   ],
-  modules: ['@element-plus/nuxt'],
+  modules: [
+    '@element-plus/nuxt',
+    '@nuxt/image',
+    'nuxt-icon'
+],
   css: [
     '~/assets/css/element/index.scss',
     '~/assets/css/index.scss',
-    'element-plus/theme-chalk/display.css'
+    'element-plus/theme-chalk/display.css',
+    '~/assets/css/main.css'
   ],
   elementPlus: {
     icon: 'ElIcon',
     importStyle: 'scss',
+  },
+  postcss: {
+    plugins: {
+      tailwindcss: {},
+      autoprefixer: {},
+    },
   },
 })
