@@ -37,7 +37,7 @@
 </template>
 
 <script setup>
-import { ref, defineEmits, toRefs } from 'vue';
+import { ref, toRefs } from 'vue';
 
 const emit = defineEmits(['onSelectMethods']);
 const props = defineProps({

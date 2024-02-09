@@ -8,7 +8,11 @@
       <el-form :model="paymentDetails" label-position="top">
         <div class="align_center">
           <el-form-item label="Amount to pay" class="mr-10 full_width">
-            <el-input v-model="paymentDetails.reference" placeholder="0.00" />
+            <el-input
+              type="text"
+              v-model="paymentDetails.amount"
+              placeholder="0.00"
+            />
           </el-form-item>
           <CountryDropdown
             country-list="default"
