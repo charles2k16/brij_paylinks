@@ -10,26 +10,26 @@
           <img src="/img/logo-dark.png" alt="logo" class="merchant-logo" />
         </div>
 
-        <div class="merchant-info mt-40">
+        <div class="merchant-info mt-5">
           <div>
             <h2>Bloom</h2>
 
-            <p class="mt-10">Internet Service</p>
+            <p class="mt-2">Internet Service</p>
 
-            <hr class="hr_rule mt-20" />
-            <div class="mt-20">
+            <hr class="hr_rule mt-2" />
+            <div class="mt-5">
               <div class="align_center">
                 <el-icon-phone />
-                <span class="ml-10">+233540571511</span>
+                <span class="ml-2">+233540571511</span>
               </div>
 
-              <div class="align_center mt-10">
+              <div class="align_center mt-2">
                 <el-icon-location />
-                <span class="ml-10">Dome Pillar 2 K.boat</span>
+                <span class="ml-2">Dome Pillar 2 K.boat</span>
               </div>
             </div>
 
-            <hr class="hr_rule mt-20" />
+            <hr class="hr_rule mt-5" />
           </div>
         </div>
       </div>

@@ -2,7 +2,7 @@
   <el-row
     v-loading="pageLoading"
     element-loading-text="Loading..."
-    class="mt-20"
+    class="mt-5"
     :gutter="20"
   >
     <el-col
@@ -11,7 +11,7 @@
       :md="8"
       :sm="12"
       :xs="12"
-      class="mb-20"
+      class="mb-5"
     >
       <div
         :class="
@@ -19,7 +19,7 @@
         "
         @click="selectedPayment(method)"
       >
-        <div class="d-flex justify_end px-10 pt-10 vector">
+        <div class="d-flex justify_end px-2 pt-2 vector">
           <img
             v-show="isActive == method.channel"
             src="/img/check.svg"
@@ -29,7 +29,7 @@
 
         <div class="pay_img">
           <img :src="method.icon_url" :alt="method.channel" />
-          <span class="d-block label mt-5">{{ method.name }}</span>
+          <span class="d-block label mt-2">{{ method.name }}</span>
         </div>
       </div>
     </el-col>
@@ -48,13 +48,15 @@ const props = defineProps({
 });
 
 let pageLoading = ref(true);
-let isActive = ref('');
-let paymentMethods = [];
+let isActive = ref('vodafoneghana');
+// array of payment methods reactivity
+let paymentMethods = ref([]);
 
 const { currency: currencyRef } = toRefs(props);
 
 const selectedPayment = payMethod => {
-  isActive.value = payMethod.channel;
+  // set active to the selected payment method
+  isActive = payMethod.channel;
   emit('onSelectMethods', payMethod);
 };
 

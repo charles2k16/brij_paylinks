@@ -1,10 +1,9 @@
 <template>
   <div class="payment-info">
-    <div></div>
     <h2>Make Payment</h2>
-    <p class="mt-10">Enter amount to pay and select payment method</p>
+    <p class="mt-3">Enter amount to pay and select payment method</p>
 
-    <div class="mt-40">
+    <div class="mt-5">
       <el-form :model="paymentDetails" label-position="top">
         <div class="align_center">
           <el-form-item label="Amount to pay" class="mr-10 full_width">
