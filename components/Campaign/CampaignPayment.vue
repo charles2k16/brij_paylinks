@@ -53,10 +53,10 @@
         </div>
 
         <!-- tags for sm screen only -->
-        <div class="flex w-full flex-row flex-wrap border py-1 rounded-md px-2  sm:hidden">
+        <div class="flex w-full flex-row flex-wrap border py-1 rounded-full px-2  sm:hidden">
             <!-- chips -->
-            <div v-for="(tag, index) in tags" :key="index" class="flex bg-teal-900 rounded-md me-1 mb-1">
-                <p class="text-sm text-white px-2 py-1">{{ tag.name }}</p>
+            <div v-for="(tag, index) in tags" :key="index" class="flex bg-teal-900 rounded-full me-1 mb-1">
+                <p class="text-sm text-white px-4 py-1">{{ tag.name }}</p>
             </div>
         </div>
         

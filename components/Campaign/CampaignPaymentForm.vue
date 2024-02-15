@@ -42,17 +42,17 @@
         <!-- Male payment & pledge button -->
         <!-- Buttons -->
         <div class="flex flex-row gap-y-2 md:flex-col gap-x-3 mt-8">
-            <!-- Get Started -->
+            <!-- Make paymnet  -->
             <button type="button"
-                class=" flex-1 border border-teal-900 px-4 flex flex-row py-2 justify-center items-center gap-x-3 rounded-md hover:bg-teal-900 hover:text-white text-teal-900">
-                <p class="font-medium">Make Pledge</p>
-                <Icon name="majesticons:money-hand" size="25" />
-            </button>
-            <!-- Login  -->
-            <button type="button"
-                class="flex-1 bg-teal-900 px-4 flex flex-row py-2 flex-nowrap justify-center items-center gap-x-3 rounded-md hover:bg-teal-950 text-white ">
+                class="flex-1 secondary-custom-bg-color px-4 flex flex-row py-2 flex-nowrap justify-center items-center gap-x-3 rounded-full  text-teal-900 ">
                 <Icon name="ep:money" size="25" />
                 <p class="font-medium">Make payment</p>
+            </button>
+            <!-- Pledge -->
+            <button type="button"
+                class=" flex-1 border border-teal-900 px-4 flex flex-row py-2 justify-center items-center gap-x-3 rounded-full hover:bg-teal-900 hover:text-white text-teal-900">
+                <Icon name="majesticons:money-hand" size="25" />
+                <p class="font-medium">Make Pledge</p>
             </button>
         </div>
 
@@ -66,7 +66,7 @@
             </div>
             <div>
                 <button type="button"
-                    class="flex-1 bg-teal-900 px-4 flex flex-row py-3 flex-nowrap justify-center items-center gap-x-3 rounded-md hover:bg-teal-950 text-white ">
+                    class="flex-1 secondary-custom-bg-color px-4 flex flex-row py-3 flex-nowrap justify-center items-center gap-x-3 rounded-full  text-teal-900 ">
                     <Icon name="clarity:copy-to-clipboard-line" size="25" />
                     <p class="font-medium">Copy</p>
                 </button>
@@ -107,4 +107,25 @@ const amountChips = reactive([
     { amount: 1 },
 ])
 </script>
-<style></style>
+<style scoped>
+
+.primary-custom-bg-color {
+  background-color: #04383F;
+}
+
+.secondary-custom-bg-color{
+  background-color: #F9AB10;
+}
+
+.secondary-custom-bg-color:hover{
+  background-color: #f0af2c;
+}
+
+.button-font-weight{
+  font-weight: 900;
+}
+
+.primary-custom-text-color {
+  color: #04383F;
+}
+</style>

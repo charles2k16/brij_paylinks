@@ -38,9 +38,9 @@
         
 
         <!-- List of tags -->
-        <div class="flex w-full flex-row flex-wrap border py-1 rounded-md mt-4 px-2">
+        <div class="flex w-full flex-row flex-wrap border py-1 rounded-full mt-4 px-2">
             <!-- chips -->
-            <div v-for="(tag, index) in props.data.tags" :key="index" class="flex bg-teal-900 rounded-md me-1">
+            <div v-for="(tag, index) in props.data.tags" :key="index" class="flex bg-teal-900 rounded-full me-1">
                 <p class="text-sm text-white px-2 py-1">{{ tag.name }}</p>
             </div>
         </div>
@@ -54,7 +54,7 @@
     </div>
 </template>
 <script setup lang="ts">
-import {type Campaign} from '~/type/type'
+import { type Campaign } from '~/types/index'
 
 const props = defineProps<{
   data: Campaign
