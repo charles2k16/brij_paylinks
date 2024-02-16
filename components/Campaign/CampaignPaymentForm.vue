@@ -54,7 +54,7 @@
             </button>
 
             <!-- select payment menthod dialog -->
-            <el-dialog v-model="paymentMethodialogVisible" title="Payment Options" width="400">
+            <el-dialog v-model="paymentMethodialogVisible" :title="dialogueTitle" width="400">
                 <!-- payment methods -->
                 <CampaignPaymentMethod v-if="!showOtp"/>
                 <CampaignOTP v-else/>
@@ -100,7 +100,7 @@ import {usePaymentStore} from '~/store/payment';
 
 // instance of tpayment store
 const paymentStore = usePaymentStore();
-const {showOtp} = storeToRefs(paymentStore);
+const {showOtp,dialogueTitle} = storeToRefs(paymentStore);
 
 // form instance
 const ruleFormRef = ref<FormInstance>()

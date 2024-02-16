@@ -21,6 +21,10 @@
 </template>
 <script setup lang="ts">
 import { ElNotification } from 'element-plus'
+import {usePaymentStore} from '~/store/payment'
+
+// intsance of payment store
+const paymentStore = usePaymentStore();
 
 const emit = defineEmits(['sendOtp'])
 const digitPin = reactive(['', '', '', '', '', ''])
@@ -63,6 +67,9 @@ const verifyOTP = () => {
     message: 'You have successfully donated to New Gate Fundraiser Campaign :)',
     type: 'success',
   })
+
+  // make showOTP var false after its successfull
+  paymentStore.showOtp = false;
 }
 
     //  async function resendOtp() {

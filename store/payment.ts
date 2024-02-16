@@ -13,6 +13,15 @@ export const usePaymentStore = defineStore('payment', () => {
     }
   })
 
+  // compute dialoge title
+  const dialogueTitle = computed(() => {
+    if(showOtp.value === false ){
+      return 'Payment Options'
+    }else{
+      return 'Payment OTP'
+    }
+  })
+
   // select payment method
   const SelectedPayment = ref<paymentOption | null>(null)
 
@@ -30,5 +39,5 @@ export const usePaymentStore = defineStore('payment', () => {
 
 
 
-  return { isPaymentMethodSelected, otpCode, paymentData, SelectedPayment, showOtp }
+  return { isPaymentMethodSelected, otpCode, paymentData, SelectedPayment, showOtp, dialogueTitle }
 })
