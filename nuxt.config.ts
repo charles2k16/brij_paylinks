@@ -12,7 +12,8 @@ export default defineNuxtConfig({
   modules: [
     '@element-plus/nuxt',
     '@nuxt/image',
-    'nuxt-icon'
+    'nuxt-icon',
+    '@pinia/nuxt'
 ],
   css: [
     '~/assets/css/element/index.scss',

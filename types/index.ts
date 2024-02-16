@@ -23,3 +23,15 @@ export interface Curreancy {
     code:string,
     flag_url:string
 }
+
+export interface PaymentForm {
+    amount: string
+    phone: string
+  }
+
+export interface paymentOption {
+    name:string,
+    image:string,
+    value:string
+}
+  
