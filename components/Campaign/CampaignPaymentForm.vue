@@ -54,7 +54,7 @@
             </button>
 
             <!-- select payment menthod dialog -->
-            <el-dialog v-model="paymentMethodialogVisible" :title="dialogueTitle" width="400">
+            <el-dialog v-model="paymentMethodialogVisible" :title="dialogueTitle" width="400" :before-close="handleClose">
                 <!-- payment methods -->
                 <CampaignPaymentMethod v-if="!showOtp"/>
                 <CampaignOTP v-else/>
@@ -163,6 +163,12 @@ const amountChips = reactive([
 
 // dialogue 
 const paymentMethodialogVisible = ref(false)
+
+  // on dialogue close
+  const handleClose = (done: () => void) => {
+    paymentStore.showOtp = false;
+    done();
+}
 
 </script>
 <style scoped>

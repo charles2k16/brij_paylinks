@@ -66,6 +66,7 @@ const verifyOTP = () => {
     title: 'Payment made successfully',
     message: 'You have successfully donated to New Gate Fundraiser Campaign :)',
     type: 'success',
+    duration: 0,
   })
 
   // make showOTP var false after its successfull

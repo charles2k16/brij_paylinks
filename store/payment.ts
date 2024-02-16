@@ -39,5 +39,7 @@ export const usePaymentStore = defineStore('payment', () => {
 
 
 
-  return { isPaymentMethodSelected, otpCode, paymentData, SelectedPayment, showOtp, dialogueTitle }
+
+
+  return { isPaymentMethodSelected, otpCode, paymentData, SelectedPayment, showOtp, dialogueTitle,   }
 })
