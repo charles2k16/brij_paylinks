@@ -1,5 +1,5 @@
 <template>
-    <el-form ref="form"  label-width="120px">
+    <el-form ref="form" label-width="120px">
         <p class="text-gray-400 text-sm mt-5 mb-2">Amount to donate</p>
         <div class="flex w-full gap-x-2 mb-2">
             <div class="flex border border-gray-300 rounded-sm py-3 px-3 gap-x-3 items-center">
@@ -42,12 +42,19 @@
         <!-- Male payment & pledge button -->
         <!-- Buttons -->
         <div class="flex flex-row gap-y-2 md:flex-col gap-x-3 mt-8">
-            <!-- Make paymnet  -->
-            <button type="button"
-                class="flex-1 secondary-custom-bg-color px-4 flex flex-row py-2 flex-nowrap justify-center items-center gap-x-3 rounded-full  text-teal-900 ">
+            <!-- Make paymnet button -->
+            <button type="button" @click="paymentMethodialogVisible = true"
+                class="flex-1 secondary-custom-bg-color  px-4 flex flex-row py-2 flex-nowrap justify-center items-center gap-x-3 rounded-full  text-teal-900 ">
                 <Icon name="ep:money" size="25" />
                 <p class="font-medium">Make payment</p>
             </button>
+
+            <!-- select payment menthod dialog -->
+            <el-dialog v-model="paymentMethodialogVisible" title="Payment Options" width="400">
+                <!-- payment methods -->
+                <PaymentMethods/>
+            </el-dialog>
+
             <!-- Pledge -->
             <button type="button"
                 class=" flex-1 border border-teal-900 px-4 flex flex-row py-2 justify-center items-center gap-x-3 rounded-full hover:bg-teal-900 hover:text-white text-teal-900">
@@ -81,13 +88,12 @@
 <script setup lang="ts">
 
 // payment forms model
-
 const paymentForm = reactive({
     amount: 0,
-    phone:''
+    phone: ''
 })
+// dummy url
 const campaignUrl = ref('https://icones.js.org/collection/all?s=copy')
-
 
 // amount chips
 const amountChips = reactive([
@@ -106,26 +112,29 @@ const amountChips = reactive([
     { amount: 10 },
     { amount: 1 },
 ])
+
+// dialogue 
+const paymentMethodialogVisible = ref(false)
+
 </script>
 <style scoped>
-
 .primary-custom-bg-color {
-  background-color: #04383F;
+    background-color: #04383F;
 }
 
-.secondary-custom-bg-color{
-  background-color: #F9AB10;
+.secondary-custom-bg-color {
+    background-color: #F9AB10;
 }
 
-.secondary-custom-bg-color:hover{
-  background-color: #f0af2c;
+.secondary-custom-bg-color:hover {
+    background-color: #f0af2c;
 }
 
-.button-font-weight{
-  font-weight: 900;
+.button-font-weight {
+    font-weight: 900;
 }
 
 .primary-custom-text-color {
-  color: #04383F;
+    color: #04383F;
 }
 </style>
