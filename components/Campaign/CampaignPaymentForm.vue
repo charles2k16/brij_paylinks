@@ -17,9 +17,9 @@
         </div>
 
         <!-- chips -->
-        <div class="flex flex-wrap  rounded-md mt-5">
+        <div class="flex flex-wrap  rounded-md mt-5 j">
             <div v-for="(chip, index) in amountChips" :key="index" class="group">
-                <button class="border-2 me-2 mb-2 border-teal-900 group-hover:bg-teal-900 py-0.5 px-3 rounded-md">
+                <button type="button" class="border-2 me-2 mb-2 border-teal-900 group-hover:bg-teal-900 py-0.5 px-3 rounded-md">
                     <p class="text-teal-950 font-bold text-sm group-hover:text-white">{{ chip.amount }}</p>
                 </button>
             </div>
