@@ -1,8 +1,7 @@
 <template>
   <div class="w-full flex flex-col lg:px-20 md:px-5 px-2">
     <!-- Banner -->
-    <Banner class="hidden sm:block" />
-
+    <CampaignBanner class="hidden sm:block" />
     <!-- Campaign Info & Payment -->
     <div class="flex flex-row md:space-x-4 lg:px-16">
       <div class="lg:basis-3/5 md:basis-1/2 basis-full hidden sm:block">
@@ -53,7 +52,6 @@ import { ArrowLeftBold} from '@element-plus/icons-vue';
 
 const drawer = ref(false)
 
-
 // test data for campaign
 const campaignData = reactive<Campaign>({
   title:
@@ -83,6 +81,11 @@ const campaignData = reactive<Campaign>({
     flag_url: 'https://cdn-icons-png.flaticon.com/128/197/197381.png',
   },
 });
+
+definePageMeta({
+    layout: 'campaign-layout'
+})
+
 </script>
 <style scoped>
 .primary-custom-bg-color {

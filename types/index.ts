@@ -24,14 +24,40 @@ export interface Curreancy {
     flag_url:string
 }
 
-export interface PaymentForm {
+export interface CampaignPaymentForm {
     amount: string
     phone: string
   }
 
-export interface paymentOption {
-    name:string,
-    image:string,
-    value:string
+export interface InvoicePaymentForm{
+    amount: string,
+    phone: string,
+    currency:string,
+    paymentOption:string,
+    reference:string,
+    email:string
+}
+
+
+
+
+// payment options
+export interface PaymentMethods {
+    status:  number;
+    data:    PaymentOption[];
+    message: string;
+}
+
+export interface PaymentOption {
+    id:                    string;
+    name:                  string;
+    channel:               string;
+    fund_type:             string;
+    description:           string;
+    icon_url:              string;
+    bank_code:             null | string;
+    supported_currencies:  string[];
+    country_abbreviations: string[];
+    active_state:          string;
 }
   

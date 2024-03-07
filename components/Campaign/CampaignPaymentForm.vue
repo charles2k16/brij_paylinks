@@ -10,7 +10,7 @@
             </div>
             <!-- Input for amount -->
             <div class="flex-1">
-                <el-form-item  prop="amount">
+                <el-form-item prop="amount">
                     <el-input placeholder="Eg. 100" v-model="paymentForm.amount" clearable></el-input>
                 </el-form-item>
             </div>
@@ -19,7 +19,8 @@
         <!-- chips -->
         <div class="flex flex-wrap  rounded-md mt-5 j">
             <div v-for="(chip, index) in amountChips" :key="index" class="group">
-                <button type="button" class="border-2 me-2 mb-2 border-teal-900 group-hover:bg-teal-900 py-0.5 px-3 rounded-md">
+                <button type="button"
+                    class="border-2 me-2 mb-2 border-teal-900 group-hover:bg-teal-900 py-0.5 px-3 rounded-md">
                     <p class="text-teal-950 font-bold text-sm group-hover:text-white">{{ chip.amount }}</p>
                 </button>
             </div>
@@ -36,33 +37,50 @@
             </div>
             <!-- Input for amount -->
             <div class="flex-1">
-                <el-form-item  prop="phone">
-                     <el-input placeholder="Eg. 0553904533" v-model="paymentForm.phone" clearable></el-input> 
+                <el-form-item prop="phone">
+                    <el-input placeholder="Eg. 0553904533" v-model="paymentForm.phone" clearable></el-input>
                 </el-form-item>
             </div>
         </div>
 
 
-        <!-- Male payment & pledge button -->
+        <!-- Make payment & pledge button -->
         <!-- Buttons -->
         <div class="flex flex-row gap-y-2 md:flex-col gap-x-3 mt-8">
             <!-- Make paymnet button -->
-            <button type="button" @click="submitForm(ruleFormRef)" 
+            <button type="button" @click="submitForm(ruleFormRef)"
                 class="flex-1 secondary-custom-bg-color  px-4 flex flex-row py-2 flex-nowrap justify-center items-center gap-x-3 rounded-full  text-teal-900 ">
                 <Icon name="ep:money" size="25" />
                 <p class="font-medium">Make payment</p>
             </button>
 
             <!-- select payment menthod dialog -->
-            <el-dialog v-model="paymentMethodialogVisible" :title="dialogueTitle" width="400" :before-close="handleClose">
+            <el-dialog v-model="paymentMethodialogVisible" :title="dialogueTitle" width="440"
+                :before-close="handleClose">
                 <!-- payment methods -->
-                <CampaignPaymentMethod v-if="!showOtp"/>
-                <CampaignOTP v-else/>
+                <PaymentMethod v-if="!isOTPView" :options="campaignStore.paymentOptions"
+                    v-model="campaignStore.selectedPaymentOption" class="flex-1" />
+                <!-- otp -->
+                <div v-else class="flex flex-col items-center">
+                    <!-- OT Field -->
+                    <OPTInput :digits-pin="campaignStore.otpCode" />
+                    <!-- OTP submit button -->
+                    <el-button size="large" class="w-full secondary-custom-bg-color mt-5" @click="campaignStore.verifyOTP" round>Confirm
+                        code</el-button>
+                    <!-- Resend button -->
+                    <el-button class="reset-btn" link>Resend code</el-button> <!-- Resend button -->
+                </div>
+                <!-- button -->
+                <!-- Make paymnet button -->
+                <button v-if="!isOTPView" :disabled="!isPaymentMethodSelected" @click="campaignStore.toggleOTPView()"
+                    type="button"
+                    class="flex-1 secondary-custom-bg-color w-full mt-5 px-4 flex flex-row py-2 flex-nowrap justify-center items-center gap-x-3 rounded-full  text-teal-900 ">
+                    <p class="font-bold">Make payments</p>
+                </button>
             </el-dialog>
 
             <!-- Pledge -->
             <button type="button"
-                
                 class=" flex-1 border border-teal-900 px-4 flex flex-row py-2 justify-center items-center gap-x-3 rounded-full hover:bg-teal-900 hover:text-white text-teal-900">
                 <Icon name="majesticons:money-hand" size="25" />
                 <p class="font-medium">Make Pledge</p>
@@ -93,53 +111,56 @@
 </template>
 <script setup lang="ts">
 import type { FormInstance, FormRules } from 'element-plus'
-import {type PaymentForm} from '~/types/index';
-import {usePaymentStore} from '~/store/payment';
+import { type CampaignPaymentForm } from '~/types/index';
+import { useCampaignStore } from '~/store/campaign';
+import { h } from 'vue'
+import { ElNotification } from 'element-plus'
 
 
 
 // instance of tpayment store
-const paymentStore = usePaymentStore();
-const {showOtp,dialogueTitle} = storeToRefs(paymentStore);
+const campaignStore = useCampaignStore();
+const { dialogueTitle, isOTPView, isPaymentMethodSelected, } = storeToRefs(campaignStore);
 
 // form instance
 const ruleFormRef = ref<FormInstance>()
 
+
 // payment forms model
-const paymentForm = reactive<PaymentForm>({
+const paymentForm = reactive<CampaignPaymentForm>({
     amount: '0',
     phone: ''
 })
 
-// validation rules
-const rules = reactive<FormRules<PaymentForm>>({
-  amount: [
-    { required: true, message: 'Please input amount', trigger: 'blur',  },
-  ],
-  phone: [
-    { required: true, message: 'Please input phone number', trigger: 'blur', },
-    { min: 3, max: 10, message: 'Length should be up to 10 digits', trigger: 'blur' },
-  ]
 
+// validation rules
+const rules = reactive<FormRules<CampaignPaymentForm>>({
+    amount: [
+        { required: true, message: 'Please input amount', trigger: 'blur', },
+    ],
+    phone: [
+        { required: true, message: 'Please input phone number', trigger: 'blur', },
+        { min: 10, max: 10, message: 'Length should be up to 10 digits', trigger: 'blur' },
+    ]
 })
 
-// submit form function
-const submitForm = async (formEl: FormInstance | undefined) => {
-  if (!formEl) return
-  await formEl.validate((valid, fields) => {
-    if (valid) {
 
-      // toggle dialogue
-      paymentMethodialogVisible.value = true
+function submitForm(ruleFormRef: any) {
+    ruleFormRef.validate((valid: any) => {
+        if (valid) {
+            // alert('submit!');
 
-      // asign form values to store values
-      paymentStore.paymentData = paymentForm
+            //asign form values to store values
+            campaignStore.paymentData = paymentForm
+            paymentMethodialogVisible.value = true
 
-    } else {
-      console.log('error submit!', fields)
-    }
-  })
+        } else {
+            console.log('error submit!!');
+            return false;
+        }
+    });
 }
+
 // dummy url
 const campaignUrl = ref('https://icones.js.org/collection/all?s=copy')
 
@@ -164,11 +185,14 @@ const amountChips = reactive([
 // dialogue 
 const paymentMethodialogVisible = ref(false)
 
-  // on dialogue close
-  const handleClose = (done: () => void) => {
-    paymentStore.showOtp = false;
+// on dialogue close
+const handleClose = (done: () => void) => {
     done();
+    campaignStore.isOTPView = false;
+    campaignStore.selectedPaymentOption = null;
+    campaignStore.otpCode = campaignStore.otpCode.map(() => "");
 }
+
 
 </script>
 <style scoped>
@@ -190,5 +214,12 @@ const paymentMethodialogVisible = ref(false)
 
 .primary-custom-text-color {
     color: #04383F;
+}
+
+.reset-btn {
+    font-weight: bold;
+    font-size: 14px;
+    margin-top: 15px;
+    color: var(--color-primary);
 }
 </style>

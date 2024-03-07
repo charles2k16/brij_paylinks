@@ -7,32 +7,36 @@
         </div>
         <!-- Pin code fields -->
         <div class="pin-code flex flex-row gap-x-1">
-            <input class="pin-code" v-for="(digit, index) in digitPin" :key="index" :ref="`digitInput${index}`"
-                v-model="digitPin[index]" type="number" maxlength="1" @input="handleInput(index)"
+            <input class="pin-code" v-for="(digit, index) in digitsPin" :key="index" :ref="`digitInput${index}`"
+                v-model="digitsPin[index]" type="number" maxlength="1" @input="handleInput(index)"
                 @keydown="handleKeydown(index, $event)" />
         </div>
-        <!-- Resend button -->
 
-        <el-button size="large" class="w-full secondary-custom-bg-color" @click="verifyOTP" round>Resend code</el-button>
-
-        <el-button class="reset-btn" link >Resend code</el-button>
 
     </div>
 </template>
 <script setup lang="ts">
-import { ElNotification } from 'element-plus'
-import {usePaymentStore} from '~/store/payment'
+import {useCampaignStore} from '~/store/campaign'
 
 // intsance of payment store
-const paymentStore = usePaymentStore();
+const campaignStore = useCampaignStore();
 
-const emit = defineEmits(['sendOtp'])
-const digitPin = reactive(['', '', '', '', '', ''])
 
+//props
+const props = defineProps<{
+  digitsPin: string[]
+}>()
+
+// emit
+const emit = defineEmits(['on-complete:digitsPin'])
+
+// digits
+// const digitsPin = reactive(['', '', '', '', '', ''])
+const digitsPin = ref<string[]>(props.digitsPin)
 
 function handleInput(index: number) {
-    if (digitPin[index] !== '') {
-        if (index < digitPin.length - 1) {
+    if (digitsPin.value[index] !== '') {
+        if (index < digitsPin.value.length - 1) {
             const nextInput: any = document.querySelector(
                 `.pin-code input:nth-child(${index + 2})`
             )
@@ -41,7 +45,7 @@ function handleInput(index: number) {
             }
         } else {
             // All inputs are filled, trigger your action here
-            emit('sendOtp', digitPin.join(''))
+            emit('on-complete:digitsPin', digitsPin.value.join(''))
         }
     }
 }
@@ -49,7 +53,7 @@ function handleInput(index: number) {
 function handleKeydown(index: number, event: any) {
     if (
         event.key === 'Backspace' &&
-        digitPin[index] === '' &&
+        digitsPin.value[index] === '' &&
         index > 0
     ) {
         const previousInput: any = document.querySelector(
@@ -61,17 +65,7 @@ function handleKeydown(index: number, event: any) {
     }
 }
 
-const verifyOTP = () => {
-    ElNotification({
-    title: 'Payment made successfully',
-    message: 'You have successfully donated to New Gate Fundraiser Campaign :)',
-    type: 'success',
-    duration: 0,
-  })
 
-  // make showOTP var false after its successfull
-  paymentStore.showOtp = false;
-}
 
     //  async function resendOtp() {
     //   this.pageLoading = true
@@ -117,11 +111,7 @@ input::-webkit-inner-spin-button {
     margin: 0;
 }
 
-.reset-btn {
-    font-weight: bold;
-    font-size: 14px;
-    color: var(--color-primary);
-}
+
 
 .secondary-custom-bg-color {
     background-color: #F9AB10;
