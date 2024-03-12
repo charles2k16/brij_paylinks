@@ -3,28 +3,19 @@
     v-loading="pageLoading"
     element-loading-text="Loading..."
     class="mt-20"
-    :gutter="20"
-  >
+    :gutter="20">
     <el-col
       v-for="(method, index) in paymentMethods"
       :key="index"
       :md="8"
       :sm="12"
       :xs="12"
-      class="mb-20"
-    >
+      class="mb-20">
       <div
-        :class="
-          isActive === method.channel ? 'active payment_div' : 'payment_div'
-        "
-        @click="selectedPayment(method)"
-      >
+        :class="isActive === method.channel ? 'active payment_div' : 'payment_div'"
+        @click="selectedPayment(method)">
         <div class="d-flex justify_end px-10 pt-10 vector">
-          <img
-            v-show="isActive == method.channel"
-            src="/img/check.svg"
-            alt="check"
-          />
+          <img v-show="isActive == method.channel" src="/img/check.svg" alt="check" />
         </div>
 
         <div class="pay_img">
@@ -37,7 +28,7 @@
 </template>
 
 <script setup>
-import { ref, defineEmits, toRefs } from 'vue';
+import { ref, toRefs } from 'vue';
 
 const emit = defineEmits(['onSelectMethods']);
 const props = defineProps({
