@@ -21,7 +21,7 @@
         </el-button>
       </template>
       <!-- banner -->
-      <Banner/>
+      <CampaignBanner/>
     </el-drawer>
 
 
