@@ -1,9 +1,9 @@
 <template>
-  <div class="w-full flex flex-col lg:px-20 md:px-5 px-2">
+  <div class="w-full flex flex-col lg:px-20 section">
     <!-- Banner -->
     <CampaignBanner class="hidden sm:block" />
     <!-- Campaign Info & Payment -->
-    <div class="flex flex-row md:space-x-4 lg:px-16">
+    <div class="flex flex-row md:space-x-4 ">
       <div class="lg:basis-3/5 md:basis-1/2 basis-full hidden sm:block">
         <!-- Campaign Info -->
         <CampaignInfo :data="campaignData" />
