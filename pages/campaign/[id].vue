@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full flex flex-col lg:px-20 section">
+  <div  class="w-full flex flex-col lg:px-20 section">
     <!-- Banner -->
 
     <CampaignBanner class="hidden sm:block" />
@@ -54,10 +54,6 @@ import { useCampaignStore} from "~/store/campaign";
 import { usePaymentOptions} from "~/store/payment_options";
 
 
-// get payemnt method options
-onMounted(() => {
-    paymentOptiosnStore.getPaymentMethod('GHS')
-})
 
 const campaignStore = useCampaignStore();
 const route  = useRoute()
@@ -65,8 +61,14 @@ const paymentOptiosnStore = usePaymentOptions()
 const {paymentOptions} = storeToRefs(paymentOptiosnStore)
 const {campaignResponse, merchantResponse} = storeToRefs(campaignStore)
 
+// get payemnt method options
+onMounted(() => {
+    campaignStore.verifyCampaignLink(route.params.id.toString())
+    paymentOptiosnStore.getPaymentMethod('GHS')
+    console.log(route.params.id)
+})
 
-console.log(route.params.id)
+
 const drawer = ref(false)
 
 // onMounted(() => {

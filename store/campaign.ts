@@ -44,15 +44,6 @@ export const useCampaignStore = defineStore("campaign", () => {
     return otpCode.value.every((code) => code !== "");
   });
 
-  // verify OTP
-  const verifyOTP = () => {
-    ElNotification({
-      title: "Payment made successfully",
-      type: "success",
-      message: "You  have successfully donated to this campaign",
-      duration: 0,
-    });
-  };
 
 
 
@@ -61,10 +52,8 @@ export const useCampaignStore = defineStore("campaign", () => {
   // verify incomin campaign link
   const campaignResponse = ref<CampaignResponse | null>(null);
 
-  const isCampaignVerifying = ref(false);
   async function verifyCampaignLink(campaign_link: string) {
     try {
-      isCampaignVerifying.value = true;
 
       const res = await axios.get(
         `${baseURL}/paymentcampaigns/link/${campaign_link}`,
@@ -76,7 +65,6 @@ export const useCampaignStore = defineStore("campaign", () => {
       if (res.status === 200) {
         console.log("campaign link verified successfully");
         campaignResponse.value = res.data;
-        isCampaignVerifying.value = false;
         // get merhcant details
         getMerhant();
         return 200;
@@ -84,7 +72,6 @@ export const useCampaignStore = defineStore("campaign", () => {
         return res.status;
       }
     } catch (error: any) {
-      isCampaignVerifying.value = false;
 
       console.error("Error verifying campaign link:", error);
       // showToast('Failed to verify link', `${error.response.data.message}`, true)
@@ -214,7 +201,6 @@ export const useCampaignStore = defineStore("campaign", () => {
     otpCode,
     selectedPaymentOption,
     dialogueTitle,
-    verifyOTP,
     verifyCampaignLink,
     campaignResponse,
     sendOTP,
@@ -222,7 +208,6 @@ export const useCampaignStore = defineStore("campaign", () => {
     payDonation,
     isOTPSuccessfull,
     isOtpCodeFilled,
-    isCampaignVerifying,
     isPayingmentLoading,
     merchantResponse,
   
