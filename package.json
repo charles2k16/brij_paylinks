@@ -12,6 +12,8 @@
   "devDependencies": {
     "@element-plus/nuxt": "^1.0.6",
     "@nuxt/devtools": "latest",
+    "@vueuse/core": "^10.9.0",
+    "@vueuse/nuxt": "^10.9.0",
     "autoprefixer": "^10.4.17",
     "nuxt": "^3.8.0",
     "nuxt-icon": "^0.6.8",

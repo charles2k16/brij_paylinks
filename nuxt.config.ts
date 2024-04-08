@@ -3,7 +3,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   runtimeConfig: {
     public: {
-      baseURL: process.env.BASE_URL || 'https://api.example.com/',
+      baseURL: 'https://uat-api.brij.money/api/v2',
     },
   },
   components: [
@@ -13,7 +13,8 @@ export default defineNuxtConfig({
     '@element-plus/nuxt',
     '@nuxt/image',
     'nuxt-icon',
-    '@pinia/nuxt'
+    '@pinia/nuxt',
+    '@vueuse/nuxt'
 ],
   css: [
     '~/assets/css/element/index.scss',

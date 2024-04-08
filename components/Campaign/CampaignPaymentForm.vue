@@ -17,7 +17,7 @@
         </div>
 
         <!-- chips -->
-        <div class="flex flex-wrap  rounded-md mt-5 j">
+        <div class="flex flex-wrap  rounded-md mt-1">
             <div v-for="(chip, index) in amountChips" :key="index" class="group">
                 <button type="button"
                     class="border-2 me-2 mb-2 border-teal-900 group-hover:bg-teal-900 py-0.5 px-3 rounded-md">
@@ -27,7 +27,7 @@
         </div>
 
         <!--Phone number field-->
-        <p class="text-gray-400 text-sm mt-5 mb-2">Amount to donate</p>
+        <p class="text-gray-400 text-sm mt-5 mb-2">Phone number</p>
         <div class="flex w-full gap-x-2 mb-2">
             <div class="flex h-fit border border-gray-300 rounded-sm py-3 px-3 gap-x-3 items-center">
                 <!-- flag -->
@@ -54,73 +54,72 @@
                 <p class="font-medium">Make payment</p>
             </button>
 
+
             <!-- select payment menthod dialog -->
             <el-dialog v-model="paymentMethodialogVisible" :title="dialogueTitle" width="440"
                 :before-close="handleClose">
-                <!-- payment methods -->
-                <PaymentMethod v-if="!isOTPView" :options="campaignStore.paymentOptions"
-                    v-model="campaignStore.selectedPaymentOption" class="flex-1" />
+                    <pre>
+                        {{ selectedPaymentOption }}
+                    </pre>
+                <div  v-if="!isOTPSuccessfull"  class="flex flex-col justify-center items-center">
+                    <!-- payment methods -->
+                    <PaymentMethod :options="props.paymentOptions.data"
+                        v-model="campaignStore.selectedPaymentOption" class="flex-1" />
+                    <!-- Continue -->
+                    <!-- <button v-if="isPaymentMethodSelected" :disabled="!isPaymentMethodSelected" @click="initiateOTPRequest" type="button"
+                        class="flex-1 secondary-custom-bg-color w-full mt-5 px-4 flex flex-row py-2 flex-nowrap justify-center items-center gap-x-3 rounded-full  text-teal-900 ">
+                        <p v-if="isSendOTPLoading">Sending OTP .....</p>
+                        <p v-else class="font-bold">Continue</p>
+                    </button> -->
+                    <el-button :loading="isSendOTPLoading" v-if="isPaymentMethodSelected" :disabled="!isPaymentMethodSelected" @click="initiateOTPRequest" size="large" class="w-full secondary-custom-bg-color mt-5" round>
+                        <p v-if="isSendOTPLoading">Sending OTP .....</p>
+                        <p v-else class="font-bold">Continue</p>
+                    </el-button>
+                    
+
+                    <div v-else class="text-sm text-gray-500 mt-5">Select payment to  continue</div>
+                </div>
+
                 <!-- otp -->
                 <div v-else class="flex flex-col items-center">
                     <!-- OT Field -->
                     <OPTInput :digits-pin="campaignStore.otpCode" />
                     <!-- OTP submit button -->
-                    <el-button size="large" class="w-full secondary-custom-bg-color mt-5" @click="campaignStore.verifyOTP" round>Confirm
-                        code</el-button>
+                    <el-button v-if="isOtpCodeFilled" :loading="isPayingmentLoading" size="large" class="w-full secondary-custom-bg-color mt-5"
+                        @click="campaignStore.payDonation(paymentForm.amount, paymentForm.phone)" round>Enter OTP Code to continue</el-button>
                     <!-- Resend button -->
-                    <el-button class="reset-btn" link>Resend code</el-button> <!-- Resend button -->
+                    <el-button :loading="isSendOTPLoading" @click="initiateOTPRequest()" class="reset-btn" link>
+                        <p v-if="isSendOTPLoading">Resending OTP Code ...</p>
+                         <p v-else>Re send OTP Code</p>
+                    </el-button> <!-- Resend button -->
                 </div>
                 <!-- button -->
-                <!-- Make paymnet button -->
-                <button v-if="!isOTPView" :disabled="!isPaymentMethodSelected" @click="campaignStore.toggleOTPView()"
-                    type="button"
-                    class="flex-1 secondary-custom-bg-color w-full mt-5 px-4 flex flex-row py-2 flex-nowrap justify-center items-center gap-x-3 rounded-full  text-teal-900 ">
-                    <p class="font-bold">Make payments</p>
-                </button>
-            </el-dialog>
 
-            <!-- Pledge -->
-            <button type="button"
-                class=" flex-1 border border-teal-900 px-4 flex flex-row py-2 justify-center items-center gap-x-3 rounded-full hover:bg-teal-900 hover:text-white text-teal-900">
-                <Icon name="majesticons:money-hand" size="25" />
-                <p class="font-medium">Make Pledge</p>
-            </button>
+            </el-dialog>
         </div>
 
 
         <!-- Copy Campaign link field -->
-        <p class="text-gray-400 text-sm mt-16 mb-2">Campaign Link</p>
-        <div class="flex justify-between  w-full gap-x-2 mb-2">
-            <!-- Input for link -->
-            <div class="flex-1">
-                <el-input placeholder="Eg. 0553904533" v-model="campaignUrl" clearable></el-input>
-            </div>
-            <div>
-                <button type="button"
-                    class="flex-1 secondary-custom-bg-color px-4 flex flex-row py-3 flex-nowrap justify-center items-center gap-x-3 rounded-full  text-teal-900 ">
-                    <Icon name="clarity:copy-to-clipboard-line" size="25" />
-                    <p class="font-medium">Copy</p>
-                </button>
-            </div>
+        <div class="mt-10" >
+            <CampaignCopyLink :url="campaignUrl"/>
         </div>
 
+        
         <!-- footer text -->
-        <p class="text-center mt-10 text-sm">@ A collaboration by the Music Director, Youth Cordinator
-            and Instrument Committee.</p>
+        <p class="text-center mt-10 text-gray-400 text-sm">{{ props.campaign?.footnote }}</p>
     </el-form>
 </template>
 <script setup lang="ts">
 import type { FormInstance, FormRules } from 'element-plus'
-import { type CampaignPaymentForm } from '~/types/index';
+import { type Campaign, type CampaignPaymentForm } from '~/types/index';
 import { useCampaignStore } from '~/store/campaign';
-import { h } from 'vue'
-import { ElNotification } from 'element-plus'
+import { type PaymentMethods } from '~/types/index'
 
 
 
 // instance of tpayment store
 const campaignStore = useCampaignStore();
-const { dialogueTitle, isOTPView, isPaymentMethodSelected, } = storeToRefs(campaignStore);
+const { dialogueTitle, isOTPSuccessfull,  isPaymentMethodSelected, selectedPaymentOption, isPayingmentLoading, isOtpCodeFilled, isSendOTPLoading } = storeToRefs(campaignStore);
 
 // form instance
 const ruleFormRef = ref<FormInstance>()
@@ -128,9 +127,20 @@ const ruleFormRef = ref<FormInstance>()
 
 // payment forms model
 const paymentForm = reactive<CampaignPaymentForm>({
-    amount: '0',
+    amount: '1',
     phone: ''
 })
+
+// props
+const props = defineProps<{
+    paymentOptions: PaymentMethods,
+    campaign: Campaign | null
+}>()
+
+  // campaign url
+  const campaignUrl = ref(
+    `https://pay.brij.money/campaign/${props.campaign?.campaign_link}`
+  );
 
 
 // validation rules
@@ -151,7 +161,6 @@ function submitForm(ruleFormRef: any) {
             // alert('submit!');
 
             //asign form values to store values
-            campaignStore.paymentData = paymentForm
             paymentMethodialogVisible.value = true
 
         } else {
@@ -161,13 +170,19 @@ function submitForm(ruleFormRef: any) {
     });
 }
 
-// dummy url
-const campaignUrl = ref('https://icones.js.org/collection/all?s=copy')
+function initiateOTPRequest() {
+    console.log('send ot test')
+    campaignStore.sendOTP(paymentForm.phone)
+}
+
+function makePayment(){
+    console.log('hitting payment')
+    campaignStore.payDonation(paymentForm.amount, paymentForm.phone)
+}
+
 
 // amount chips
 const amountChips = reactive([
-    { amount: 7000 },
-    { amount: 6000 },
     { amount: 5000 },
     { amount: 4000 },
     { amount: 3000 },
@@ -188,9 +203,10 @@ const paymentMethodialogVisible = ref(false)
 // on dialogue close
 const handleClose = (done: () => void) => {
     done();
-    campaignStore.isOTPView = false;
+    campaignStore.isOTPSuccessfull = false;
     campaignStore.selectedPaymentOption = null;
     campaignStore.otpCode = campaignStore.otpCode.map(() => "");
+
 }
 
 

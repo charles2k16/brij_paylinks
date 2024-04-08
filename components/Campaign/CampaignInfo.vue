@@ -1,8 +1,6 @@
 <template>
     <div class="py-5 flex flex-col justify-start">
 
-        <!-- Campaign Title -->
-        <p class="text-black text-xl lg:pe-16">{{ props.data.title }}</p>
 
         <!-- Campaign Image Slider -->
         <div class="block mt-2 bg-slate-400">
@@ -13,73 +11,76 @@
             </el-carousel>
         </div>
 
+        <!-- Campaign Title -->
+        <h2 class="text-gray-900 text-3xl lg:pe-16 mt-2">{{ props.campaign?.title }}</h2>
+
         <!-- Campaign orginizer info -->
         <div class="flex mt-4 w-full items-center gap-x-4 flex-wrap">
             <!-- Avatar -->
-            <div class="p-2 rounded-full  flex justify-between items-center border border-teal-900">
-                <Icon name="mdi:shield-account" class="text-teal-950" size="20"/>
-            </div>
+            <el-popover placement="bottom" :width="200" trigger="hover" class="` hover:cursor-pointer">
+                <template #reference>
+                    <div class="p-2 rounded-full  flex justify-between items-center  border-2 border-teal-900">
+                        <Icon name="ph:storefront-bold" class="text-teal-950" size="20" />
+                    </div>
+                </template>
+                 <div class="flex flex-col gap-y-2">
+                    <p class="text-sm text-amber-600">Merhant details</p>
+
+                 <div class="flex flex-col">
+                    <h2 class="text-base font-bold">{{ props.merchant?.data.name }}</h2>
+                    <p class="text-sm text-gray-400">{{ props.merchant?.data.contact }}</p>
+                 </div>
+
+                    <hr>
+                    <p class="text-sm text-gray-400">Address - {{ props.merchant?.data.address }}</p>
+
+                 </div>
+            </el-popover>
 
             <!-- Orginizer name -->
-            <div class="flex gap-x-2">
-                <p class="text-sm font-bold">{{ props.data.user.name }}</p>
-                <p class="text-sm">is organizing a Champaign</p>
+            <div class="flex flex-col">
+                <div class="flex items-center gap-x-2">
+                    <h2 class="text-base font-bold">{{ props.merchant?.data.name }}</h2>
+                    <p class="text-base">is organizing a Champaign</p>
+                </div>
+                <p class="text-sm text-gray-400">Created on {{ formateDate(props.campaign?.created_at!, 'ddd Do MMM, YYYY') }}</p>
+
             </div>
 
-            <!-- dot seprator -->
-            <div class="rounded-full p-0.5 primary-custom-bg-color"></div>
 
             <!-- date -->
-            <p class="text-sm text-gray-400">Created {{ props.data.createdAt }}</p>
-
         </div>
 
- 
-        
+
+
 
         <!-- List of tags -->
-        <div class="flex w-full flex-row flex-wrap border py-1 rounded-full mt-4 px-2">
+        <div class="flex w-full flex-row flex-wrap border py-2 rounded-full mt-4 px-2">
             <!-- chips -->
-            <div v-for="(tag, index) in props.data.tags" :key="index" class="flex bg-teal-900 rounded-full me-1">
-                <p class="text-sm text-white px-2 py-1">{{ tag.name }}</p>
+            <div v-for="(tag, index) in props.campaign?.tags" :key="index" class="flex bg-teal-900 rounded-full me-2">
+                <p class="text-base font-semibold text-white px-5 py-2">{{ tag }}</p>
             </div>
         </div>
 
         <!-- Description -->
-        <div class="mt-4" v-for="(paragraph, index) in paragraphs" :key="index">
-            <p class="mb-0">{{ paragraph }}</p>
-        </div>
+        <p class="mt-4 text-lg">{{ props.campaign?.description }}</p>
+
+
+        <!-- footer text -->
+        <p class="text-center text-gray-400 mt-10 text-sm">{{ props.campaign?.footnote }}</p>
 
 
     </div>
 </template>
 <script setup lang="ts">
-import { type Campaign } from '~/types/index'
-
+import { useCampaignStore } from '~/store/campaign';
+import { type Campaign, type MerchantDetails } from '~/types/index'
+const campaignStore = useCampaignStore()
 const props = defineProps<{
-  data: Campaign
+    campaign: Campaign | null,
+    merchant: MerchantDetails | null
 }>()
 
-    // Campaign tags
-    const tags = reactive([
-        {name: 'Church Fundraiser'},
-        {name: 'Church Donation'},
-        {name: 'Church Instruments'},
-    ])
 
-    // campaign description
-        const campaignDescription = props.data.description.toString()
-        // const campaignDescription = `Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui quisquam laudantium magni! Eum aspernatur commodi pariatur et temporibus, iure harum. Hic, voluptatum repellendus cumque, saepe quibusdam odit quasi pariatur non ut expedita deleniti! Facilis quasi eius.
-        // Illum tempore, cum et quas eligendi, iste impedit atque magni? Delectus debitis atque cumque iure culpa enim totam, possimus dolores consequatur quos consectetur adipisci maiores illo, perferendis qui nisi corrupti, aliquam eaque praesentium voluptatibus maxime!.
-        // Tenetur quibusdam commodi enim earum. Dolore reiciendis, accusantium obcaecati fugit eligendi voluptates dolor consectetur quo nihil asperiores quibusdam. Consectetur perspiciatis voluptatem eaque illum nulla iure nam.
-        // impedit quos quisquam nemo fugiat harum vero assumenda quas, officia voluptatibus exercitationem sed. 
-        // Facilis corporis omnis assumenda quod consectetur mollitia quaerat rerum minima, fugiat adipisci molestias accusantium ea necessitatibus molestiae qui fuga, odit, reiciendis cupiditate doloribus aliquid labore quam recusandae ullam.
-        // Sint nostrum explicabo, quis eius maxime eaque architecto dolorem, aut dolore nam a consequuntur asperiores officiis ducimus maiores? Magnam eligendi amet omnis doloremque hic recusandae necessitatibus dignissimos ipsam eius provident itaque.
-        // quae neque quibusdam vero repellat nihil ab quisquam molestiae placeat molestias at ea quasi, sint commodi. Quibusdam expedita voluptatum.`;
-
-        // computed to paragrapg description
-        const paragraphs = computed(() => {
-            return campaignDescription.split('\n');
-        })
 </script>
-<style ></style>
+<style></style>

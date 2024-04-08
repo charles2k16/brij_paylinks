@@ -1,5 +1,5 @@
 <template>
-    <div class="flex lg:flex-row flex-col w-full justify-center">
+    <div class=" section flex lg:flex-row flex-col w-full justify-center">
         <div class=" w-full lg:w-[50%] lg:h-lvh h-fit bg-gray-50 lg:p-10 p-5 flex flex-col lg:px-32">
             <div class="flex w-full lg:justify-start justify-center">
                 <div
@@ -50,7 +50,7 @@
                     <span class="text-2xl font-medium mt-3 text-start ">Make payment</span>
                     <p class="text-slate-400 text-start ">Enter amount to pay and select payment method</p>
                     <!-- forms -->
-                    <InvoicePaymentForm />
+                    <InvoicePaymentForm :paymentOptions="paymentOptions!" />
                </div>
 
                <!-- footer links -->
@@ -65,7 +65,14 @@
 </template>
 
 <script setup lang="ts">
+import { usePaymentOptions } from '~/store/payment_options'
+const paymentOptiosnStore = usePaymentOptions()
+const {paymentOptions } = storeToRefs(paymentOptiosnStore)
 
+// get payemnt method options
+onMounted(() => {
+    paymentOptiosnStore.getPaymentMethod('GHS')
+})
 
 // ** toggle merchant ** //
 const showMerchantContactInfo = ref(true)

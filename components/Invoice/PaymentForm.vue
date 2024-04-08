@@ -26,13 +26,13 @@
             <p class="mb-2 font-semibold">Reference</p>
             <el-input placeholder="Eg. Paying for services" v-model="invoiceStore.invoicePaymentForm.reference" />
         </el-form-item>
-
         <div v-if="isPaymentMethodDataLoading" class="flex flex-col items-center w-full gap-y-3">
             <Icon class="text-2xl text-amber-600" name="eos-icons:bubble-loading" />
             <p class="text-sm">Loading payment options</p>
         </div>
+        
         <!-- paymethodd -->
-        <PaymentMethod v-else :options="invoiceStore.paymentMethodData?.data!"
+        <PaymentMethod v-else :options="paymentOptiosnStore.paymentOptions?.data!"
             v-model="invoiceStore.SelectedPaymentOption" class="flex-1" />
 
 
@@ -46,18 +46,19 @@
         <!-- Confirm Payement for dialogue -->
         <el-dialog v-model="dialogVisible" class="rounded-md" title="Confirm payment" width="400"
             :before-close="handleClose">
-                <!-- Invoice popup forms -->
-                <InvoiceConfirmPaymentPopup v-if="!isOTPView" />
-                <!-- otp -->
-                <div v-else class="flex flex-col items-center">
-                    <!-- OT Field -->
-                    <OPTInput :digits-pin="invoiceStore.OTPCode" />
-                    <!-- OTP submit button -->
-                    <el-button size="large" class="w-full secondary-custom-bg-color mt-5" @click="invoiceStore.verifyOTP" >Confirm
-                        code</el-button>
-                    <!-- Resend button -->
-                    <el-button class="reset-btn" link>Resend code</el-button> <!-- Resend button -->
-                </div>
+            <!-- Invoice popup forms -->
+            <InvoiceConfirmPaymentPopup v-if="!isOTPView" />
+            <!-- otp -->
+            <div v-else class="flex flex-col items-center">
+                <!-- OT Field -->
+                <OPTInput :digits-pin="invoiceStore.OTPCode" />
+                <!-- OTP submit button -->
+                <el-button size="large" class="w-full secondary-custom-bg-color mt-5"
+                    @click="invoiceStore.verifyOTP">Confirm
+                    code</el-button>
+                <!-- Resend button -->
+                <el-button class="reset-btn" link>Resend code</el-button> <!-- Resend button -->
+            </div>
             <template #footer>
                 <div class="w-full flex justify-center items-center gap-x-4 bg-gray-100 p-3 rounded-md">
                     <Icon class="text-xl text-teal-950" name="tdesign:secured" />
@@ -75,27 +76,34 @@
 import { reactive, ref } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import { useInvoiceStore } from '~/store/invoice'
+import { usePaymentOptions } from '~/store/payment_options'
 import type { InvoicePaymentForm } from '~/types/index'
+import type { PaymentMethods } from '~/types/index'
 
 
 // instance of store
 const invoiceStore = useInvoiceStore()
-const { isPaymentMethodDataLoading, isPaymentMethodSelected, isOTPView } = storeToRefs(invoiceStore)
+const paymentOptiosnStore = usePaymentOptions()
+
+const { isPaymentMethodSelected, isOTPView } = storeToRefs(invoiceStore)
+const { isPaymentMethodDataLoading } = storeToRefs(paymentOptiosnStore)
 
 
-// get payemnt method options
-onMounted(() => {
-    invoiceStore.getPaymentMethod()
-})
+
 
 // watch the selected currency and request the payment options from api
 watch(
-  () => invoiceStore.invoicePaymentForm.currency,
-  (newValue, oldValue) => {
-    console.log(`Age changed from ${oldValue} to ${newValue}`);
-    invoiceStore.getPaymentMethod()
-  }
+    () => invoiceStore.invoicePaymentForm.currency,
+    (newValue, oldValue) => {
+        console.log(`Age changed from ${oldValue} to ${newValue}`);
+        paymentOptiosnStore.getPaymentMethod(invoiceStore.invoicePaymentForm.currency)
+    }
 );
+
+// props
+const props = defineProps<{
+    paymentOptions: PaymentMethods
+}>()
 
 
 // ** Dialogue **//
