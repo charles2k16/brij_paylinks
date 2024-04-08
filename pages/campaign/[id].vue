@@ -7,12 +7,12 @@
     <div class="flex flex-row md:space-x-4 ">
       <div class="lg:basis-3/5 md:basis-1/2 basis-full hidden sm:block">
         <!-- Campaign Info -->
-        <CampaignInfo :campaign="campaignData" :merchant="campaignStore.merchantDetailResponse" />
+        <CampaignInfo :campaign="campaignResponse?.data!" :merchant="merchantResponse" />
       </div>
 
       <!-- Campaign Info -->
       <div class="flex-1">
-        <CampaignPayment :paymentOptions="paymentOptions!" :campaign="campaignData" :merchant="campaignStore.merchantDetailResponse" />
+        <CampaignPayment :paymentOptions="paymentOptions!" :merchant="merchantResponse" :campaign="campaignResponse?.data!" />
       </div>
     </div>
 
@@ -36,7 +36,7 @@
         <div class="flex text-base mb-5">
           <p> Donate to support<span class="font-bold text-teal-900"> Faith Ministries Music department humbly ask for support to acquire new instruments</span> Campaign</p>
         </div>
-        <CampaignPaymentForm :campaign="campaignData!" :paymentOptions="paymentOptions!"/>
+        <CampaignPaymentForm :campaign="campaignResponse?.data!" :merchant="merchantResponse" :paymentOptions="paymentOptions!"/>
       </el-drawer>
       <!-- pledge -->
       <!-- <button type="button"
@@ -63,16 +63,17 @@ const campaignStore = useCampaignStore();
 const route  = useRoute()
 const paymentOptiosnStore = usePaymentOptions()
 const {paymentOptions} = storeToRefs(paymentOptiosnStore)
+const {campaignResponse, merchantResponse} = storeToRefs(campaignStore)
 
 
 console.log(route.params.id)
 const drawer = ref(false)
 
-onMounted(() => {
-  campaignData.value = campaignStore.campaignResponse?.data!
-})
+// onMounted(() => {
+//   campaignData.value = campaignStore.campaignResponse?.data!
+// })
 // test data for campaign
-const campaignData = ref<Campaign | null>(null);
+// const campaignData = ref<Campaign | null>(null);
 
 definePageMeta({
     layout: 'campaign-layout',

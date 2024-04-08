@@ -3,11 +3,9 @@ import { h } from "vue";
 import { ElNotification } from "element-plus";
 import { getHeaders } from "~/utils/index";
 import type {
-  CampaignPaymentForm,
   PaymentOption,
   CampaignResponse,
-  CampaignPaymentData,
-  MerchantDetails,
+  MerchantResponse,
 } from "~/types/index";
 import axios from "axios";
 import { getOtpCode } from "~/utils";
@@ -56,13 +54,13 @@ export const useCampaignStore = defineStore("campaign", () => {
     });
   };
 
-  // payment form data
 
-  // campaign response
-  const campaignResponse = ref<CampaignResponse | null>(null);
-  const merchantDetailResponse = ref<MerchantDetails | null>(null);
+
+
 
   // verify incomin campaign link
+  const campaignResponse = ref<CampaignResponse | null>(null);
+
   const isCampaignVerifying = ref(false);
   async function verifyCampaignLink(campaign_link: string) {
     try {
@@ -96,7 +94,10 @@ export const useCampaignStore = defineStore("campaign", () => {
 
 
 
+
   // fetch merhcant details
+  const merchantResponse = ref<MerchantResponse>();
+
   async function getMerhant() {
     try {
       // merhant details
@@ -104,7 +105,7 @@ export const useCampaignStore = defineStore("campaign", () => {
         `${baseURL}/m/${campaignResponse.value?.data.payment_link}`,
         { headers: getHeaders() }
       );
-      merchantDetailResponse.value = response.data;
+      merchantResponse.value = response.data;
       console.log(response);
     } catch (error: any) {
       console.log(error);
@@ -119,7 +120,7 @@ export const useCampaignStore = defineStore("campaign", () => {
     try {
       isSendOTPLoading.value = true;
       const payload = {
-        customer_contact: "+233553410199",
+        customer_contact: customer_contact,
         payment_link: campaignResponse.value?.data.payment_link,
       };
 
@@ -154,17 +155,17 @@ export const useCampaignStore = defineStore("campaign", () => {
   }
 
   const isPayingmentLoading = ref(false);
-  async function payDonation(amount: string, momo_number: string) {
+  async function payDonation(amount: string, currency:string, momo_number: string) {
     try {
       isPayingmentLoading.value = true;
 
       const payload = {
         payment_method_id: selectedPaymentOption.value?.id,
         payment_details: {
-          momo_number: '+233553410199',
+          momo_number: momo_number,
           description: "Payment link transaction",
           amount: amount,
-          currency: "GHS",
+          currency: currency,
           otp: getOtpCode(otpCode),
           customer_firstname: "john",
           customer_lastname: "doe",
@@ -223,7 +224,7 @@ export const useCampaignStore = defineStore("campaign", () => {
     isOtpCodeFilled,
     isCampaignVerifying,
     isPayingmentLoading,
-    merchantDetailResponse,
+    merchantResponse,
   
   };
 });

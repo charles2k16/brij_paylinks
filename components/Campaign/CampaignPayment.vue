@@ -40,19 +40,19 @@
                     <p class="text-sm text-amber-600">Merhant details</p>
 
                  <div class="flex flex-col">
-                    <h2 class="text-base font-bold">{{ props.merchant?.data.name }}</h2>
-                    <p class="text-sm text-gray-400">{{ props.merchant?.data.contact }}</p>
+                    <h2 class="text-base font-bold">{{ merchant?.data.name}}</h2>
+                    <p class="text-sm text-gray-400">{{ merchant?.data.contact }}</p>
                  </div>
 
                     <hr>
-                    <p class="text-sm text-gray-400">Address - {{ props.merchant?.data.address }}</p>
+                    <p class="text-sm text-gray-400">Address - {{ merchant?.data.address}}</p>
 
                  </div>
             </el-popover>
                         <!-- Orginizer name -->
                         <div class="flex flex-col">
                 <div class="flex items-center gap-x-2">
-                    <h2 class="text-base font-bold">{{ props.merchant?.data.name }}</h2>
+                    <h2 class="text-base font-bold">{{  merchant?.data.address }}</h2>
                     <p class="text-base">is organizing a Champaign</p>
                 </div>
                 <p class="text-sm text-gray-400">Created on {{ formateDate(props.campaign?.created_at!, 'ddd Do MMM, YYYY') }}</p>
@@ -88,32 +88,27 @@
 
         <!-- Copy Campaign link field for small screens only-->
         <div class="block sm:hidden mt-5">
-            <CampaignCopyLink :url="campaignUrl" />
+            <CampaignCopyLink :campaignLink="campaign?.campaign_link!" />
         </div>
+
 
         <p class="text-center mt-5 text-gray-400 text-sm mb-20 sm:hidden flex justify-center ">{{ props.campaign?.footnote }}</p>
 
 
-
-
         <!--  Payment form-->
-        <CampaignPaymentForm :campaign="props.campaign" :paymentOptions="paymentOptions" class="hidden sm:block" />
+        <CampaignPaymentForm :campaign="props.campaign" :merchant="merchant"  :paymentOptions="paymentOptions" class="hidden sm:block" />
     </div>
 </template>
 <script setup lang="ts">
-import type { Campaign, MerchantDetails, PaymentMethods  } from '~/types';
+import type { Campaign, MerchantResponse, PaymentMethods  } from '~/types';
 
 
 const props = defineProps<{
-    campaign: Campaign | null,
-    paymentOptions: PaymentMethods,
-    merchant: MerchantDetails | null
+    campaign: Campaign
+    paymentOptions: PaymentMethods 
+    merchant: MerchantResponse | undefined
 }>()
 
-  // campaign url
-  const campaignUrl = ref(
-    `https://pay.brij.money/campaign/${props.campaign?.campaign_link}`
-  );
 
 
 </script>

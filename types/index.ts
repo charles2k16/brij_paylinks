@@ -18,7 +18,8 @@ export interface Curreancy {
 
 export interface CampaignPaymentForm {
     amount: string
-    phone: string
+    phone: string,
+    currency:string
   }
 
 export interface InvoicePaymentForm{
@@ -101,7 +102,7 @@ export interface PaymentDetails {
     customer_email:     string;
 }
 
-export interface MerchantDetails {
+export interface MerchantResponse{
     status:  number;
     data:    Merchant;
     message: string;

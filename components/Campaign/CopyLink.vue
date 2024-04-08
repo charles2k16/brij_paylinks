@@ -3,7 +3,7 @@
     <div class="flex justify-between  w-full gap-x-2 mb-2">
         <!-- Input for link -->
         <div class="flex-1">
-            <el-input id="copyUrlField" placeholder="Eg. 0553904533" v-model="props.url" clearable></el-input>
+            <el-input disabled id="copyUrlField" placeholder="Eg. 0553904533" v-model="campaignUrl" clearable></el-input>
         </div>
         <div>
             <button @click="copyToClipboard()" type="button"
@@ -18,7 +18,7 @@
 import { ElMessage } from 'element-plus'
 
 const props = defineProps<{
-    url: string
+    campaignLink: string
 }>()
 
 function copyToClipboard() {
@@ -29,7 +29,7 @@ function copyToClipboard() {
         navigator.clipboard.writeText(inputElement.value)
             .then(() => {
                 console.log(`Text copied to clipboard: ${inputElement.value}`);
-                console.log(`Text copied to clipboard: ${props.url}`);
+                console.log(`Text copied to clipboard: ${campaignUrl}`);
                 ElMessage({
                     message: 'Campaign link copied successfully',
                     type: 'success',
@@ -40,6 +40,12 @@ function copyToClipboard() {
             });
     }
 }
+
+
+  // campaign url
+  const campaignUrl = ref(
+    `https://pay.brij.money/campaign/${props.campaignLink}`
+  );
 
 </script>
 <style>

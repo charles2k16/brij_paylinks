@@ -27,12 +27,12 @@
                     <p class="text-sm text-amber-600">Merhant details</p>
 
                  <div class="flex flex-col">
-                    <h2 class="text-base font-bold">{{ props.merchant?.data.name }}</h2>
-                    <p class="text-sm text-gray-400">{{ props.merchant?.data.contact }}</p>
+                    <h2 class="text-base font-bold">{{ merchant?.data.name }}</h2>
+                    <p class="text-sm text-gray-400">{{ merchant?.data.contact }}</p>
                  </div>
 
                     <hr>
-                    <p class="text-sm text-gray-400">Address - {{ props.merchant?.data.address }}</p>
+                    <p class="text-sm text-gray-400">Address - {{merchant?.data.address }}</p>
 
                  </div>
             </el-popover>
@@ -40,7 +40,7 @@
             <!-- Orginizer name -->
             <div class="flex flex-col">
                 <div class="flex items-center gap-x-2">
-                    <h2 class="text-base font-bold">{{ props.merchant?.data.name }}</h2>
+                    <h2 class="text-base font-bold">{{merchant?.data.name }}</h2>
                     <p class="text-base">is organizing a Champaign</p>
                 </div>
                 <p class="text-sm text-gray-400">Created on {{ formateDate(props.campaign?.created_at!, 'ddd Do MMM, YYYY') }}</p>
@@ -74,11 +74,10 @@
 </template>
 <script setup lang="ts">
 import { useCampaignStore } from '~/store/campaign';
-import { type Campaign, type MerchantDetails } from '~/types/index'
-const campaignStore = useCampaignStore()
+import { type Campaign,  type MerchantResponse } from '~/types/index'
 const props = defineProps<{
-    campaign: Campaign | null,
-    merchant: MerchantDetails | null
+    campaign: Campaign  | any,
+    merchant: MerchantResponse | undefined
 }>()
 
 
