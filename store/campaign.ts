@@ -142,6 +142,7 @@ export const useCampaignStore = defineStore("campaign", () => {
   }
 
   const isPayingmentLoading = ref(false);
+  const isPaymentSuccessfull = ref(false)
   async function payDonation(amount: string, currency:string, momo_number: string) {
     try {
       isPayingmentLoading.value = true;
@@ -176,6 +177,7 @@ export const useCampaignStore = defineStore("campaign", () => {
       );
 
       console.log(res);
+      isPaymentSuccessfull.value = true
       ElNotification({
         title: "OPT Donation made successfully",
         message: `${res.data.message}`,
@@ -186,6 +188,8 @@ export const useCampaignStore = defineStore("campaign", () => {
       isPayingmentLoading.value = false;
     } catch (error: any) {
       isPayingmentLoading.value = false;
+      isPaymentSuccessfull.value = false
+
       console.log(error);
       ElNotification({
         title: "Failed to make transactions ",
@@ -210,6 +214,6 @@ export const useCampaignStore = defineStore("campaign", () => {
     isOtpCodeFilled,
     isPayingmentLoading,
     merchantResponse,
-  
+    isPaymentSuccessfull
   };
 });

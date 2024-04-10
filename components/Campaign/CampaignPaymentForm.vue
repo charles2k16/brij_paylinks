@@ -1,19 +1,18 @@
 <template>
     <el-form ref="ruleFormRef" :model="paymentForm" :rules="rules">
-        <p class="text-gray-400 text-sm mt-5 mb-2">Amount to donate</p>
+        <p class="text-gray-700 text-sm mt-5 mb-2">Amount to donate</p>
         <div class="flex w-full gap-x-2 mb-2">
-            <div class="flex h-fit i">
+            <div class="flex h-fit">
                 <el-form-item prop="currency">
-                    <el-select v-model="paymentForm.currency" placeholder="Select" size="large" style="width: 100px">
-                        <el-option v-for="(currency, index) in merchant?.data.accepted_currencies" :key="index"
-                            :label="currency.abbreviation" :value="currency.abbreviation" />
-                    </el-select>
+                    <MazSelect v-model="paymentForm.currency" label="Select currency" color="warning"
+                        :options=extractAbbr(merchant?.data.accepted_currencies!) />
                 </el-form-item>
             </div>
             <!-- Input for amount -->
             <div class="flex-1">
                 <el-form-item prop="amount">
-                    <el-input placeholder="Eg. 100" v-model="paymentForm.amount" clearable></el-input>
+                    <MazInput class="w-full" key="lg" color="warning" v-model="paymentForm.amount" label="Enter Amount"
+                        placeholder="200" size="md" />
                 </el-form-item>
             </div>
         </div>
@@ -23,50 +22,62 @@
             <div v-for="(chip, index) in amountChips" :key="index" class="group">
                 <button type="button"
                     class="border-2 me-2 mb-2 border-teal-900 group-hover:bg-teal-900 py-0.5 px-3 rounded-md">
-                    <p class="text-teal-950 font-bold text-sm group-hover:text-white" @click="onChipClick(chip.amount   )">{{
-                        chip.amount }}</p>
+                    <p class="text-teal-950 font-bold text-sm group-hover:text-white" @click="onChipClick(chip.amount)">
+                        {{
+                            chip.amount }}</p>
                 </button>
             </div>
         </div>
 
 
         <!--Phone number field-->
-        <p class="text-gray-400 text-sm mt-5 mb-2">Phone number</p>
+        <p class="text-gray-700 text-sm mt-10 mb-2">Phone number</p>
         <div class="flex w-full gap-x-2 mb-2">
             <!-- Input for amount -->
             <div class="flex-1">
                 <el-form-item prop="phone">
-                    <el-input placeholder="Eg. 0553904533" v-model="paymentForm.phone" clearable></el-input>
+                    <MazPhoneNumberInput color="warning" class="w-full" v-model="paymentForm.phone" show-code-on-list
+                        :only-countries="countries" default-country-code="GH" :ignored-countries="['AC']"
+                        @update="results = $event" />
                 </el-form-item>
+                <div class="flex w-full ">
+
+                </div>
+
+
             </div>
         </div>
 
 
+
+
         <!-- Make payment & pledge button -->
         <!-- Buttons -->
-        <div class="flex flex-row gap-y-2 md:flex-col gap-x-3 mt-8">
+        <div class="flex flex-row gap-y-2 md:flex-col gap-x-3 mt-3">
             <!-- Make paymnet button -->
-            <button type="button" @click="submitForm(ruleFormRef)"
-                class="flex-1 secondary-custom-bg-color  px-4 flex flex-row py-2 flex-nowrap justify-center items-center gap-x-3 rounded-full  text-teal-900 ">
+            <MazBtn @click="submitForm(ruleFormRef)" size="sm" color="warning" rounded>
                 <Icon name="ep:money" size="25" />
-                <p class="font-medium">Make payment</p>
-            </button>
-
-
+                Make Payment
+            </MazBtn>
             <!-- select payment menthod dialog -->
-            <el-dialog v-model="paymentMethodialogVisible" :title="dialogueTitle" width="440"
-                :before-close="handleClose">
-                <div v-if="!isOTPSuccessfull" class="flex flex-col justify-center items-center">
+            <MazDialog @close="handleClose" v-model="paymentMethodialogVisible" :title="dialogueTitle">
+                <div v-if="!isOTPSuccessfull" class="flex flex-col">
                     <!-- payment methods -->
                     <PaymentMethod :options="props.paymentOptions.data" v-model="campaignStore.selectedPaymentOption"
                         class="flex-1" />
                     <!-- Continue -->
-                    <el-button :loading="isSendOTPLoading" v-if="isPaymentMethodSelected"
-                        :disabled="!isPaymentMethodSelected" @click="initiateOTPRequest" size="large"
-                        class="w-full secondary-custom-bg-color mt-5" round>
-                        <p v-if="isSendOTPLoading">Sending OTP .....</p>
+
+                    <MazBtn :loading="isSendOTPLoading" v-if="isPaymentMethodSelected" class="w-full mt-4"
+                        :disabled="!isPaymentMethodSelected" @click="initiateOTPRequest" size="sm" color="warning"
+                        rounded>
+                        <div class="flex gap-x-2">
+                            <Icon name="ep:money" size="25" />
+
+                            <p v-if="isSendOTPLoading">Sending OTP .....</p>
                         <p v-else class="font-bold">Continue</p>
-                    </el-button>
+                        </div>
+   
+                    </MazBtn>
 
 
                     <div v-else class="text-sm text-gray-500 mt-5">Select payment to continue</div>
@@ -75,70 +86,104 @@
                 <!-- otp -->
                 <div v-else class="flex flex-col items-center">
                     <!-- OT Field -->
-                    <OPTInput :digits-pin="campaignStore.otpCode" />
+                    <OPTInput class="w-full" :digits-pin="campaignStore.otpCode" />
                     <!-- OTP submit button -->
-                    <el-button v-if="isOtpCodeFilled" :loading="isPayingmentLoading" size="large"
-                        class="w-full secondary-custom-bg-color mt-5"
-                        @click="campaignStore.payDonation(paymentForm.amount, paymentForm.currency!, paymentForm.phone)"
-                        round>Enter OTP Code
-                        to continue</el-button>
-                    <!-- Resend button -->
-                    <el-button :loading="isSendOTPLoading" @click="initiateOTPRequest()" class="reset-btn" link>
-                        <p v-if="isSendOTPLoading">Resending OTP Code ...</p>
-                        <p v-else>Re send OTP Code</p>
-                    </el-button> <!-- Resend button -->
-                </div>
-                <!-- button -->
+                    <MazBtn v-if="isOtpCodeFilled" :loading="isPayingmentLoading" class="w-full mt-5" size="sm" color="warning" @click="campaignStore.payDonation(paymentForm.amount, paymentForm.currency!, paymentForm.phone)" rounded>
+                        Enter OTP Code to continue
+                    </MazBtn>
 
-            </el-dialog>
+                    <!-- Resend button -->
+                    <MazBtn :loading="isSendOTPLoading" color="transparent" size="mini" @click="initiateOTPRequest()" class="reset-btn" link>
+                        <p v-if="isSendOTPLoading">Resending OTP Code ...</p>
+                        <p v-else>Re-send OTP Code</p>
+                    </MazBtn>
+ 
+                </div>
+            </MazDialog>
         </div>
 
 
-        <!-- Copy Campaign link field -->
-        <div class="mt-10">
+      <!-- Copy Campaign link field -->
+      <div class="mt-10">
             <CampaignCopyLink :campaignLink="campaign?.campaign_link!" />
         </div>
 
 
-
-
         <!-- footer text -->
         <p class="text-center mt-10 text-gray-400 text-sm">{{ props.campaign?.footnote }}</p>
+
+        <!-- success payment modal -->
+
+        <MazDialog v-model="isPaymentSuccessfull" :on-close="handleClose">
+            <div class="flex flex-col justify-center items-center">
+                <Icon class="text-6xl text-green-700" name="ri:send-plane-line" />
+                <h2 class="text-2xl mt-3">Donation Made Successfull</h2>
+                <p class="text-center">You have successfully made donated to this campaign. Share this campaign by copy
+                    the URL below.</p>
+
+                <div class="w-full border border-gray-200 p-5 mt-5 rounded-md">
+                    <p class="text-lg">You donated an amount of <span class="font-semibold">GHS 200 </span>to <span
+                            class="font-semibold">Fund Raising for new School Build in Newton</span>'s Campaign on
+                        <span>{{ formateDate(new Date, 'Mo MMM YYYY h:ss a') }}</span> </p>
+                    <div class="flex w-full">
+                        <CampaignCopyLink class="w-full mt-5" :campaignLink="campaign?.campaign_link!" />   
+                    </div>
+                </div>
+                <div class="mt-10">
+
+                </div>
+            </div>
+            <template #footer="{ close }">
+                <MazBtn color="warning" @click="close">
+                    Go back
+                </MazBtn>
+            </template>
+        </MazDialog>
+
+
+  
+
+        
+
+
+
+
     </el-form>
 </template>
 <script setup lang="ts">
 import type { FormInstance, FormRules } from 'element-plus'
-import { type Campaign, type CampaignPaymentForm, type Merchant, type MerchantResponse } from '~/types/index';
+import { type Campaign, type CampaignPaymentForm, type Merchant, type MerchantResponse, type SelectCountryResult } from '~/types/index';
 import { useCampaignStore } from '~/store/campaign';
 import { type PaymentMethods } from '~/types/index'
-import {usePaymentOptions} from '~/store/payment_options'
+import { usePaymentOptions } from '~/store/payment_options'
+import MazPhoneNumberInput from 'maz-ui/components/MazPhoneNumberInput'
+import { extractAbbr } from '~/utils/index'
 
 
 // instance of tpayment store
 const campaignStore = useCampaignStore();
 const paymentOptiosnStore = usePaymentOptions();
-const { dialogueTitle, isOTPSuccessfull, isPaymentMethodSelected, isPayingmentLoading, isOtpCodeFilled, isSendOTPLoading } = storeToRefs(campaignStore);
-
-// form instance
-const ruleFormRef = ref<FormInstance>()
-
-
+const { dialogueTitle, isOTPSuccessfull, isPaymentMethodSelected, isPayingmentLoading, isOtpCodeFilled, isSendOTPLoading, isPaymentSuccessfull } = storeToRefs(campaignStore);
 // props
 const props = defineProps<{
     paymentOptions: PaymentMethods,
     campaign: Campaign,
     merchant: MerchantResponse | undefined
+    countries: any[]
 }>()
 
 
-// selected currency
-const selectedCurrency = ref('')
+// form instance
+const ruleFormRef = ref<FormInstance>()
 
+
+// phone number 
+const results = ref<SelectCountryResult>()
 
 // payment forms model
 const paymentForm = reactive<CampaignPaymentForm>({
-    amount: '1',
-    phone: '',
+    amount: '',
+    phone: results.value?.e164!,
     currency: ''
 })
 // validation rules
@@ -148,7 +193,7 @@ const rules = reactive<FormRules<CampaignPaymentForm>>({
     ],
     phone: [
         { required: true, message: 'Please input phone number', trigger: 'blur', },
-        { min: 10, max: 10, message: 'Length should be up to 10 digits', trigger: 'blur' },
+        // { min: 10, max: 10, message: 'Length should be up to 10 digits', trigger: 'blur' },
     ],
     currency: [
         {
@@ -159,8 +204,9 @@ const rules = reactive<FormRules<CampaignPaymentForm>>({
     ],
 })
 
+const isSuccessModalShow = ref(false)
 
-
+extractAbbr(props.merchant?.data.accepted_currencies!)
 function submitForm(ruleFormRef: any) {
     ruleFormRef.validate((valid: any) => {
         if (valid) {
@@ -177,13 +223,14 @@ function submitForm(ruleFormRef: any) {
 }
 
 
+
+
 // initiate OTP
 function initiateOTPRequest() {
     console.log('send ot test')
     campaignStore.sendOTP(paymentForm.phone)
 }
 
-// watch for payment options
 // watch the selected currency and request the payment options from api
 watch(
     () => paymentForm.currency,
@@ -209,18 +256,20 @@ const amountChips = reactive([
     { amount: "1" },
 ])
 
-async function onChipClick(amount:string) {
-        paymentForm.amount = amount
+async function onChipClick(amount: string) {
+    paymentForm.amount = amount
 }
 
 // dialogue 
 const paymentMethodialogVisible = ref(false)
 
 // on dialogue close
-const handleClose = (done: () => void) => {
-    done();
+const handleClose = () => {
+    // done();
+    console.log('closing modal ..')
     campaignStore.isOTPSuccessfull = false;
     campaignStore.selectedPaymentOption = null;
+    campaignStore.isPaymentSuccessfull = false;
     campaignStore.otpCode = campaignStore.otpCode.map(() => "");
 
 }

@@ -1,4 +1,5 @@
 import { useDateFormat } from "@vueuse/core";
+import type { AcceptedCurrencies } from "~/types";
 
 export function formateDate(date: Date, format: string) {
   const formattedDate = useDateFormat(date, format);
@@ -15,4 +16,11 @@ export function getHeaders() {
     Accept: "application/json",
   };
   return headers;
+}
+
+export function extractAbbr(array: AcceptedCurrencies[]): string[] {
+  if(array == undefined){
+    return []
+  }
+  return array.map((currency) => currency.abbreviation);
 }

@@ -14,7 +14,8 @@ export default defineNuxtConfig({
     '@nuxt/image',
     'nuxt-icon',
     '@pinia/nuxt',
-    '@vueuse/nuxt'
+    '@vueuse/nuxt',
+    'maz-ui/nuxt'
 ],
   css: [
     '~/assets/css/element/index.scss',

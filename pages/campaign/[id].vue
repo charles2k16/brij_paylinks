@@ -1,29 +1,30 @@
 <template>
-  <div  class="w-full flex flex-col lg:px-20 section">
+  <div  class="w-full flex flex-col lg:px-20 lg:py-2 section">
     <!-- Banner -->
 
-    <CampaignBanner class="hidden sm:block" />
+    <!-- <CampaignBanner class="hidden sm:block" /> -->
     <!-- Campaign Info & Payment -->
-    <div class="flex flex-row md:space-x-4 ">
-      <div class="lg:basis-3/5 md:basis-1/2 basis-full hidden sm:block">
+    <div class="flex flex-row justify-center md:space-x-4 h-full">
+      <div class="lg:basis-[60%] md:basis-1/2 basis-full hidden sm:block h-full border rounded-md">
         <!-- Campaign Info -->
         <CampaignInfo :campaign="campaignResponse?.data!" :merchant="merchantResponse" />
       </div>
 
       <!-- Campaign Info -->
-      <div class="flex-1">
-        <CampaignPayment :paymentOptions="paymentOptions!" :merchant="merchantResponse" :campaign="campaignResponse?.data!" />
+      <div class=" lg:basis-[40%] md:basis-1/2">
+        <CampaignPayment :paymentOptions="paymentOptions!" :countries="cty_abbr" :merchant="merchantResponse" :campaign="campaignResponse?.data!" />
       </div>
     </div>
 
     <div class="sm:hidden fixed bottom-0 left-0 right-0 flex gap-x-2 items-center justify-center bg-white p-4 shadow-lg">
       <!-- Donate  -->
-      <button type="button"
-        @click="drawer = true"
-        class="flex-1 secondary-custom-bg-color px-4 flex flex-row py-2 flex-nowrap justify-center items-center gap-x-3 rounded-full hover:bg-teal-950 text-teal-900">
-        <Icon name="ep:money" size="25" />
-        <p class="font-medium">Donate</p>
-      </button>
+
+
+      <MazBtn @click="drawer = true" color="warning" size="sm" rounded class="w-full">
+        <Icon name="ep:money"  size="25"  />
+          Donate
+        </MazBtn>
+      
       <!-- Drawer for payment form on mobile -->
       <el-drawer v-model="drawer" size="90%" direction="btt" :show-close="false">
         <template #header="{ close, titleId, titleClass }">
@@ -34,9 +35,9 @@
         </template>
         <!-- banner -->
         <div class="flex text-base mb-5">
-          <p> Donate to support<span class="font-bold text-teal-900"> Faith Ministries Music department humbly ask for support to acquire new instruments</span> Campaign</p>
+          <p> Donate to support <span class="font-bold text-teal-900"> {{ campaignResponse?.data.title }} </span> Campaign</p>
         </div>
-        <CampaignPaymentForm :campaign="campaignResponse?.data!" :merchant="merchantResponse" :paymentOptions="paymentOptions!"/>
+        <CampaignPaymentForm :campaign="campaignResponse?.data!" :countries="cty_abbr" :merchant="merchantResponse" :paymentOptions="paymentOptions!"/>
       </el-drawer>
       <!-- pledge -->
       <!-- <button type="button"
@@ -60,14 +61,26 @@ const route  = useRoute()
 const paymentOptiosnStore = usePaymentOptions()
 const {paymentOptions} = storeToRefs(paymentOptiosnStore)
 const {campaignResponse, merchantResponse} = storeToRefs(campaignStore)
+import { supportedCountries } from '~/assets/data';
 
 // get payemnt method options
 onMounted(() => {
     campaignStore.verifyCampaignLink(route.params.id.toString())
     paymentOptiosnStore.getPaymentMethod('GHS')
     console.log(route.params.id)
+    getCountriesAsync()
+    console.log(cty_abbr)
 })
 
+let cty_abbr = ['GH']
+
+function getCountriesAsync() {
+    cty_abbr = supportedCountries.map(
+        (country: { abbreviation: string }) => {
+            return country.abbreviation
+        }
+    )
+}
 
 const drawer = ref(false)
 

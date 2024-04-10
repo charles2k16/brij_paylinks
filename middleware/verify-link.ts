@@ -18,7 +18,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
       // return navigateTo(`/error`);
        throw createError({
         statusCode: 404,
-        statusMessage: 'Oooops, The link is either expired or Invalid',
+        statusMessage: 'Oooops, The link is either invalid or inactive',
         data: {
           myCustomField: true
         }
@@ -31,7 +31,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
 
     throw createError({
       statusCode: 404,
-      statusMessage: 'Oooops, The link is either expired or Invalid',
+      statusMessage: 'Oooops, The link is either invalid or inactive',
       data: {
         myCustomField: true
       }

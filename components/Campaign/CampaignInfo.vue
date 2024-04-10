@@ -1,18 +1,19 @@
 <template>
-    <div class="py-5 flex flex-col justify-start">
+    <div class="py-5 px-10 flex flex-col justify-start">
 
 
         <!-- Campaign Image Slider -->
         <div class="block mt-2 bg-slate-400">
             <el-carousel height="300px">
-                <el-carousel-item v-for="item in 4" :key="item">
-                    <h3 class="small">{{ item }}</h3>
+                <el-carousel-item v-for="(image, index) in props.campaign.images" :key="index">
+                        <img  :src="image.url" class="cover" alt="campaign_image">
                 </el-carousel-item>
             </el-carousel>
         </div>
 
+
         <!-- Campaign Title -->
-        <h2 class="text-gray-900 text-3xl lg:pe-16 mt-2">{{ props.campaign?.title }}</h2>
+        <h2 class="text-gray-900 text-2xl lg:pe-16 mt-2">{{ props.campaign?.title }}</h2>
 
         <!-- Campaign orginizer info -->
         <div class="flex mt-4 w-full items-center gap-x-4 flex-wrap">
@@ -65,7 +66,7 @@
         <!-- Description -->
         <p class="mt-4 text-lg">{{ props.campaign?.description }}</p>
 
-
+        
         <!-- footer text -->
         <p class="text-center text-gray-400 mt-10 text-sm">{{ props.campaign?.footnote }}</p>
 
@@ -82,4 +83,10 @@ const props = defineProps<{
 
 
 </script>
-<style></style>
+<style>
+.cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+</style>

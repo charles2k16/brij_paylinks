@@ -1,17 +1,14 @@
 <template>
-    <p class="text-gray-400 text-sm mb-2">Campaign Link</p>
-    <div class="flex justify-between  w-full gap-x-2 mb-2">
-        <!-- Input for link -->
-        <div class="flex-1">
-            <el-input disabled id="copyUrlField" placeholder="Eg. 0553904533" v-model="campaignUrl" clearable></el-input>
-        </div>
-        <div>
-            <button @click="copyToClipboard()" type="button"
-                class="flex-1 secondary-custom-bg-color px-4 flex flex-row py-3 flex-nowrap justify-center items-center gap-x-3 rounded-full  text-teal-900 ">
-                <Icon name="clarity:copy-to-clipboard-line" size="25" />
-                <p class="font-medium">Copy</p>
-            </button>
-        </div>
+
+
+    <div class="flex gap-2">
+        <MazInput disabled id="copyUrlField" class="w-full" key="lg" color="warning"
+            v-model="campaignUrl" placeholder="200" size="md" />
+
+        <MazBtn @click="copyToClipboard()" size="sm" color="warning" rounded>
+            <Icon name="clarity:copy-to-clipboard-line" size="25" />
+            Copy
+        </MazBtn>
     </div>
 </template>
 <script setup lang="ts">
@@ -42,12 +39,10 @@ function copyToClipboard() {
 }
 
 
-  // campaign url
-  const campaignUrl = ref(
+// campaign url
+const campaignUrl = ref(
     `https://pay.brij.money/campaign/${props.campaignLink}`
-  );
+);
 
 </script>
-<style>
-
-</style>
+<style></style>

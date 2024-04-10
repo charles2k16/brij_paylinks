@@ -1,11 +1,11 @@
 <template>
     <div
-        class="w-full lg:border md:border lg:border-gray-200 md:border-gray-200  mt-4 lg:px-3 px-2 lg:py-3  rounded-lg">
+        class="w-full lg:border md:border lg:border-gray-200 md:border-gray-200   lg:px-3 px-2 lg:py-3  rounded-lg">
         <!-- Campaign Image Slider -->
         <div class="block bg-slate-400 w-full sm:hidden">
-            <el-carousel height="200px">
-                <el-carousel-item v-for="item in 4" :key="item">
-                    <h3 class="small">{{ item }}</h3>
+            <el-carousel height="220px">
+                <el-carousel-item v-for="(image, index) in props.campaign.images" :key="index">
+                        <img  :src="image.url" class="cover" alt="campaign_image">
                 </el-carousel-item>
             </el-carousel>
         </div>
@@ -60,6 +60,8 @@
             </div>
         </div>
 
+        <CampaignCopyLink class="w-full my-5 sm:hidden flex" :campaignLink="campaign?.campaign_link!" />   
+
         <!-- tags for sm screen only -->
         <div class="flex w-full flex-row flex-wrap border py-1 rounded-full px-1  sm:hidden">
             <!-- chips -->
@@ -69,34 +71,16 @@
         </div>
 
 
-        <!-- Amount raised card for large screen -->
-        <!-- <div class="sm:flex bg-gray-50 py-3 px-3 rounded-md items-center flex-wrap hidden">
-            <img src="~/assets/images/ghana.png" class="lg:me-3 me-2" height="27" width="27" alt="ghana_flag">
-            <div class="flex gap-x-1 lg:me-5 me-3">
-                <p class="primary-custom-text-color font-bold ">₵30000.00</p>
-                <p>Raised</p>
-            </div>
-            <div class="rounded-full p-0.5 primary-custom-bg-color lg:me-5 me-3"></div>
-            <div class="flex gap-x-1">
-                <p>0</p>
-                <p>donations</p>
-            </div>
-        </div> -->
-
+        
         <!-- Campaign description for small screen -->
             <p class="my-5 block sm:hidden">{{ props.campaign?.description }}</p>
-
-        <!-- Copy Campaign link field for small screens only-->
-        <div class="block sm:hidden mt-5">
-            <CampaignCopyLink :campaignLink="campaign?.campaign_link!" />
-        </div>
 
 
         <p class="text-center mt-5 text-gray-400 text-sm mb-20 sm:hidden flex justify-center ">{{ props.campaign?.footnote }}</p>
 
 
         <!--  Payment form-->
-        <CampaignPaymentForm :campaign="props.campaign" :merchant="merchant"  :paymentOptions="paymentOptions" class="hidden sm:block" />
+        <CampaignPaymentForm :campaign="props.campaign" :merchant="merchant" :countries="countries" :paymentOptions="paymentOptions" class="hidden sm:block" />
     </div>
 </template>
 <script setup lang="ts">
@@ -107,9 +91,17 @@ const props = defineProps<{
     campaign: Campaign
     paymentOptions: PaymentMethods 
     merchant: MerchantResponse | undefined
+    countries: any[]
+
 }>()
 
 
 
 </script>
-<style></style>
+<style>
+.cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+</style>
