@@ -1,18 +1,19 @@
 <template>
-  <div  class="w-full flex flex-col lg:px-20 lg:py-2 section">
+  <div class="w-full flex flex-col lg:px-20 lg:py-2 section">
     <!-- Banner -->
 
     <!-- <CampaignBanner class="hidden sm:block" /> -->
     <!-- Campaign Info & Payment -->
     <div class="flex flex-row justify-center md:space-x-4 h-full">
-      <div class="lg:basis-[60%] md:basis-1/2 basis-full hidden sm:block h-full border rounded-md">
+      <div class="lg:w-[60%] md:w-[50%] w-full hidden sm:block h-full bg-gray-50 rounded-md">
         <!-- Campaign Info -->
         <CampaignInfo :campaign="campaignResponse?.data!" :merchant="merchantResponse" />
       </div>
 
       <!-- Campaign Info -->
-      <div class=" lg:basis-[40%] md:basis-1/2">
-        <CampaignPayment :paymentOptions="paymentOptions!" :countries="cty_abbr" :merchant="merchantResponse" :campaign="campaignResponse?.data!" />
+      <div class=" lg:w-[40%] md:w-[50%] w-full">
+        <CampaignPayment :paymentOptions="paymentOptions!" :countries="cty_abbr" :merchant="merchantResponse"
+          :campaign="campaignResponse?.data!" />
       </div>
     </div>
 
@@ -21,24 +22,16 @@
 
 
       <MazBtn @click="drawer = true" color="warning" size="sm" rounded class="w-full">
-        <Icon name="ep:money"  size="25"  />
-          Donate
-        </MazBtn>
-      
+        <Icon name="ep:money" size="25" />
+        Donate
+      </MazBtn>
+
       <!-- Drawer for payment form on mobile -->
-      <el-drawer v-model="drawer" size="90%" direction="btt" :show-close="false">
-        <template #header="{ close, titleId, titleClass }">
-          <h4 :id="titleId" :class="titleClass">Donate to the campaign</h4>
-          <el-button type="" @click="close" link :icon="ArrowLeftBold">
-            Back
-          </el-button>
-        </template>
-        <!-- banner -->
-        <div class="flex text-base mb-5">
-          <p> Donate to support <span class="font-bold text-teal-900"> {{ campaignResponse?.data.title }} </span> Campaign</p>
-        </div>
+      <MazBottomSheet v-model="drawer">
         <CampaignPaymentForm :campaign="campaignResponse?.data!" :countries="cty_abbr" :merchant="merchantResponse" :paymentOptions="paymentOptions!"/>
-      </el-drawer>
+      </MazBottomSheet>
+
+
       <!-- pledge -->
       <!-- <button type="button"
         class="flex-1 border border-teal-900 px-4 flex flex-row py-2 justify-center items-center gap-x-3 rounded-full hover:bg-teal-900 hover:text-white text-teal-900">
@@ -50,49 +43,48 @@
 </template>
 <script setup lang="ts">
 import { type Campaign } from '~/types/index';
-import { ArrowLeftBold} from '@element-plus/icons-vue';
-import { useCampaignStore} from "~/store/campaign";
-import { usePaymentOptions} from "~/store/payment_options";
+import { ArrowLeftBold } from '@element-plus/icons-vue';
+import { useCampaignStore } from "~/store/campaign";
+import { usePaymentOptions } from "~/store/payment_options";
 
 
 
 const campaignStore = useCampaignStore();
-const route  = useRoute()
+const route = useRoute()
 const paymentOptiosnStore = usePaymentOptions()
-const {paymentOptions} = storeToRefs(paymentOptiosnStore)
-const {campaignResponse, merchantResponse} = storeToRefs(campaignStore)
+const { paymentOptions } = storeToRefs(paymentOptiosnStore)
+const { campaignResponse, merchantResponse } = storeToRefs(campaignStore)
 import { supportedCountries } from '~/assets/data';
 
-// get payemnt method options
-onMounted(() => {
-    campaignStore.verifyCampaignLink(route.params.id.toString())
-    paymentOptiosnStore.getPaymentMethod('GHS')
-    console.log(route.params.id)
-    getCountriesAsync()
-    console.log(cty_abbr)
-})
 
+// data
+const drawer = ref(false)
 let cty_abbr = ['GH']
 
+// onmounted
+onMounted(() => {
+  campaignStore.verifyCampaignLink(route.params.id.toString())
+  paymentOptiosnStore.getPaymentMethod('GHS')
+  console.log(route.params.id)
+  getCountriesAsync()
+  console.log(cty_abbr)
+})
+
+// methods
 function getCountriesAsync() {
-    cty_abbr = supportedCountries.map(
-        (country: { abbreviation: string }) => {
-            return country.abbreviation
-        }
-    )
+  cty_abbr = supportedCountries.map(
+    (country: { abbreviation: string }) => {
+      return country.abbreviation
+    }
+  )
 }
 
-const drawer = ref(false)
 
-// onMounted(() => {
-//   campaignData.value = campaignStore.campaignResponse?.data!
-// })
-// test data for campaign
-// const campaignData = ref<Campaign | null>(null);
+
 
 definePageMeta({
-    layout: 'campaign-layout',
-    middleware:['verify-link']
+  layout: 'campaign-layout',
+  middleware: ['verify-link']
 })
 
 </script>

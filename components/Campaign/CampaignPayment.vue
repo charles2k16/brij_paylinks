@@ -1,9 +1,9 @@
 <template>
     <div
-        class="w-full lg:border md:border lg:border-gray-200 md:border-gray-200   lg:px-3 px-2 lg:py-3  rounded-lg">
+        class="w-full lg:border md:border lg:border-gray-200 md:border-gray-200   lg:px-3 px-4 lg:py-3 pb-3  rounded-lg">
         <!-- Campaign Image Slider -->
-        <div class="block bg-slate-400 w-full sm:hidden">
-            <el-carousel height="220px">
+        <div class="block w-full sm:hidden rounded-md">
+            <el-carousel class="h-64 rounded-md">
                 <el-carousel-item v-for="(image, index) in props.campaign.images" :key="index">
                         <img  :src="image.url" class="cover" alt="campaign_image">
                 </el-carousel-item>
@@ -60,7 +60,7 @@
             </div>
         </div>
 
-        <CampaignCopyLink class="w-full my-5 sm:hidden flex" :campaignLink="campaign?.campaign_link!" />   
+        <CampaignCopyLink class="w-full my-5 sm:hidden" :campaignLink="campaign?.campaign_link!" />   
 
         <!-- tags for sm screen only -->
         <div class="flex w-full flex-row flex-wrap border py-1 rounded-full px-1  sm:hidden">

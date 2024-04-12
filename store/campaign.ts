@@ -8,14 +8,25 @@ import type {
   MerchantResponse,
 } from "~/types/index";
 import axios from "axios";
-import { getOtpCode } from "~/utils";
 
 export const useCampaignStore = defineStore("campaign", () => {
   // import runtime config
   const runtimeConfig = useRuntimeConfig();
   const baseURL = runtimeConfig.public.baseURL;
 
-  // selected payment check
+  // data
+  const selectedPaymentOption = ref<PaymentOption | null>(null);
+  const otpCode = ref('');
+  const isSendOTPLoading = ref(false);
+  const isOTPSuccessfull = ref(false);
+  const merchantResponse = ref<MerchantResponse>();
+  const campaignResponse = ref<CampaignResponse | null>(null);
+  const isPayingmentLoading = ref(false);
+  const isPaymentSuccessfull = ref(false);
+
+  // computed 
+
+
   const isPaymentMethodSelected = computed(() => {
     if (selectedPaymentOption.value === null) {
       return false;
@@ -24,7 +35,6 @@ export const useCampaignStore = defineStore("campaign", () => {
     }
   });
 
-  // compute dialoge title
   const dialogueTitle = computed(() => {
     if (isOTPSuccessfull.value === false) {
       return "Payment Options";
@@ -33,28 +43,10 @@ export const useCampaignStore = defineStore("campaign", () => {
     }
   });
 
-  // select payment method
-  const selectedPaymentOption = ref<PaymentOption | null>(null);
 
-  // confirmation otp code
-  const otpCode = ref<string[]>(["", "", "", "", "", ""]);
-
-  // check whether its filles
-  const isOtpCodeFilled = computed(() => {
-    return otpCode.value.every((code) => code !== "");
-  });
-
-
-
-
-
-
-  // verify incomin campaign link
-  const campaignResponse = ref<CampaignResponse | null>(null);
-
+// methods & functions
   async function verifyCampaignLink(campaign_link: string) {
     try {
-
       const res = await axios.get(
         `${baseURL}/paymentcampaigns/link/${campaign_link}`,
         {
@@ -72,18 +64,11 @@ export const useCampaignStore = defineStore("campaign", () => {
         return res.status;
       }
     } catch (error: any) {
-
       console.error("Error verifying campaign link:", error);
       // showToast('Failed to verify link', `${error.response.data.message}`, true)
       return error.response ? error.response.status : 500;
     }
   }
-
-
-
-
-  // fetch merhcant details
-  const merchantResponse = ref<MerchantResponse>();
 
   async function getMerhant() {
     try {
@@ -99,8 +84,7 @@ export const useCampaignStore = defineStore("campaign", () => {
     }
   }
 
-  const isSendOTPLoading = ref(false);
-  const isOTPSuccessfull = ref(false);
+
   async function sendOTP(customer_contact: string) {
     console.log("hitting .. otp");
 
@@ -141,9 +125,12 @@ export const useCampaignStore = defineStore("campaign", () => {
     }
   }
 
-  const isPayingmentLoading = ref(false);
-  const isPaymentSuccessfull = ref(false)
-  async function payDonation(amount: string, currency:string, momo_number: string) {
+
+  async function payDonation(
+    amount: string,
+    currency: string,
+    momo_number: string
+  ) {
     try {
       isPayingmentLoading.value = true;
 
@@ -154,7 +141,7 @@ export const useCampaignStore = defineStore("campaign", () => {
           description: "Payment link transaction",
           amount: amount,
           currency: currency,
-          otp: getOtpCode(otpCode),
+          otp: otpCode.value,
           customer_firstname: "john",
           customer_lastname: "doe",
           customer_email: "me@you.com",
@@ -177,7 +164,7 @@ export const useCampaignStore = defineStore("campaign", () => {
       );
 
       console.log(res);
-      isPaymentSuccessfull.value = true
+      isPaymentSuccessfull.value = true;
       ElNotification({
         title: "OPT Donation made successfully",
         message: `${res.data.message}`,
@@ -188,7 +175,7 @@ export const useCampaignStore = defineStore("campaign", () => {
       isPayingmentLoading.value = false;
     } catch (error: any) {
       isPayingmentLoading.value = false;
-      isPaymentSuccessfull.value = false
+      isPaymentSuccessfull.value = false;
 
       console.log(error);
       ElNotification({
@@ -199,6 +186,8 @@ export const useCampaignStore = defineStore("campaign", () => {
       });
     }
   }
+
+  
 
   return {
     isPaymentMethodSelected,
@@ -211,9 +200,9 @@ export const useCampaignStore = defineStore("campaign", () => {
     isSendOTPLoading,
     payDonation,
     isOTPSuccessfull,
-    isOtpCodeFilled,
     isPayingmentLoading,
     merchantResponse,
-    isPaymentSuccessfull
+    isPaymentSuccessfull,
+    
   };
 });

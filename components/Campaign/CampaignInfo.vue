@@ -3,8 +3,8 @@
 
 
         <!-- Campaign Image Slider -->
-        <div class="block mt-2 bg-slate-400">
-            <el-carousel height="300px">
+        <div class="block mt-2rounded-lg">
+            <el-carousel class="lg:h-72 md:h-52 rounded-lg">
                 <el-carousel-item v-for="(image, index) in props.campaign.images" :key="index">
                         <img  :src="image.url" class="cover" alt="campaign_image">
                 </el-carousel-item>
@@ -74,7 +74,6 @@
     </div>
 </template>
 <script setup lang="ts">
-import { useCampaignStore } from '~/store/campaign';
 import { type Campaign,  type MerchantResponse } from '~/types/index'
 const props = defineProps<{
     campaign: Campaign  | any,

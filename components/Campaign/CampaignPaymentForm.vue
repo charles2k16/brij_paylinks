@@ -1,5 +1,7 @@
 <template>
+    
     <el-form ref="ruleFormRef" :model="paymentForm" :rules="rules">
+    
         <p class="text-gray-700 text-sm mt-5 mb-2">Amount to donate</p>
         <div class="flex w-full gap-x-2 mb-2">
             <div class="flex h-fit">
@@ -17,14 +19,14 @@
             </div>
         </div>
 
+
         <!-- chips -->
         <div class="flex flex-wrap  rounded-md mt-1">
             <div v-for="(chip, index) in amountChips" :key="index" class="group">
                 <button type="button"
                     class="border-2 me-2 mb-2 border-teal-900 group-hover:bg-teal-900 py-0.5 px-3 rounded-md">
                     <p class="text-teal-950 font-bold text-sm group-hover:text-white" @click="onChipClick(chip.amount)">
-                        {{
-                            chip.amount }}</p>
+                        {{chip.amount}}</p>
                 </button>
             </div>
         </div>
@@ -38,7 +40,7 @@
                 <el-form-item prop="phone">
                     <MazPhoneNumberInput color="warning" class="w-full" v-model="paymentForm.phone" show-code-on-list
                         :only-countries="countries" default-country-code="GH" :ignored-countries="['AC']"
-                        @update="results = $event" />
+                        @update="phoneResult = $event" />
                 </el-form-item>
                 <div class="flex w-full ">
 
@@ -55,42 +57,42 @@
         <!-- Buttons -->
         <div class="flex flex-row gap-y-2 md:flex-col gap-x-3 mt-3">
             <!-- Make paymnet button -->
-            <MazBtn @click="submitForm(ruleFormRef)" size="sm" color="warning" rounded>
+            <MazBtn @click="submitForm(ruleFormRef)" size="sm" color="warning" class="w-full" rounded>
                 <Icon name="ep:money" size="25" />
-                Make Payment
+                Continue
             </MazBtn>
             <!-- select payment menthod dialog -->
-            <MazDialog @close="handleClose" v-model="paymentMethodialogVisible" :title="dialogueTitle">
+            <MazDialog @close="handleClose" v-model="paymentMethodialogVisible" :title="dialogueTitle" :persistent="false">
+                
                 <div v-if="!isOTPSuccessfull" class="flex flex-col">
                     <!-- payment methods -->
                     <PaymentMethod :options="props.paymentOptions.data" v-model="campaignStore.selectedPaymentOption"
                         class="flex-1" />
                     <!-- Continue -->
 
+
                     <MazBtn :loading="isSendOTPLoading" v-if="isPaymentMethodSelected" class="w-full mt-4"
                         :disabled="!isPaymentMethodSelected" @click="initiateOTPRequest" size="sm" color="warning"
                         rounded>
                         <div class="flex gap-x-2">
                             <Icon name="ep:money" size="25" />
-
-                            <p v-if="isSendOTPLoading">Sending OTP .....</p>
-                        <p v-else class="font-bold">Continue</p>
+                            <p class="font-bold">Continue</p>
                         </div>
-   
                     </MazBtn>
 
-
-                    <div v-else class="text-sm text-gray-500 mt-5">Select payment to continue</div>
+                    <div v-else class="text-sm text-gray-500 mt-5 text-center">Select payment to continue</div>
                 </div>
 
                 <!-- otp -->
                 <div v-else class="flex flex-col items-center">
                     <!-- OT Field -->
-                    <OPTInput class="w-full" :digits-pin="campaignStore.otpCode" />
-                    <!-- OTP submit button -->
-                    <MazBtn v-if="isOtpCodeFilled" :loading="isPayingmentLoading" class="w-full mt-5" size="sm" color="warning" @click="campaignStore.payDonation(paymentForm.amount, paymentForm.currency!, paymentForm.phone)" rounded>
-                        Enter OTP Code to continue
-                    </MazBtn>
+                    <!-- <OPTInput class="w-full" :digits-pin="campaignStore.otpCode" /> -->
+
+                    <Loading v-if="isPayingmentLoading" message="Initializing payment, authorize payment .."/>
+
+                    <MazInputCode v-else  :code-length="6" size="sm" v-model="otpCode" class="flex flex-wrap justify-center" @completed="handlePayment()" color="warning"  />
+                    
+
 
                     <!-- Resend button -->
                     <MazBtn :loading="isSendOTPLoading" color="transparent" size="mini" @click="initiateOTPRequest()" class="reset-btn" link>
@@ -99,6 +101,7 @@
                     </MazBtn>
  
                 </div>
+
             </MazDialog>
         </div>
 
@@ -163,7 +166,7 @@ import { extractAbbr } from '~/utils/index'
 // instance of tpayment store
 const campaignStore = useCampaignStore();
 const paymentOptiosnStore = usePaymentOptions();
-const { dialogueTitle, isOTPSuccessfull, isPaymentMethodSelected, isPayingmentLoading, isOtpCodeFilled, isSendOTPLoading, isPaymentSuccessfull } = storeToRefs(campaignStore);
+const { dialogueTitle, isOTPSuccessfull, isPaymentMethodSelected, isPayingmentLoading, otpCode, isSendOTPLoading, isPaymentSuccessfull } = storeToRefs(campaignStore);
 // props
 const props = defineProps<{
     paymentOptions: PaymentMethods,
@@ -173,20 +176,10 @@ const props = defineProps<{
 }>()
 
 
-// form instance
+// data
 const ruleFormRef = ref<FormInstance>()
-
-
-// phone number 
-const results = ref<SelectCountryResult>()
-
-// payment forms model
-const paymentForm = reactive<CampaignPaymentForm>({
-    amount: '',
-    phone: results.value?.e164!,
-    currency: ''
-})
-// validation rules
+const paymentMethodialogVisible = ref(false)
+const phoneResult = ref<SelectCountryResult>()
 const rules = reactive<FormRules<CampaignPaymentForm>>({
     amount: [
         { required: true, message: 'Please input amount', trigger: 'blur', },
@@ -203,44 +196,11 @@ const rules = reactive<FormRules<CampaignPaymentForm>>({
         },
     ],
 })
-
-const isSuccessModalShow = ref(false)
-
-extractAbbr(props.merchant?.data.accepted_currencies!)
-function submitForm(ruleFormRef: any) {
-    ruleFormRef.validate((valid: any) => {
-        if (valid) {
-            // alert('submit!');
-
-            //asign form values to store values
-            paymentMethodialogVisible.value = true
-
-        } else {
-            console.log('error submit!!');
-            return false;
-        }
-    });
-}
-
-
-
-
-// initiate OTP
-function initiateOTPRequest() {
-    console.log('send ot test')
-    campaignStore.sendOTP(paymentForm.phone)
-}
-
-// watch the selected currency and request the payment options from api
-watch(
-    () => paymentForm.currency,
-    (newValue, oldValue) => {
-        console.log(`Age changed from ${oldValue} to ${newValue}`);
-        paymentOptiosnStore.getPaymentMethod(paymentForm.currency)
-    }
-);
-
-// amount chips
+const paymentForm = reactive<CampaignPaymentForm>({
+    amount: '',
+    phone: phoneResult.value?.e164!,
+    currency: ''
+})
 const amountChips = reactive([
     { amount: '5000' },
     { amount: "4000" },
@@ -256,22 +216,50 @@ const amountChips = reactive([
     { amount: "1" },
 ])
 
+//wathch
+watch(
+    () => paymentForm.currency,
+    (newValue, oldValue) => {
+        console.log(`Age changed from ${oldValue} to ${newValue}`);
+        paymentOptiosnStore.getPaymentMethod(paymentForm.currency)
+    }
+);
+
+
+
+// functions & methids
+function submitForm(ruleFormRef: any) {
+    ruleFormRef.validate((valid: any) => {
+        if (valid) {
+            paymentMethodialogVisible.value = true
+        } else {
+            console.log('error submit!!');
+            return false;
+        }
+    });
+}
+// initiate OTP
+function initiateOTPRequest() {
+    console.log('send ot test')
+    campaignStore.sendOTP(paymentForm.phone)
+}
+
 async function onChipClick(amount: string) {
     paymentForm.amount = amount
 }
 
-// dialogue 
-const paymentMethodialogVisible = ref(false)
-
-// on dialogue close
 const handleClose = () => {
     // done();
     console.log('closing modal ..')
     campaignStore.isOTPSuccessfull = false;
     campaignStore.selectedPaymentOption = null;
     campaignStore.isPaymentSuccessfull = false;
-    campaignStore.otpCode = campaignStore.otpCode.map(() => "");
+    campaignStore.otpCode = '';
+}
 
+// on complete pin field
+function handlePayment(){
+    campaignStore.payDonation(paymentForm.amount, paymentForm.currency, paymentForm.phone)
 }
 
 

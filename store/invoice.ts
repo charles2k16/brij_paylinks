@@ -37,7 +37,7 @@ export const useInvoiceStore = defineStore("invoice", () => {
   const isOTPView = ref(false);
 
   // confirmation otp code
-  const OTPCode = ref<string[]>(["", "", "", "", "", ""]);
+  const OTPCode = ref();
 
   // verify OTP
   const verifyOTP = () => {
