@@ -17,7 +17,8 @@
       </div>
     </div>
 
-    <div class="sm:hidden fixed bottom-0 left-0 right-0 flex gap-x-2 items-center justify-center bg-white p-4 shadow-lg">
+    <div
+      class="sm:hidden fixed bottom-0 left-0 right-0 flex gap-x-2 items-center justify-center bg-white p-4 shadow-lg">
       <!-- Donate  -->
 
 
@@ -28,7 +29,23 @@
 
       <!-- Drawer for payment form on mobile -->
       <MazBottomSheet v-model="drawer">
-        <CampaignPaymentForm :campaign="campaignResponse?.data!" :countries="cty_abbr" :merchant="merchantResponse" :paymentOptions="paymentOptions!"/>
+
+
+        <div class="h-screen">
+          <div class="h-full overflow-scroll py-10">
+            <!-- content here -->
+            <div class="flex w-full justify-between items-center mb-5">
+              <p class="text-gray-400">Payment Form</p>
+
+              <MazBtn color="transparent">
+                <Icon name="ic:sharp-close" />
+              </MazBtn>
+            </div>
+            <CampaignPaymentForm :campaign="campaignResponse?.data!" :countries="cty_abbr" :merchant="merchantResponse"
+              :paymentOptions="paymentOptions!" />
+
+          </div>
+        </div>
       </MazBottomSheet>
 
 

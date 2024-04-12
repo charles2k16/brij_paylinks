@@ -64,7 +64,7 @@
                 Continue
             </MazBtn>
             <!-- select payment menthod dialog -->
-            <MazDialog @close="handleClose" v-model="paymentMethodialogVisible" :title="dialogueTitle" :persistent="false">
+            <MazDialog @close="handleClose" v-model="paymentMethodialogVisible" :title="dialogueTitle" :persistent="false" scrollable>
                 
                 <div v-if="!isOTPSuccessfull" class="flex flex-col">
                     <!-- payment methods -->
