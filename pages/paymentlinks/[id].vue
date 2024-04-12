@@ -2,50 +2,28 @@
 
 
 <template>
-  <div class="w-full flex flex-col lg:px-20 lg:py-2 section">
+  <div class="w-full flex flex-col section">
     <!-- Banner -->
 
     <!-- <CampaignBanner class="hidden sm:block" /> -->
     <!-- Campaign Info & Payment -->
-    <div class="flex flex-row justify-center md:space-x-4 h-full">
+    <div class="flex lg:flex-row flex-col justify-center  md:space-x-4 h-full mt-10">
 
 
-      <div class="lg:w-[50%] w-full lg:h-screen h-fit bg-gray-50 rounded-md flex lg:justify-end justify-center">
-            <div class="lg:max-w-md w-full lg:pt-20  lg:pr-20 py-5 ">
-        <PaymentLinkMerchantInfo />
+      <div class="lg:w-[50%] w-full  h-fit rounded-md flex justify-center">
+            <div class="lg:max-w-lg w-full flex justify-center bg-slate-300 ">
+               <PaymentLinkMerchantInfo :paymentOptions="paymentOptions!" :countries="cty_abbr"  />
 
             </div>
 
         </div>
 
       <!-- Campaign Info -->
-      <div class=" lg:w-[40%] md:w-[50%] w-full hidden sm:block ">
-        <PaymentLinkPaymentInfo />
+      <div class=" lg:max-w-md md:w-[50%] w-full hidden sm:block ">
+        <PaymentLinkPaymentForm :paymentOptions="paymentOptions!" :countries="cty_abbr"  />
       </div>
     </div>
 
-    <div class="sm:hidden fixed bottom-0 left-0 right-0 flex gap-x-2 items-center justify-center bg-white p-4 shadow-lg">
-      <!-- Donate  -->
-
-
-      <MazBtn @click="drawer = true" color="warning" size="sm" rounded class="w-full">
-        <Icon name="ep:money" size="25" />
-        Donate
-      </MazBtn>
-
-      <!-- Drawer for payment form on mobile -->
-      <MazBottomSheet v-model="drawer">
-      <p>loedjdj</p>
-      </MazBottomSheet>
-
-
-      <!-- pledge -->
-      <!-- <button type="button"
-        class="flex-1 border border-teal-900 px-4 flex flex-row py-2 justify-center items-center gap-x-3 rounded-full hover:bg-teal-900 hover:text-white text-teal-900">
-        <p class="font-medium">I Pledge</p>
-        <Icon name="majesticons:money-hand" size="25" />
-      </button> -->
-    </div>
   </div>
 </template>
 <script setup lang="ts">
@@ -65,13 +43,12 @@ import { supportedCountries } from '~/assets/data';
 
 
 // data
-const drawer = ref(false)
 let cty_abbr = ['GH']
 
 // onmounted
 onMounted(() => {
-  // campaignStore.verifyCampaignLink(route.params.id.toString())
-  // paymentOptiosnStore.getPaymentMethod('GHS')
+  campaignStore.verifyCampaignLink(route.params.id.toString())
+   paymentOptiosnStore.getPaymentMethod('GHS')
   console.log(route.params.id)
   getCountriesAsync()
   console.log(cty_abbr)
