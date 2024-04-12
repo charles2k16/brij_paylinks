@@ -47,14 +47,22 @@
             </MazBtn>
 
             <!-- Drawer for payment form on mobile -->
-            <MazBottomSheet v-model="drawer">
+            <MazBottomSheet v-model="drawer" :noClose="true" :noPadding="false" cl>
                 <div class="h-screen">
-                    <div class="h-full overflow-y-auto py-20">
+                    <div class="h-full overflow-y-auto py-10">
+                        <div class="flex justify-between items-center mb-5">
+                            <p class="text-gray-500">Payment form</p>
+                            <MazBtn  @click="drawer = false"  color="transparent">
+                                <Icon name="ic:sharp-close" />
+                            </MazBtn>
+
+                        </div>
                         <!-- content here -->
                         <PaymentLinkPaymentForm :paymentOptions="paymentOptions!" :countries="countries" />
 
                     </div>
                 </div>
+
 
             </MazBottomSheet>
 
