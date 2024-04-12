@@ -1,8 +1,7 @@
 <template>
 
     <div class="flex lg:flex-row flex-col justify-center md:space-x-4 h-full">
-        <div
-            class="lg:w-[50%] w-full lg:h-screen h-fit bg-gray-50 rounded-md flex lg:justify-end justify-center">
+        <div class="lg:w-[50%] w-full lg:h-screen h-fit bg-gray-50 rounded-md flex lg:justify-end justify-center">
             <div class="lg:max-w-md w-full lg:pt-20  lg:pr-20 py-5 ">
                 <InvoicePaymentinfo />
             </div>

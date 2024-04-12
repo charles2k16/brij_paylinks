@@ -10,17 +10,16 @@
     <div class="flex flex-row justify-center md:space-x-4 h-full">
 
 
-      <div class="lg:w-[50%] w-full lg:h-screen h-fit bg-gray-50 rounded-md flex lg:justify-end justify-center">
-            <div class="lg:max-w-md w-full lg:pt-20  lg:pr-20 py-5 ">
-        <PaymentLinkMerchantInfo />
-
+      <div class="lg:w-[50%] w-full lg:h-screen h-fit  rounded-md flex lg:justify-end justify-center">
+            <div class="lg:max-w-lg w-full lg:pt-20   lg:pr-20 py-5 ">
+               <PaymentLinkMerchantInfo />
             </div>
 
         </div>
 
       <!-- Campaign Info -->
-      <div class=" lg:w-[40%] md:w-[50%] w-full hidden sm:block ">
-        <PaymentLinkPaymentInfo />
+      <div class=" lg:w-[50%] md:w-[50%] w-full hidden sm:block ">
+        <PaymentLinkPaymentForm/>
       </div>
     </div>
 

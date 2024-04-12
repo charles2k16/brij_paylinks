@@ -1,7 +1,9 @@
 <template>
     
     <el-form ref="ruleFormRef" :model="paymentForm" :rules="rules">
-    
+        <h2 class="text-2xl mt-2">Make payment</h2>
+        <p class="mb-5">Enter amount to pay and select payment method</p>
+
         <p class="text-gray-700 text-sm mt-5 mb-2">Amount to donate</p>
         <div class="flex w-full gap-x-2 mb-2">
             <div class="flex h-fit">
