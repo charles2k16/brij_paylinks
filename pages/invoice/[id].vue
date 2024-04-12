@@ -2,16 +2,16 @@
 
     <div class="flex lg:flex-row flex-col justify-center md:space-x-4 h-full">
         <div
-            class="lg:w-[50%] w-full lg:h-screen h-fit bg-gray-50 rounded-md flex lg:justify-end justify-center lg:p-10">
-            <div class="lg:w-[60%] w-full">
+            class="lg:w-[50%] w-full lg:h-screen h-fit bg-gray-50 rounded-md flex lg:justify-end justify-center">
+            <div class="lg:max-w-md w-full lg:pt-20  lg:pr-20 py-5 ">
                 <InvoicePaymentinfo />
             </div>
 
         </div>
 
         <!-- Campaign Info -->
-        <div class=" lg:w-[50%] w-fullflex lg:justify-start justify-center lg:p-10">
-            <div class=" lg:w-[60%] w-full flex justify-center lg:px-1 md:px-20 px-2 lg:py-0 py-5">
+        <div class=" lg:w-[50%] w-full flex lg:justify-start justify-center">
+            <div class=" lg:max-w-lg w-full flex justify-center lg:pt-20  lg:pl-20 py-5 ">
                 <InvoicePaymentForm :paymentOptions="paymentOptions!" :countries="cty_abbr" />
             </div>
         </div>

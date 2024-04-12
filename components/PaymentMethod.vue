@@ -1,10 +1,10 @@
 <template>
 
   <!-- Select payment -->
-  <div class="flex flex-col">
+  <div class="flex flex-col ">
     <p class="font-bold text-gray-500">Choose Payment Method</p>
     <!-- options -->
-    <div class="flex flex-row w-[100%] justify-start flex-wrap gap-y-2  gap-x-2 mt-5">
+    <div class="flex flex-row w-[100%] justify-between flex-wrap gap-y-2  gap-x-0 mt-5">
       <div v-for="(option, index) in options" :key="index" @click=onSelectPaymentMethod(option)
         :class="{ 'border-amber-600 border-2': modelValue === option, 'border-gray-300': modelValue !== option }"
         class="flex lg:w-[32%] w-[30%] h-28 flex-col items-center justify-center border rounded-lg py-3 px-2 cursor-pointer">

@@ -1,6 +1,10 @@
 <template>
-    <el-form ref="invoicePaymentFormz" :model="invoiceStore.invoicePaymentForm" :rules="rules" label-width="auto"
-        class="demo-ruleForm w-full" size="default" status-icon>
+    <el-form ref="invoicePaymentFormz" :model="invoiceStore.invoicePaymentForm" :rules="rules" 
+        class="demo-ruleForm max-w-" size="default" status-icon>
+
+    <h2 class="text-2xl">Make payment</h2>
+    <p class="mb-5">Enter amount to pay and select payment method</p>
+
         <!-- amount & currency -->
 
         <div class="flex w- gap-x-2 mb-2">
