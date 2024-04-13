@@ -47,9 +47,9 @@
             Procedd to payment
         </MazBtn>
 
-        <MazDialog @close="handleClose" v-model="dialogVisible" :persistent="false" >
+        <MazDialog @close="handleClose" v-model="dialogVisible" :persistent="false" scrollable>
             <!-- <p class="text-lg">Confirm Payment</p> -->
-            <InvoiceConfirmPaymentPopup :countries="countries" v-if="!isOTPView" />
+            <InvoiceConfirmPayment :countries="countries" v-if="!isOTPView" />
             <div v-else class="flex flex-col items-center">
                 <!-- OT Field -->
                 <MazInputCode  :code-length="6" size="xs" v-model="invoiceStore.OTPCode" class="flex flex-wrap justify-center" @completed="invoiceStore.verifyOTP" color="warning"  />

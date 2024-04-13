@@ -3,7 +3,7 @@
     <div class="flex lg:flex-row flex-col justify-center md:space-x-4 h-full">
         <div
             class="lg:w-[50%] w-full lg:h-screen h-fit bg-gray-50 rounded-md flex lg:justify-end justify-center">
-            <div class="lg:max-w-md w-full lg:pt-20  lg:pr-20 py-5 ">
+            <div class="lg:max-w-md w-full lg:pt-20  lg:pr-20 py-5 px-5">
                 <InvoicePaymentinfo />
             </div>
 
@@ -11,7 +11,7 @@
 
         <!-- Campaign Info -->
         <div class=" lg:w-[50%] w-full flex lg:justify-start justify-center">
-            <div class=" lg:max-w-lg w-full flex justify-center lg:pt-20  lg:pl-20 py-5 ">
+            <div class=" lg:max-w-lg w-full flex justify-center lg:pt-20  lg:pl-20 py-5 px-5">
                 <InvoicePaymentForm :paymentOptions="paymentOptions!" :countries="cty_abbr" />
             </div>
         </div>

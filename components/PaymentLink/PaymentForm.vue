@@ -1,5 +1,5 @@
 <template>
-  <el-form ref="invoicePaymentFormz" :model="invoiceStore.invoicePaymentForm" :rules="rules" 
+  <el-form ref="invoicePaymentFormz" :model="paymentLinkStore.invoicePaymentForm" :rules="rules" 
       class="demo-ruleForm max-w-" size="default" status-icon>
 
   <h2 class="text-2xl">Make payment</h2>
@@ -10,14 +10,14 @@
       <div class="flex w- gap-x-2 mb-2">
           <div class="flex h-fit">
               <el-form-item prop="currency">
-                  <MazSelect v-model="invoiceStore.invoicePaymentForm.currency" label="Select currency"
+                  <MazSelect v-model="paymentLinkStore.invoicePaymentForm.currency" label="Select currency"
                       color="warning" :options="['GHS', 'NGN', 'KSH']" />
               </el-form-item>
           </div>
           <!-- Input for amount -->
           <div class="flex-1">
               <el-form-item prop="amount">
-                  <MazInput class="w-full" key="lg" color="warning" v-model="invoiceStore.invoicePaymentForm.amount"
+                  <MazInput class="w-full" key="lg" color="warning" v-model="paymentLinkStore.invoicePaymentForm.amount"
                       label="Enter Amount" size="md" />
               </el-form-item>
           </div>
@@ -26,7 +26,7 @@
       <!-- Reference -->
       <el-form-item prop="reference">
           <p class="mb-2 font-semibold">Reference</p>
-          <MazInput class="w-full" key="lg" color="warning" v-model="invoiceStore.invoicePaymentForm.reference"
+          <MazInput class="w-full" key="lg" color="warning" v-model="paymentLinkStore.invoicePaymentForm.reference"
               label="Reference" placeholder="Pay for services" size="md" />
       </el-form-item>
 
@@ -37,7 +37,7 @@
 
       <!-- paymethodd -->
       <PaymentMethod v-else :options="paymentOptiosnStore.paymentOptions?.data!"
-          v-model="invoiceStore.SelectedPaymentOption" class="flex-1" />
+          v-model="paymentLinkStore.SelectedPaymentOption" class="flex-1" />
 
 
       <!-- submit button -->
@@ -47,12 +47,12 @@
           Procedd to payment
       </MazBtn>
 
-      <MazDialog @close="handleClose" v-model="dialogVisible" :persistent="false" >
+      <MazDialog @close="handleClose" v-model="dialogVisible" :persistent="false" scrollable>
           <!-- <p class="text-lg">Confirm Payment</p> -->
-          <InvoiceConfirmPaymentPopup :countries="countries" v-if="!isOTPView" />
+          <PaymentLinkConfirmPayment :countries="countries" v-if="!isOTPView" />
           <div v-else class="flex flex-col items-center">
               <!-- OT Field -->
-              <MazInputCode  :code-length="6" size="xs" v-model="invoiceStore.OTPCode" class="flex flex-wrap justify-center" @completed="invoiceStore.verifyOTP" color="warning"  />
+              <MazInputCode  :code-length="6" size="xs" v-model="paymentLinkStore.OTPCode" class="flex flex-wrap justify-center" @completed="paymentLinkStore.verifyOTP" color="warning"  />
 
               <el-button class="reset-btn" link>Resend code</el-button> <!-- Resend button -->
           </div>
@@ -75,7 +75,7 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
-import { useInvoiceStore } from '~/store/invoice'
+import { usePaymentLinkStore } from '~/store/payment_links'
 import { usePaymentOptions } from '~/store/payment_options'
 import type { InvoicePaymentForm } from '~/types/index'
 import type { PaymentMethods } from '~/types/index'
@@ -83,9 +83,9 @@ import { ElMessage } from 'element-plus'
 
 
 // instance of store
-const invoiceStore = useInvoiceStore()
+const paymentLinkStore = usePaymentLinkStore()
 const paymentOptiosnStore = usePaymentOptions()
-const { isPaymentMethodSelected, isOTPView } = storeToRefs(invoiceStore)
+const { isPaymentMethodSelected, isOTPView } = storeToRefs(paymentLinkStore)
 const { isPaymentMethodDataLoading } = storeToRefs(paymentOptiosnStore)
 const dialogVisible = ref(false)
 const invoicePaymentFormz = ref<FormInstance>()
@@ -109,10 +109,10 @@ const invoicePaymentFormz = ref<FormInstance>()
 
 // watch the selected currency and request the payment options from api
 watch(
-  () => invoiceStore.invoicePaymentForm.currency,
+  () => paymentLinkStore.invoicePaymentForm.currency,
   (newValue, oldValue) => {
       console.log(`Age changed from ${oldValue} to ${newValue}`);
-      paymentOptiosnStore.getPaymentMethod(invoiceStore.invoicePaymentForm.currency)
+      paymentOptiosnStore.getPaymentMethod(paymentLinkStore.invoicePaymentForm.currency)
   }
 );
 
@@ -125,12 +125,12 @@ const props = defineProps<{
 
 // ** Dialogue **//
 const handleClose = (done: () => void) => {
-  invoiceStore.isOTPView = false;
+  paymentLinkStore.isOTPView = false;
   console.log('close');
   done();
-  invoiceStore.invoicePaymentForm.email = "";
-  invoiceStore.invoicePaymentForm.phone = "";
-  invoiceStore.OTPCode = ""
+  paymentLinkStore.invoicePaymentForm.email = "";
+  paymentLinkStore.invoicePaymentForm.phone = "";
+  paymentLinkStore.OTPCode = ""
 }
 
 // ** Form **//
