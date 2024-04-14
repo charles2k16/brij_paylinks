@@ -52,7 +52,11 @@
           <PaymentLinkConfirmPayment :countries="countries" v-if="!isOTPView" />
           <div v-else class="flex flex-col items-center">
               <!-- OT Field -->
-              <MazInputCode  :code-length="6" size="xs" v-model="paymentLinkStore.OTPCode" class="flex flex-wrap justify-center" @completed="paymentLinkStore.verifyOTP" color="warning"  />
+              <div class=" flex flex-col">
+                <h2 class="text-2xl text-center">Enter OTP Code</h2>
+                <p class="mb-5 text-gray-400 text-center">OTP code has been sent to your momo number, please enter to continue</p>
+                <MazInputCode  :code-length="6" size="xs" v-model="paymentLinkStore.OTPCode" class="flex flex-wrap justify-center" @completed="paymentLinkStore.verifyOTP" color="warning"  />
+              </div>
 
               <el-button class="reset-btn" link>Resend code</el-button> <!-- Resend button -->
           </div>

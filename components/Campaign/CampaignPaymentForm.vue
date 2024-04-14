@@ -1,7 +1,7 @@
 <template>
-    
+
     <el-form ref="ruleFormRef" :model="paymentForm" :rules="rules">
-    
+
         <p class="text-gray-700 text-sm mt-5 mb-2">Amount to donate</p>
         <div class="flex w-full gap-x-2 mb-2">
             <div class="flex h-fit">
@@ -26,7 +26,7 @@
                 <button type="button"
                     class="border-2 me-2 mb-2 border-teal-900 group-hover:bg-teal-900 py-0.5 px-3 rounded-md">
                     <p class="text-teal-950 font-bold text-sm group-hover:text-white" @click="onChipClick(chip.amount)">
-                        {{chip.amount}}</p>
+                        {{ chip.amount }}</p>
                 </button>
             </div>
         </div>
@@ -62,8 +62,9 @@
                 Continue
             </MazBtn>
             <!-- select payment menthod dialog -->
-            <MazDialog @close="handleClose" v-model="paymentMethodialogVisible" :title="dialogueTitle" :persistent="false" scrollable>
-                
+            <MazDialog @close="handleClose" v-model="paymentMethodialogVisible" :title="dialogueTitle"
+                :persistent="false" scrollable>
+
                 <div v-if="!isOTPSuccessfull" class="flex flex-col">
                     <!-- payment methods -->
                     <PaymentMethod :options="props.paymentOptions.data" v-model="campaignStore.selectedPaymentOption"
@@ -88,26 +89,35 @@
                     <!-- OT Field -->
                     <!-- <OPTInput class="w-full" :digits-pin="campaignStore.otpCode" /> -->
 
-                    <Loading v-if="isPayingmentLoading" message="Initializing payment, authorize payment .."/>
+                    <Loading v-if="isPayingmentLoading" message="Initializing payment, authorize payment .." />
 
-                    <MazInputCode v-else  :code-length="6" size="sm" v-model="otpCode" class="flex flex-wrap justify-center" @completed="handlePayment()" color="warning"  />
-                    
+                    <!-- OT Field -->
+                    <div v-else class=" flex flex-col">
+                        <h2 class="text-2xl text-center">Enter OTP Code</h2>
+                        <p class="mb-5 text-gray-400 text-center">OTP code has been sent to your momo number, please
+                            enter to continue</p>
+                        <MazInputCode :code-length="6" size="sm" v-model="otpCode" class="flex flex-wrap justify-center"
+                            @completed="handlePayment()" color="warning" />
+
+                    </div>
+
 
 
                     <!-- Resend button -->
-                    <MazBtn :loading="isSendOTPLoading" color="transparent" size="mini" @click="initiateOTPRequest()" class="reset-btn" link>
+                    <MazBtn :loading="isSendOTPLoading" color="transparent" size="mini" @click="initiateOTPRequest()"
+                        class="reset-btn" link>
                         <p v-if="isSendOTPLoading">Resending OTP Code ...</p>
                         <p v-else>Re-send OTP Code</p>
                     </MazBtn>
- 
+
                 </div>
 
             </MazDialog>
         </div>
 
 
-      <!-- Copy Campaign link field -->
-      <div class="mt-10">
+        <!-- Copy Campaign link field -->
+        <div class="mt-10">
             <CampaignCopyLink :campaignLink="campaign?.campaign_link!" />
         </div>
 
@@ -127,9 +137,10 @@
                 <div class="w-full border border-gray-200 p-5 mt-5 rounded-md">
                     <p class="text-lg">You donated an amount of <span class="font-semibold">GHS 200 </span>to <span
                             class="font-semibold">Fund Raising for new School Build in Newton</span>'s Campaign on
-                        <span>{{ formateDate(new Date, 'Mo MMM YYYY h:ss a') }}</span> </p>
+                        <span>{{ formateDate(new Date, 'Mo MMM YYYY h:ss a') }}</span>
+                    </p>
                     <div class="flex w-full">
-                        <CampaignCopyLink class="w-full mt-5" :campaignLink="campaign?.campaign_link!" />   
+                        <CampaignCopyLink class="w-full mt-5" :campaignLink="campaign?.campaign_link!" />
                     </div>
                 </div>
                 <div class="mt-10">
@@ -144,9 +155,9 @@
         </MazDialog>
 
 
-  
 
-        
+
+
 
 
 
@@ -258,7 +269,7 @@ const handleClose = () => {
 }
 
 // on complete pin field
-function handlePayment(){
+function handlePayment() {
     campaignStore.payDonation(paymentForm.amount, paymentForm.currency, paymentForm.phone)
 }
 
