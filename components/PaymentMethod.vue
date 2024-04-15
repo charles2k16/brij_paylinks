@@ -3,8 +3,7 @@
   <div class="flex flex-col">
     <p class="font-bold text-gray-500">Choose Payment Method</p>
     <!-- options -->
-    <div
-      class="flex flex-row w-[100%] justify-between flex-wrap gap-y-1 gap gap-x-1 mt-5">
+    <div class="flex flex-row w-[100%] justify-between flex-wrap gap-y-2 gap-x-1 mt-5">
       <div
         v-for="(option, index) in options"
         :key="index"

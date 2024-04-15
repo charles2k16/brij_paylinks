@@ -5,14 +5,18 @@
     <!-- <CampaignBanner class="hidden sm:block" /> -->
     <!-- Campaign Info & Payment -->
     <div class="flex flex-row justify-center md:space-x-4 h-full">
-      <div class="lg:w-[60%] md:w-[50%] w-full hidden sm:block h-full bg-gray-50 rounded-md">
+      <div
+        class="lg:w-[60%] md:w-[50%] w-full hidden sm:block h-full bg-gray-50 rounded-md">
         <!-- Campaign Info -->
         <CampaignInfo :campaign="campaignResponse?.data!" :merchant="merchantResponse" />
       </div>
 
       <!-- Campaign Info -->
-      <div class=" lg:w-[40%] md:w-[50%] w-full">
-        <CampaignPayment :paymentOptions="paymentOptions!" :countries="cty_abbr" :merchant="merchantResponse"
+      <div class="lg:w-[40%] md:w-[50%] w-full">
+        <CampaignPayment
+          :paymentOptions="paymentOptions!"
+          :countries="cty_abbr"
+          :merchant="merchantResponse"
           :campaign="campaignResponse?.data!" />
       </div>
     </div>
@@ -21,33 +25,30 @@
       class="sm:hidden fixed bottom-0 left-0 right-0 flex gap-x-2 items-center justify-center bg-white p-4 shadow-lg">
       <!-- Donate  -->
 
-
-      <MazBtn @click="drawer = true" color="warning" size="sm" rounded class="w-full">
+      <MazBtn @click="toggleSheet" color="warning" size="sm" rounded class="w-full">
         <Icon name="ep:money" size="25" />
         Donate
       </MazBtn>
 
       <!-- Drawer for payment form on mobile -->
-      <MazBottomSheet v-model="drawer">
-
-
+      <MazBottomSheet v-model="drawer" :no-close="true">
         <div class="h-screen">
-          <div class="h-full overflow-scroll py-10">
-            <!-- content here -->
-            <div class="flex w-full justify-between items-center mb-5">
-              <p class="text-gray-400">Payment Form</p>
-
-              <MazBtn color="transparent">
-                <Icon name="ic:sharp-close" />
+          <div class="h-full overflow-y-auto py-10">
+            <div class="flex justify-between items-center">
+              <p class="text-gray-600">Payment form</p>
+              <MazBtn @click="toggleSheet" color="transparent">
+                <icon name="ic:sharp-close" />
               </MazBtn>
             </div>
-            <CampaignPaymentForm :campaign="campaignResponse?.data!" :countries="cty_abbr" :merchant="merchantResponse"
+            <!-- content here -->
+            <CampaignPaymentForm
+              :campaign="campaignResponse?.data!"
+              :countries="cty_abbr"
+              :merchant="merchantResponse"
               :paymentOptions="paymentOptions!" />
-
           </div>
         </div>
       </MazBottomSheet>
-
 
       <!-- pledge -->
       <!-- <button type="button"
@@ -61,57 +62,53 @@
 <script setup lang="ts">
 import { type Campaign } from '~/types/index';
 import { ArrowLeftBold } from '@element-plus/icons-vue';
-import { useCampaignStore } from "~/store/campaign";
-import { usePaymentOptions } from "~/store/payment_options";
-
-
+import { useCampaignStore } from '~/store/campaign';
+import { usePaymentOptions } from '~/store/payment_options';
 
 const campaignStore = useCampaignStore();
-const route = useRoute()
-const paymentOptiosnStore = usePaymentOptions()
-const { paymentOptions } = storeToRefs(paymentOptiosnStore)
-const { campaignResponse, merchantResponse } = storeToRefs(campaignStore)
+const route = useRoute();
+const paymentOptiosnStore = usePaymentOptions();
+const { paymentOptions } = storeToRefs(paymentOptiosnStore);
+const { campaignResponse, merchantResponse } = storeToRefs(campaignStore);
 import { supportedCountries } from '~/assets/data';
 
-
 // data
-const drawer = ref(false)
-let cty_abbr = ['GH']
+const drawer = ref(false);
+let cty_abbr = ['GH'];
 
 // onmounted
 onMounted(() => {
-  campaignStore.verifyCampaignLink(route.params.id.toString())
-  paymentOptiosnStore.getPaymentMethod('GHS')
-  console.log(route.params.id)
-  getCountriesAsync()
-  console.log(cty_abbr)
-})
+  campaignStore.verifyCampaignLink(route.params.id.toString());
+  paymentOptiosnStore.getPaymentMethod('GHS');
+  console.log(route.params.id);
+  getCountriesAsync();
+  console.log(cty_abbr);
+});
 
 // methods
 function getCountriesAsync() {
-  cty_abbr = supportedCountries.map(
-    (country: { abbreviation: string }) => {
-      return country.abbreviation
-    }
-  )
+  cty_abbr = supportedCountries.map((country: { abbreviation: string }) => {
+    return country.abbreviation;
+  });
 }
 
-
-
+function toggleSheet() {
+  drawer.value = !drawer.value;
+  console.log(drawer.value);
+}
 
 definePageMeta({
   layout: 'campaign-layout',
-  middleware: ['verify-link']
-})
-
+  middleware: ['verify-link'],
+});
 </script>
 <style scoped>
 .primary-custom-bg-color {
-  background-color: #04383F;
+  background-color: #04383f;
 }
 
 .secondary-custom-bg-color {
-  background-color: #F9AB10;
+  background-color: #f9ab10;
 }
 
 .secondary-custom-bg-color:hover {
@@ -123,6 +120,6 @@ definePageMeta({
 }
 
 .primary-custom-text-color {
-  color: #04383F;
+  color: #04383f;
 }
 </style>
