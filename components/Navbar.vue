@@ -21,7 +21,7 @@
         </el-button>
       </template>
       <!-- banner -->
-      <Banner/>
+      <CampaignBanner/>
     </el-drawer>
 
 
@@ -37,16 +37,9 @@
 
         <div class="flex gap-x-1">
           <!-- Get Started -->
-          <button type="button"
-            class="border border-teal-900 px-4 flex flex-row py-1 justify-center items-center gap-x-3 rounded-full hover:bg-teal-900 hover:text-white  text-teal-950">
-            <p class="font-medium">Get started today</p>
-            <Icon name="ic:outline-keyboard-arrow-right" size="30" />
-          </button>
+          <MazBtn color="transparent" size="sm" rounded>Merchant Login</MazBtn>
           <!-- Login  -->
-          <button type="button"
-            class="secondary-custom-bg-color  px-4 flex flex-row py-1 justify-center items-center gap-x-3  rounded-full  text-teal-900">
-            <p class="font-medium">Merchant login</p>
-          </button>
+          <MazBtn color="warning" size="sm" rounded>Merchant Login</MazBtn>
         </div>
       </div>
     </div>

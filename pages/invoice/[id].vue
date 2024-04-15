@@ -1,4 +1,5 @@
 <template>
+<<<<<<< HEAD
   <div class="flex lg:flex-row flex-col w-full justify-center">
     <div
       class="w-full lg:w-[50%] lg:h-lvh h-fit bg-gray-50 lg:p-10 p-5 flex flex-col lg:px-32">
@@ -6,6 +7,15 @@
         <div
           class="primary-custom-bg-color text-white p-5 rounded-md flex justify-center w-20 h-20 lg:w-full lg:h-52 items-center">
           <img src="/img/logo-dark.png" alt="logo" class="w-fit" />
+=======
+
+    <div class="flex lg:flex-row flex-col justify-center md:space-x-4 h-full">
+        <div class="lg:w-[50%] w-full lg:h-screen h-fit bg-gray-50 rounded-md flex lg:justify-end justify-center">
+            <div class="lg:max-w-md w-full lg:pt-20  lg:pr-20 py-5 px-5">
+                <InvoicePaymentinfo />
+            </div>
+
+>>>>>>> 2350856403cea33a015ae703c5fce22ab8144bc1
         </div>
       </div>
       <span class="text-2xl font-medium mt-3 lg:text-start text-center"
@@ -13,6 +23,7 @@
       >
       <p class="text-slate-400 lg:text-start text-center">Internet Service</p>
 
+<<<<<<< HEAD
       <!-- toggle contact btn -->
       <div class="flex justify-center">
         <button
@@ -40,6 +51,13 @@
           <el-button type="warning" circle>
             <Icon class="text-teal-950" name="mdi:content-copy" />
           </el-button>
+=======
+        <!-- Campaign Info -->
+        <div class=" lg:w-[50%] w-full flex lg:justify-start justify-center">
+            <div class=" lg:max-w-lg w-full flex justify-center lg:pt-20  lg:pl-20 py-5 px-5">
+                <InvoicePaymentForm :paymentOptions="paymentOptions!" :countries="cty_abbr" />
+            </div>
+>>>>>>> 2350856403cea33a015ae703c5fce22ab8144bc1
         </div>
         <div class="flex items-center justify-between">
           <div class="d-flex gap-x-3 items-center">
@@ -51,6 +69,7 @@
       </div>
     </div>
 
+<<<<<<< HEAD
     <div class="w-full lg:w-[50%] overflow-scroll">
       <div
         class="w-full lg:h-lvh h-fit lg:py-5 py-5 flex flex-col justify-between lg:px-28 px-5">
@@ -80,6 +99,37 @@ const showMerchantContactInfo = ref(true);
 function toggleContactInfo() {
   showMerchantContactInfo.value = !showMerchantContactInfo.value;
 }
+=======
+
+</template>
+
+<script setup lang="ts">
+import { usePaymentOptions } from '~/store/payment_options'
+const paymentOptiosnStore = usePaymentOptions()
+const { paymentOptions } = storeToRefs(paymentOptiosnStore)
+import { supportedCountries } from '~/assets/data';
+
+// get payemnt method options
+onMounted(() => {
+    paymentOptiosnStore.getPaymentMethod('GHS')
+    getCountriesAsync()
+
+})
+
+// data
+let cty_abbr = ['GH']
+
+
+// methods
+function getCountriesAsync() {
+    cty_abbr = supportedCountries.map(
+        (country: { abbreviation: string }) => {
+            return country.abbreviation
+        }
+    )
+}
+
+>>>>>>> 2350856403cea33a015ae703c5fce22ab8144bc1
 </script>
 
 <style lang="scss">

@@ -12,6 +12,8 @@
   "devDependencies": {
     "@element-plus/nuxt": "^1.0.6",
     "@nuxt/devtools": "latest",
+    "@vueuse/core": "^10.9.0",
+    "@vueuse/nuxt": "^10.9.0",
     "autoprefixer": "^10.4.17",
     "nuxt": "^3.8.0",
     "nuxt-icon": "^0.6.8",
@@ -27,6 +29,8 @@
     "@pinia/nuxt": "^0.5.1",
     "axios": "^1.6.7",
     "element-plus": "^2.4.2",
+    "libphonenumber-js": "^1.10.60",
+    "maz-ui": "^3.37.8",
     "pinia": "^2.1.7"
   }
 }

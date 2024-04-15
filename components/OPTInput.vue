@@ -1,8 +1,8 @@
 <template>
-    <div class="flex flex-col gap-y-8  items-start">
+    <div class="flex flex-col gap-y-8  items-center">
         <!-- text -->
         <div class="flex flex-col">
-            <p class="text-2xl font-bold text-teal-900">Confirm OTP</p>
+            <p class="text-2xl font-bold text-teal-900 text-center">Confirm OTP</p>
             <p class="text-sm">A 6-digit Code has been sent to your number</p>
         </div>
         <!-- Pin code fields -->
