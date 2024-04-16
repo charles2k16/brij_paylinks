@@ -43,7 +43,7 @@
         <!-- submit button -->
 
 
-        <MazBtn color="warning" size="sm" @click="submitForm(invoicePaymentFormz)" class="w-full mt-5" rounded>
+        <MazBtn color="warning" size="sm" @click="submitForm(invoicePaymentFormz)" class="w-full mt-5">
             Procedd to payment
         </MazBtn>
 

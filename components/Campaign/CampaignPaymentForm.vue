@@ -57,7 +57,7 @@
         <!-- Buttons -->
         <div class="flex flex-row gap-y-2 md:flex-col gap-x-3 mt-3">
             <!-- Make paymnet button -->
-            <MazBtn @click="submitForm(ruleFormRef)" size="sm" color="warning" class="w-full" rounded>
+            <MazBtn @click="submitForm(ruleFormRef)" size="sm" color="warning" class="w-full" >
                 <Icon name="ep:money" size="25" />
                 Continue
             </MazBtn>
@@ -74,7 +74,7 @@
 
                     <MazBtn :loading="isSendOTPLoading" v-if="isPaymentMethodSelected" class="w-full mt-4"
                         :disabled="!isPaymentMethodSelected" @click="initiateOTPRequest" size="sm" color="warning"
-                        rounded>
+                        >
                         <div class="flex gap-x-2">
                             <Icon name="ep:money" size="25" />
                             <p class="font-bold">Continue</p>

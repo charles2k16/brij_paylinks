@@ -24,3 +24,5 @@ export function extractAbbr(array: AcceptedCurrencies[]): string[] {
   }
   return array.map((currency) => currency.abbreviation);
 }
+
+

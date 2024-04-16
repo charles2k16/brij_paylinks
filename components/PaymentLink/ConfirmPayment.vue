@@ -3,7 +3,7 @@
         <!-- Amount to be paid -->
         <h2 class="text-2xl font-semibold text-black">{{ invoicePaymentForm.amount }} {{ invoicePaymentForm.currency }}
         </h2>
-        <p class="text-sm text-gray-400">Pay Bloom Impact Ltd.</p>
+        <p class="text-sm text-gray-400">Pay Bloom Impact Ltd.</p> {{ paymentLink }}
 
         <hr class="my-5">
         <el-form ref="invoicePaymentPopupFormz" style="max-width: 600px" :model="paymentLinkStore.invoicePaymentForm"
@@ -23,7 +23,7 @@
 
 
             <!-- submit button -->
-            <MazBtn color="warning" size="sm" @click="submitForm(invoicePaymentPopupFormz)" class="w-full mt-5" rounded>
+            <MazBtn  :loading="isSendOTPLoading"  color="warning" size="sm" @click="submitForm(invoicePaymentPopupFormz)" class="w-full mt-5">
                 Continue
             </MazBtn>
         </el-form>
@@ -37,12 +37,13 @@ import type {  InvoicePaymentForm, SelectCountryResult } from '~/types/index'
 
 // props
 const props = defineProps<{
-    countries: any[]
+    countries: any[],
+    paymentLink: string | string[]
 }>()
 
 // instance of staore
 const paymentLinkStore = usePaymentLinkStore()
-const { invoicePaymentForm } = storeToRefs(paymentLinkStore)
+const { invoicePaymentForm, isSendOTPLoading } = storeToRefs(paymentLinkStore)
 const invoicePaymentPopupFormz = ref<FormInstance>()
 const phoneResult = ref<SelectCountryResult>()
 
@@ -62,9 +63,12 @@ const rules = reactive<FormRules<InvoicePaymentForm>>({
 function submitForm(invoicePaymentPopupFormz: any) {
     invoicePaymentPopupFormz.validate((valid: any) => {
         if (valid) {
+            console.log(valid)
             paymentLinkStore.isOTPView = true;
             paymentLinkStore.invoicePaymentForm.phone = phoneResult.value?.e164!
-            //asign form values to store values
+            console.log(paymentLinkStore.invoicePaymentForm.phone)
+            // send otp
+            paymentLinkStore.sendOTP(props.paymentLink.toString())
         } else {
             console.log('error submit!!');
             return false;

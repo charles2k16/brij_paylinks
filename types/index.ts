@@ -24,11 +24,11 @@ export interface CampaignPaymentForm {
 
 export interface InvoicePaymentForm{
     amount: string,
-    phone: string,
+    phone?: string,
     currency:string,
-    paymentOption:string,
-    reference:string,
-    email:string
+    paymentOption?:PaymentOption | null,
+    reference?:string,
+    email?:string,
 }
 
 
@@ -159,6 +159,8 @@ export interface AcceptedCurrencies{
     abbreviation:string,
     icon_url:string
 }
+
+
 
 
   

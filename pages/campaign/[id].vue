@@ -22,7 +22,7 @@
       <!-- Donate  -->
 
 
-      <MazBtn @click="toggleSheet" color="warning" size="sm" rounded class="w-full">
+      <MazBtn @click="toggleSheet" color="warning" size="sm" class="w-full">
         <Icon name="ep:money" size="25" />
         Donate
       </MazBtn>
@@ -79,7 +79,7 @@ let cty_abbr = ['GH']
 
 // onmounted
 onMounted(() => {
-  campaignStore.verifyCampaignLink(route.params.id.toString())
+  // campaignStore.verifyCampaignLink(route.params.id.toString())
   paymentOptiosnStore.getPaymentMethod('GHS')
   console.log(route.params.id)
   getCountriesAsync()
@@ -106,7 +106,7 @@ console.log(drawer.value)
 
 definePageMeta({
   layout: 'campaign-layout',
-  middleware: ['verify-link']
+  middleware: ['verify-campaign-link']
 })
 
 </script>

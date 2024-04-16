@@ -1,24 +1,24 @@
-import { useCampaignStore} from "~/store/campaign";
+import { usePaymentLinkStore} from "~/store/payment_links";
 
 
 export default defineNuxtRouteMiddleware(async (to) => {
-  const campaignStore = useCampaignStore();
-  const campaignId = to.params.id
+  const paymentLinkStore = usePaymentLinkStore();
+  const paymentLink = to.params.id
 
   
   
-  if (campaignId) {
-    const statusCode = await campaignStore.verifyCampaignLink(campaignId.toString());
+  if (paymentLink) {
+    const statusCode = await paymentLinkStore.verifyPaymentLink(paymentLink.toString());
 
     // console.log(statusCode)
     if (statusCode === 200) {
       return;
     } else {
-      console.log('link  is invalid or expired');
+      console.log('payment_link is invalid ');
       // return navigateTo(`/error`);
        throw createError({
         statusCode: 404,
-        statusMessage: 'Oooops, The link is either invalid or inactive',
+        statusMessage: 'Oooops, The link is either invalid ',
         data: {
           myCustomField: true
         }
@@ -31,7 +31,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
 
     throw createError({
       statusCode: 404,
-      statusMessage: 'Oooops, The link is either invalid or inactive',
+      statusMessage: 'Oooops, The link is either invalid ',
       data: {
         myCustomField: true
       }

@@ -5,7 +5,7 @@
         <MazInput disabled id="copyUrlField" class="w-full" key="lg" color="warning"
             v-model="campaignUrl" placeholder="200" size="md" />
 
-        <MazBtn @click="copyToClipboard()" size="sm" color="warning" rounded>
+        <MazBtn @click="copyToClipboard()" size="sm" color="warning" >
             <Icon name="clarity:copy-to-clipboard-line" size="25" />
             Copy
         </MazBtn>

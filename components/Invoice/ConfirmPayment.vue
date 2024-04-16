@@ -23,7 +23,7 @@
 
 
             <!-- submit button -->
-            <MazBtn color="warning" size="sm" @click="submitForm(invoicePaymentPopupFormz)" class="w-full mt-5" rounded>
+            <MazBtn color="warning" size="sm" @click="submitForm(invoicePaymentPopupFormz)" class="w-full mt-5">
                 Continue
             </MazBtn>
         </el-form>

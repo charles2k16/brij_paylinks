@@ -37,9 +37,9 @@
 
         <div class="flex gap-x-1">
           <!-- Get Started -->
-          <MazBtn color="transparent" size="sm" rounded>Merchant Login</MazBtn>
+          <MazBtn color="transparent" size="sm">Merchant Login</MazBtn>
           <!-- Login  -->
-          <MazBtn color="warning" size="sm" rounded>Merchant Login</MazBtn>
+          <MazBtn color="warning" size="sm" >Merchant Login</MazBtn>
         </div>
       </div>
     </div>

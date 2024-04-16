@@ -37,25 +37,26 @@
 
       <!-- paymethodd -->
       <PaymentMethod v-else :options="paymentOptiosnStore.paymentOptions?.data!"
-          v-model="paymentLinkStore.SelectedPaymentOption" class="flex-1" />
-
+          v-model="paymentLinkStore.selectedPaymentOption" class="flex-1" />
 
       <!-- submit button -->
-
-
-      <MazBtn color="warning" size="sm" @click="submitForm(invoicePaymentFormz)" class="w-full mt-5" rounded>
+      <MazBtn color="warning" size="sm" @click="submitForm(invoicePaymentFormz)" class="w-full mt-5">
           Procedd to payment
       </MazBtn>
 
       <MazDialog @close="handleClose" v-model="dialogVisible" :persistent="false" scrollable>
           <!-- <p class="text-lg">Confirm Payment</p> -->
-          <PaymentLinkConfirmPayment :countries="countries" v-if="!isOTPView" />
+
+          <PaymentLinkConfirmPayment :countries="countries" :paymentLink v-if="!isOTPSuccessfull" />
           <div v-else class="flex flex-col items-center">
               <!-- OT Field -->
-              <div class=" flex flex-col">
+
+              <Loading v-if="isPayingmentLoading"  message="initiating payment authorizations" />
+
+              <div v-else class=" flex flex-col">
                 <h2 class="text-2xl text-center">Enter OTP Code</h2>
                 <p class="mb-5 text-gray-400 text-center">OTP code has been sent to your momo number, please enter to continue</p>
-                <MazInputCode  :code-length="6" size="xs" v-model="paymentLinkStore.OTPCode" class="flex flex-wrap justify-center" @completed="paymentLinkStore.verifyOTP" color="warning"  />
+                <MazInputCode  :code-length="6" size="xs" v-model="paymentLinkStore.OTPCode" class="flex flex-wrap justify-center" @completed="paymentLinkStore.payMerchant(paymentLink.toString())" color="warning"  />
               </div>
 
               <el-button class="reset-btn" link>Resend code</el-button> <!-- Resend button -->
@@ -89,7 +90,7 @@ import { ElMessage } from 'element-plus'
 // instance of store
 const paymentLinkStore = usePaymentLinkStore()
 const paymentOptiosnStore = usePaymentOptions()
-const { isPaymentMethodSelected, isOTPView } = storeToRefs(paymentLinkStore)
+const { isPaymentMethodSelected, isOTPSuccessfull, isPayingmentLoading, } = storeToRefs(paymentLinkStore)
 const { isPaymentMethodDataLoading } = storeToRefs(paymentOptiosnStore)
 const dialogVisible = ref(false)
 const invoicePaymentFormz = ref<FormInstance>()
@@ -124,6 +125,7 @@ watch(
 const props = defineProps<{
   paymentOptions: PaymentMethods
   countries:any[]
+  paymentLink:string | string[]
 }>()
 
 
@@ -131,10 +133,11 @@ const props = defineProps<{
 const handleClose = (done: () => void) => {
   paymentLinkStore.isOTPView = false;
   console.log('close');
-  done();
   paymentLinkStore.invoicePaymentForm.email = "";
   paymentLinkStore.invoicePaymentForm.phone = "";
   paymentLinkStore.OTPCode = ""
+  paymentLinkStore.isOTPSuccessfull = false
+  console.log(paymentLinkStore.isOTPSuccessfull)
 }
 
 // ** Form **//

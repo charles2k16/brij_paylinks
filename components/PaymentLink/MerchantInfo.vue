@@ -1,13 +1,13 @@
 <template>
-    <div class="flex flex-col w-full lg:px-5 md:px-20 px-2 lg:py-5 py-5 bg-gray-50">
+    <div class="flex flex-col w-full lg:px-5 md:px-20 px-5 lg:py-5 py-5 bg-gray-50 rounded-md">
         <div class="flex w-full lg:justify-start justify-center">
             <div
                 class="primary-custom-bg-color text-white p-5 rounded-md flex justify-center w-20 h-20 lg:w-full lg:h-52 items-center">
                 <img src="/img/logo-dark.png" alt="logo" class="w-fit" />
             </div>
         </div>
-        <span class="text-2xl font-medium mt-3 lg:text-start text-center">Bloom Impact Limited</span>
-        <p class="text-slate-400 lg:text-start text-center">Internet Service</p>
+        <span class="text-2xl font-medium mt-3 lg:text-start text-center">{{ merchant?.name }}</span>
+        <p class="text-slate-400 lg:text-start text-center">{{ merchant?.merchant_industry }}</p>
 
         <!-- toggle contact btn -->
         <div class="flex justify-center">
@@ -26,7 +26,7 @@
             <div class="flex items-center justify-between">
                 <div class="d-flex gap-x-3 items-center ">
                     <Icon name="material-symbols:call-outline" />
-                    <p class="font-medium">+233 553410199</p>
+                    <p class="font-medium">{{ merchant?.contact }}</p>
                 </div>
                 <el-button type="warning" circle>
                     <Icon class="text-teal-950" name="mdi:content-copy" />
@@ -35,7 +35,7 @@
             <div class="flex items-center justify-between">
                 <div class="d-flex gap-x-3 items-center ">
                     <Icon name="tdesign:location-1" />
-                    <p class="font-medium">Dome Pillar 2 K.boat</p>
+                    <p class="font-medium">{{ merchant?.address }}</p>
                 </div>
                 <!-- <el-button type="warning" circle><Icon class="text-teal-950" name="mdi:content-copy"/></el-button> -->
             </div>
@@ -58,7 +58,7 @@
 
                         </div>
                         <!-- content here -->
-                        <PaymentLinkPaymentForm :paymentOptions="paymentOptions!" :countries="countries" />
+                        <PaymentLinkPaymentForm :paymentOptions="paymentOptions!" :payment-link="paymentLink" :countries="countries" />
 
                     </div>
                 </div>
@@ -71,7 +71,7 @@
     </div>
 </template>
 <script setup lang="ts">
-import type { PaymentMethods } from '~/types';
+import type { Merchant, PaymentMethods } from '~/types';
 
 
 // ** toggle merchant ** //
@@ -80,7 +80,9 @@ const drawer = ref(false)
 
 const props = defineProps<{
     paymentOptions: PaymentMethods
-    countries: any[]
+    countries: any[],
+    merchant: Merchant | undefined
+    paymentLink:string | string[]
 }>()
 
 function toggleContactInfo() {
