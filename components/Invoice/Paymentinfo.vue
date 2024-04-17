@@ -1,10 +1,14 @@
 <template>
     <div class="flex flex-col w-full bg-white lg:p-5 md:p-10 p-5">
-        <div class="flex w-full  justify-center">
-            <img src="/img/invoice-bg.png"
-                class=" lg:max-w-md md:max-w-md  w-full  lg:h-56 h-48 bg-cover bg-center rounded-lg" alt="logo" />
 
-        </div>
+        <div class="relative  lg:max-w-md md:max-w-md    lg:h-56 h-44 rounded-lg w-full bg-cover bg-center" style="background-image: url('/img/invoice-bg.png');">
+  <img src="/img/logo-white.png" alt="Logo" class="absolute top-0 right-0 m-4 h-16">
+</div>
+        <!-- <div class="flex w-full  justify-center">
+            <img src="/img/invoice-bg.png"
+                class=" lg:max-w-md md:max-w-md  w-full  lg:h-56 h-44 bg-cover bg-center rounded-lg" alt="logo" />
+
+        </div> -->
 
 
 
