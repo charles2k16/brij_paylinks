@@ -1,24 +1,24 @@
 <template>
-    <el-form ref="invoicePaymentFormz" :model="invoiceStore.invoicePaymentForm" :rules="rules" 
+    <el-form ref="invoicePaymentFormz" :model="invoiceStore.invoicePaymentForm" :rules="rules"
         class="demo-ruleForm max-w-" size="default" status-icon>
 
-    <h2 class="text-2xl">Make payment</h2>
-    <p class="mb-5">Enter amount to pay and select payment method</p>
+        <h2 class="text-2xl">Make payment</h2>
+        <p class="mb-5">Enter amount to pay and select payment method</p>
 
         <!-- amount & currency -->
 
-        <div class="flex w- gap-x-2 mb-2">
+        <div class="flex gap-x-2 mb-2">
             <div class="flex h-fit">
                 <el-form-item prop="currency">
-                    <MazSelect v-model="invoiceStore.invoicePaymentForm.currency" label="Select currency"
+                    <MazSelect disabled v-model="invoiceStore.invoicePaymentForm.currency" label="Select currency"
                         color="warning" :options="['GHS', 'NGN', 'KSH']" />
                 </el-form-item>
             </div>
             <!-- Input for amount -->
             <div class="flex-1">
                 <el-form-item prop="amount">
-                    <MazInput class="w-full" key="lg" color="warning" v-model="invoiceStore.invoicePaymentForm.amount"
-                        label="Enter Amount" size="md" />
+                    <MazInput readonly class="w-full" key="lg" color="warning"
+                        v-model="invoiceStore.invoicePaymentForm.amount" label="Enter Amount" size="md" />
                 </el-form-item>
             </div>
         </div>
@@ -44,22 +44,26 @@
 
 
         <MazBtn color="warning" size="sm" @click="submitForm(invoicePaymentFormz)" class="w-full mt-5">
-            Procedd to payment
+            Proceed to payment {{ invoice?.total }}
         </MazBtn>
 
         <MazDialog @close="handleClose" v-model="dialogVisible" :persistent="false" scrollable>
             <!-- <p class="text-lg">Confirm Payment</p> -->
-            <InvoiceConfirmPayment :countries="countries" v-if="!isOTPView" />
+            <pre>{{ isOTPSuccessfull }}</pre>
+
+            <InvoiceConfirmPayment :countries="countries" v-if="!isOTPSuccessfull" />
             <div v-else class="flex flex-col items-center">
                 <!-- OT Field -->
-                              <!-- OT Field -->
-              <div class=" flex flex-col">
-                <h2 class="text-2xl text-center">Enter OTP Code</h2>
-                <p class="mb-5 text-gray-400 text-center">OTP code has been sent to your momo number, please enter to continue</p>
-                <MazInputCode  :code-length="6" size="xs" v-model="invoiceStore.OTPCode" class="flex flex-wrap justify-center" @completed="invoiceStore.verifyOTP" color="warning"  />
-              </div>
+                <div v-if="!isPayingmentLoading" class=" flex flex-col">
+                    <h2 class="text-2xl text-center">Enter OTP Code</h2>
+                    <p class="mb-5 text-gray-400 text-center">OTP code has been sent to your momo number, please enter
+                        to continue</p>
+                    <MazInputCode :code-length="6" size="xs" v-model="invoiceStore.OTPCode"
+                        class="flex flex-wrap justify-center" @completed="invoiceStore.payInvoice" color="warning" />
+                </div>
 
-                
+                <Loading v-else message="Initiating payment authorization" />
+
                 <el-button class="reset-btn" link>Resend code</el-button> <!-- Resend button -->
             </div>
             <template #footer>
@@ -71,7 +75,32 @@
             </template>
         </MazDialog>
 
-        <!-- Confirm Payement for dialogue -->
+        <!-- success payment modal -->
+        <MazDialog v-model="isPaymentSuccessfull" :on-close="handleClose">
+            <div class="flex flex-col justify-center items-center">
+                <Icon class="text-6xl text-green-700" name="ri:send-plane-line" />
+                <h2 class="text-2xl mt-3">Invoice Paid Successfull</h2>
+                <p class="text-center">You have successfully made paid for this invoice.</p>
+
+                <div class="w-full border border-gray-200 p-5 mt-5 rounded-md">
+                    <p class="text-lg">You paid an amount of <span class="font-semibold">GHS 200 </span>to <span
+                            class="font-semibold">Monthly Invoice for Coporate Car Wash</span>'s Invoice
+                        <span>{{ formateDate(new Date, 'Mo MMM YYYY h:ss a') }}</span>
+                    </p>
+                    <!-- <div class="flex w-full">
+                        <CampaignCopyLink class="w-full mt-5" :campaignLink="campaign?.campaign_link!" />
+                    </div> -->
+                </div>
+                <div class="mt-10">
+
+                </div>
+            </div>
+            <template #footer="{ close }">
+                <MazBtn color="warning" @click="close">
+                    Go back
+                </MazBtn>
+            </template>
+        </MazDialog>
     </el-form>
 
 
@@ -91,11 +120,13 @@ import { ElMessage } from 'element-plus'
 // instance of store
 const invoiceStore = useInvoiceStore()
 const paymentOptiosnStore = usePaymentOptions()
-const { isPaymentMethodSelected, isOTPView } = storeToRefs(invoiceStore)
+const { isPaymentMethodSelected, isOTPSuccessfull, isPayingmentLoading, isPaymentSuccessfull } = storeToRefs(invoiceStore)
 const { isPaymentMethodDataLoading } = storeToRefs(paymentOptiosnStore)
+const { merchant, invoice } = storeToRefs(invoiceStore)
+
 const dialogVisible = ref(false)
 const invoicePaymentFormz = ref<FormInstance>()
-    const rules = reactive<FormRules<InvoicePaymentForm>>({
+const rules = reactive<FormRules<InvoicePaymentForm>>({
     amount: [
         { required: true, message: 'Please input Amount to pay ', trigger: 'blur' },
     ],
@@ -125,7 +156,7 @@ watch(
 // props
 const props = defineProps<{
     paymentOptions: PaymentMethods
-    countries:any[]
+    countries: any[]
 }>()
 
 
@@ -133,10 +164,13 @@ const props = defineProps<{
 const handleClose = (done: () => void) => {
     invoiceStore.isOTPView = false;
     console.log('close');
-    done();
+    // done();
     invoiceStore.invoicePaymentForm.email = "";
     invoiceStore.invoicePaymentForm.phone = "";
     invoiceStore.OTPCode = ""
+    invoiceStore.SelectedPaymentOption = null;
+    invoiceStore.isOTPSuccessfull = false,
+        invoiceStore.isSendOTPLoading = false
 }
 
 // ** Form **//

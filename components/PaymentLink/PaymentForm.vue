@@ -1,76 +1,105 @@
 <template>
-  <el-form ref="invoicePaymentFormz" :model="paymentLinkStore.invoicePaymentForm" :rules="rules" 
-      class="demo-ruleForm max-w-" size="default" status-icon>
+  <el-form ref="invoicePaymentFormz" :model="paymentLinkStore.invoicePaymentForm" :rules="rules"
+    class="demo-ruleForm max-w-" size="default" status-icon>
 
-  <h2 class="text-2xl">Make payment</h2>
-  <p class="mb-5">Enter amount to pay and select payment method</p>
+    <h2 class="text-2xl">Make payment</h2>
+    <p class="mb-5">Enter amount to pay and select payment method</p>
 
-      <!-- amount & currency -->
+    <!-- amount & currency -->
 
-      <div class="flex w- gap-x-2 mb-2">
-          <div class="flex h-fit">
-              <el-form-item prop="currency">
-                  <MazSelect v-model="paymentLinkStore.invoicePaymentForm.currency" label="Select currency"
-                      color="warning" :options="['GHS', 'NGN', 'KSH']" />
-              </el-form-item>
-          </div>
-          <!-- Input for amount -->
-          <div class="flex-1">
-              <el-form-item prop="amount">
-                  <MazInput class="w-full" key="lg" color="warning" v-model="paymentLinkStore.invoicePaymentForm.amount"
-                      label="Enter Amount" size="md" />
-              </el-form-item>
-          </div>
+    <div class="flex w- gap-x-2 mb-2">
+      <div class="flex h-fit">
+        <el-form-item prop="currency">
+          <MazSelect v-model="paymentLinkStore.invoicePaymentForm.currency" label="Select currency" color="warning"
+            :options="['GHS', 'NGN', 'KSH']" />
+        </el-form-item>
       </div>
-
-      <!-- Reference -->
-      <el-form-item prop="reference">
-          <p class="mb-2 font-semibold">Reference</p>
-          <MazInput class="w-full" key="lg" color="warning" v-model="paymentLinkStore.invoicePaymentForm.reference"
-              label="Reference" placeholder="Pay for services" size="md" />
-      </el-form-item>
-
-      <div v-if="isPaymentMethodDataLoading" class="flex flex-col items-center w-full gap-y-3">
-          <Icon class="text-2xl text-amber-600" name="eos-icons:bubble-loading" />
-          <p class="text-sm">Loading payment options</p>
+      <!-- Input for amount -->
+      <div class="flex-1">
+        <el-form-item prop="amount">
+          <MazInput class="w-full" key="lg" color="warning" v-model="paymentLinkStore.invoicePaymentForm.amount"
+            label="Enter Amount" size="md" />
+        </el-form-item>
       </div>
+    </div>
 
-      <!-- paymethodd -->
-      <PaymentMethod v-else :options="paymentOptiosnStore.paymentOptions?.data!"
-          v-model="paymentLinkStore.selectedPaymentOption" class="flex-1" />
+    <!-- Reference -->
+    <el-form-item prop="reference">
+      <p class="mb-2 font-semibold">Reference</p>
+      <MazInput class="w-full" key="lg" color="warning" v-model="paymentLinkStore.invoicePaymentForm.reference"
+        label="Reference" placeholder="Pay for services" size="md" />
+    </el-form-item>
 
-      <!-- submit button -->
-      <MazBtn color="warning" size="sm" @click="submitForm(invoicePaymentFormz)" class="w-full mt-5">
-          Procedd to payment
-      </MazBtn>
+    <div v-if="isPaymentMethodDataLoading" class="flex flex-col items-center w-full gap-y-3">
+      <Icon class="text-2xl text-amber-600" name="eos-icons:bubble-loading" />
+      <p class="text-sm">Loading payment options</p>
+    </div>
 
-      <MazDialog @close="handleClose" v-model="dialogVisible" :persistent="false" scrollable>
-          <!-- <p class="text-lg">Confirm Payment</p> -->
+    <!-- paymethodd -->
+    <PaymentMethod v-else :options="paymentOptiosnStore.paymentOptions?.data!"
+      v-model="paymentLinkStore.selectedPaymentOption" class="flex-1" />
 
-          <PaymentLinkConfirmPayment :countries="countries" :paymentLink v-if="!isOTPSuccessfull" />
-          <div v-else class="flex flex-col items-center">
-              <!-- OT Field -->
+    <!-- submit button -->
+    <MazBtn color="warning" size="sm" @click="submitForm(invoicePaymentFormz)" class="w-full mt-5">
+      Procedd to payment
+    </MazBtn>
 
-              <Loading v-if="isPayingmentLoading"  message="initiating payment authorizations" />
+    <MazDialog @close="handleClose" v-model="dialogVisible" :persistent="false" scrollable>
+      <!-- <p class="text-lg">Confirm Payment</p> -->
 
-              <div v-else class=" flex flex-col">
-                <h2 class="text-2xl text-center">Enter OTP Code</h2>
-                <p class="mb-5 text-gray-400 text-center">OTP code has been sent to your momo number, please enter to continue</p>
-                <MazInputCode  :code-length="6" size="xs" v-model="paymentLinkStore.OTPCode" class="flex flex-wrap justify-center" @completed="paymentLinkStore.payMerchant(paymentLink.toString())" color="warning"  />
-              </div>
+      <PaymentLinkConfirmPayment :countries="countries" :paymentLink v-if="!isOTPSuccessfull" />
+      <div v-else class="flex flex-col items-center">
+        <!-- OT Field -->
 
-              <el-button class="reset-btn" link>Resend code</el-button> <!-- Resend button -->
-          </div>
-          <template #footer>
-              <div class="w-full flex justify-center items-center gap-x-4 bg-gray-100 p-3 rounded-md">
-                  <Icon class="text-xl text-teal-950" name="tdesign:secured" />
-                  <p class="text-gray-600 font-bold text-sm">Secured by Brij</p>
-                  <img src="/img/logo-dark.png" alt="logo" class="w-6" />
-              </div>
-          </template>
-      </MazDialog>
+        <Loading v-if="isPayingmentLoading" message="initiating payment authorizations" />
 
-      <!-- Confirm Payement for dialogue -->
+        <div v-else class=" flex flex-col">
+          <h2 class="text-2xl text-center">Enter OTP Code</h2>
+          <p class="mb-5 text-gray-400 text-center">OTP code has been sent to your momo number, please enter to continue
+          </p>
+          <MazInputCode :code-length="6" size="xs" v-model="paymentLinkStore.OTPCode"
+            class="flex flex-wrap justify-center" @completed="paymentLinkStore.payMerchant(paymentLink.toString())"
+            color="warning" />
+        </div>
+
+        <el-button class="reset-btn" link>Resend code</el-button> <!-- Resend button -->
+      </div>
+      <template #footer>
+        <div class="w-full flex justify-center items-center gap-x-4 bg-gray-100 p-3 rounded-md">
+          <Icon class="text-xl text-teal-950" name="tdesign:secured" />
+          <p class="text-gray-600 font-bold text-sm">Secured by Brij</p>
+          <img src="/img/logo-dark.png" alt="logo" class="w-6" />
+        </div>
+      </template>
+    </MazDialog>
+
+
+    <!-- success payment modal -->
+    <MazDialog v-model="isPaymentSuccessfull" :on-close="handleClose">
+      <div class="flex flex-col justify-center items-center">
+        <Icon class="text-6xl text-green-700" name="ri:send-plane-line" />
+        <h2 class="text-2xl mt-3">Merchant Paid Successfull</h2>
+        <p class="text-center">You have successfully made payment to this merchant.</p>
+
+        <div class="w-full border border-gray-200 p-5 mt-5 rounded-md">
+          <p class="text-lg">You paid an amount of <span class="font-semibold">GHS 200 </span>to <span
+              class="font-semibold">Gentech Corp Ghana</span>'s on
+            <span>{{ formateDate(new Date, 'Mo MMM YYYY h:ss a') }}</span>
+          </p>
+          <!-- <div class="flex w-full">
+                        <CampaignCopyLink class="w-full mt-5" :campaignLink="campaign?.campaign_link!" />
+                    </div> -->
+        </div>
+        <div class="mt-10">
+
+        </div>
+      </div>
+      <template #footer="{ close }">
+        <MazBtn color="warning" @click="close">
+          Go back
+        </MazBtn>
+      </template>
+    </MazDialog>
   </el-form>
 
 
@@ -90,23 +119,23 @@ import { ElMessage } from 'element-plus'
 // instance of store
 const paymentLinkStore = usePaymentLinkStore()
 const paymentOptiosnStore = usePaymentOptions()
-const { isPaymentMethodSelected, isOTPSuccessfull, isPayingmentLoading, } = storeToRefs(paymentLinkStore)
+const { isPaymentMethodSelected, isOTPSuccessfull, isPayingmentLoading, isPaymentSuccessfull } = storeToRefs(paymentLinkStore)
 const { isPaymentMethodDataLoading } = storeToRefs(paymentOptiosnStore)
 const dialogVisible = ref(false)
 const invoicePaymentFormz = ref<FormInstance>()
-  const rules = reactive<FormRules<InvoicePaymentForm>>({
+const rules = reactive<FormRules<InvoicePaymentForm>>({
   amount: [
-      { required: true, message: 'Please input Amount to pay ', trigger: 'blur' },
+    { required: true, message: 'Please input Amount to pay ', trigger: 'blur' },
   ],
   reference: [
-      { required: true, message: 'Please input Reference ', trigger: 'blur' },
+    { required: true, message: 'Please input Reference ', trigger: 'blur' },
   ],
   currency: [
-      {
-          required: true,
-          message: 'Please select Currency',
-          trigger: 'change',
-      },
+    {
+      required: true,
+      message: 'Please select Currency',
+      trigger: 'change',
+    },
   ],
 })
 
@@ -116,16 +145,16 @@ const invoicePaymentFormz = ref<FormInstance>()
 watch(
   () => paymentLinkStore.invoicePaymentForm.currency,
   (newValue, oldValue) => {
-      console.log(`Age changed from ${oldValue} to ${newValue}`);
-      paymentOptiosnStore.getPaymentMethod(paymentLinkStore.invoicePaymentForm.currency)
+    console.log(`Age changed from ${oldValue} to ${newValue}`);
+    paymentOptiosnStore.getPaymentMethod(paymentLinkStore.invoicePaymentForm.currency)
   }
 );
 
 // props
 const props = defineProps<{
   paymentOptions: PaymentMethods
-  countries:any[]
-  paymentLink:string | string[]
+  countries: any[]
+  paymentLink: string | string[]
 }>()
 
 
@@ -148,26 +177,26 @@ const handleClose = (done: () => void) => {
 // submit form function
 function submitForm(invoicePaymentFormz: any) {
   invoicePaymentFormz.validate((valid: any) => {
-      if (valid) {
-          if (isPaymentMethodSelected.value === true) {
-              // show popup
-              dialogVisible.value = true
-              // alert('success')
-          } else {
-
-              ElMessage({
-                  message: 'Please select a payment method to continue.',
-                  type: 'warning',
-              })
-
-
-          }
-
-          //asign form values to store values
+    if (valid) {
+      if (isPaymentMethodSelected.value === true) {
+        // show popup
+        dialogVisible.value = true
+        // alert('success')
       } else {
-          console.log('error submit!!');
-          return false;
+
+        ElMessage({
+          message: 'Please select a payment method to continue.',
+          type: 'warning',
+        })
+
+
       }
+
+      //asign form values to store values
+    } else {
+      console.log('error submit!!');
+      return false;
+    }
   });
 }
 

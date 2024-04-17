@@ -160,6 +160,70 @@ export interface AcceptedCurrencies{
     icon_url:string
 }
 
+export interface InvoiceResponse {
+    status:  number;
+    data:    Invoice;
+    message: string;
+}
+
+export interface Invoice {
+    id:                    string;
+    invoice_no:            string;
+    invoice_name:          string;
+    invoice_note:          string;
+    additional_note:       null;
+    issue_date:            Date;
+    due_date:              Date;
+    currency:              string;
+    status:                string;
+    created_at:            string;
+    updated_at:            string;
+    customer:              Customer;
+    payment_code:          string;
+    subtotal:              string;
+    discount:              null;
+    taxes:                 Tax[];
+    discount_type:         null;
+    discount_value:        string;
+    amount_after_discount: string;
+    discount_amount:       string;
+    tax_amount:            string;
+    amount_after_tax:      string;
+    total:                 string;
+    invoice_items:         InvoiceItem[];
+    invoice_payment_logs:  any[];
+}
+
+export interface Customer {
+    id:           string;
+    firstname:    string;
+    lastname:     string;
+    phone:        string;
+    email:        string;
+    country_name: null;
+    country_flag: CountryFlag;
+}
+
+export interface CountryFlag {
+}
+
+export interface InvoiceItem {
+    id:               string;
+    item_description: string;
+    quantity:         number;
+    unit_price:       string;
+    subtotal:         string;
+}
+
+export interface Tax {
+    id:         string;
+    name:       string;
+    percentage: string;
+    status:     string;
+    created_at: string;
+}
+
+
 
 
 

@@ -3,7 +3,7 @@
         <!-- Amount to be paid -->
         <h2 class="text-2xl font-semibold text-black">{{ invoicePaymentForm.amount }} {{ invoicePaymentForm.currency }}
         </h2>
-        <p class="text-sm text-gray-400">Pay Bloom Impact Ltd.</p>
+        <p class="text-sm text-gray-400">{{ merchant?.data.name }}</p>
 
         <hr class="my-5">
         <el-form ref="invoicePaymentPopupFormz" style="max-width: 600px" :model="invoiceStore.invoicePaymentForm"
@@ -23,7 +23,7 @@
 
 
             <!-- submit button -->
-            <MazBtn color="warning" size="sm" @click="submitForm(invoicePaymentPopupFormz)" class="w-full mt-5">
+            <MazBtn color="warning" :loading="isSendOTPLoading" size="sm" @click="submitForm(invoicePaymentPopupFormz)" class="w-full mt-5">
                 Continue
             </MazBtn>
         </el-form>
@@ -42,7 +42,7 @@ const props = defineProps<{
 
 // instance of staore
 const invoiceStore = useInvoiceStore()
-const { invoicePaymentForm } = storeToRefs(invoiceStore)
+const { invoicePaymentForm, isSendOTPLoading, merchant } = storeToRefs(invoiceStore)
 const invoicePaymentPopupFormz = ref<FormInstance>()
 const phoneResult = ref<SelectCountryResult>()
 
@@ -52,7 +52,7 @@ const rules = reactive<FormRules<InvoicePaymentForm>>({
         { required: true, message: 'Please input phone number', trigger: 'blur', },
     ],
     email: [
-        { required: true, message: 'Please input Amount to pay ', trigger: 'blur' },
+        { required: true, message: 'Please input Email address', trigger: 'blur' },
     ],
 })
 
@@ -64,6 +64,9 @@ function submitForm(invoicePaymentPopupFormz: any) {
         if (valid) {
             invoiceStore.isOTPView = true;
             invoiceStore.invoicePaymentForm.phone = phoneResult.value?.e164!
+
+            invoiceStore.sendOTP()
+
             //asign form values to store values
         } else {
             console.log('error submit!!');
@@ -71,6 +74,7 @@ function submitForm(invoicePaymentPopupFormz: any) {
         }
     });
 }
+
 
 
 
