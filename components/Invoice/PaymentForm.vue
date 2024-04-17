@@ -49,7 +49,6 @@
 
         <MazDialog @close="handleClose" v-model="dialogVisible" :persistent="false" scrollable>
             <!-- <p class="text-lg">Confirm Payment</p> -->
-            <pre>{{ isOTPSuccessfull }}</pre>
 
             <InvoiceConfirmPayment :countries="countries" v-if="!isOTPSuccessfull" />
             <div v-else class="flex flex-col items-center">

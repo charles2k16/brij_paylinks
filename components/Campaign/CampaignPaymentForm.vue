@@ -96,7 +96,7 @@
                         <h2 class="text-2xl text-center">Enter OTP Code</h2>
                         <p class="mb-5 text-gray-400 text-center">OTP code has been sent to your momo number, please
                             enter to continue</p>
-                        <MazInputCode :code-length="6" size="sm" v-model="otpCode" class="flex flex-wrap justify-center"
+                        <MazInputCode :code-length="6" size="xs" v-model="otpCode" class="flex flex-wrap justify-center"
                             @completed="handlePayment()" color="warning" />
 
                     </div>

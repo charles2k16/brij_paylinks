@@ -75,7 +75,7 @@
 
 
     <!-- success payment modal -->
-    <MazDialog v-model="isPaymentSuccessfull" :on-close="handleClose">
+    <MazDialog v-model="success" :on-close="handleClose">
       <div class="flex flex-col justify-center items-center">
         <Icon class="text-6xl text-green-700" name="ri:send-plane-line" />
         <h2 class="text-2xl mt-3">Merchant Paid Successfull</h2>
@@ -122,6 +122,7 @@ const paymentOptiosnStore = usePaymentOptions()
 const { isPaymentMethodSelected, isOTPSuccessfull, isPayingmentLoading, isPaymentSuccessfull } = storeToRefs(paymentLinkStore)
 const { isPaymentMethodDataLoading } = storeToRefs(paymentOptiosnStore)
 const dialogVisible = ref(false)
+const success = ref(true)
 const invoicePaymentFormz = ref<FormInstance>()
 const rules = reactive<FormRules<InvoicePaymentForm>>({
   amount: [
