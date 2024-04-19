@@ -6,11 +6,10 @@ export default defineNuxtRouteMiddleware(async (to) => {
   const paymentLink = to.params.id
 
   
-  
   if (paymentLink) {
     const statusCode = await paymentLinkStore.verifyPaymentLink(paymentLink.toString());
 
-    // console.log(statusCode)
+    console.log(statusCode)
     if (statusCode === 200) {
       return;
     } else {

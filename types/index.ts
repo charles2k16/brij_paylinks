@@ -223,6 +223,17 @@ export interface Tax {
     created_at: string;
 }
 
+export interface PaymentLinkTemplate {
+    id:            string;
+    name:          string;
+    amount:        number;
+    currency:      string;
+    status:        string;
+    template_link: string;
+    payment_link:  string;
+}
+
+
 
 
 

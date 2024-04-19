@@ -4,6 +4,7 @@ import type {
   PaymentOption,
   InvoicePaymentForm,
   MerchantResponse,
+  PaymentLinkTemplate,
 } from "~/types";
 import axios from "axios";
 
@@ -22,6 +23,8 @@ export const usePaymentLinkStore = defineStore("paymentlink", () => {
   const isOTPSuccessfull = ref(false);
   const isPaymentSuccessfull = ref(false);
   const isPayingmentLoading = ref(false);
+  const isPaymentLinktemplate = ref(false);
+  const paymentLinktemplate = ref<PaymentLinkTemplate | null>()
   const invoicePaymentForm = ref<InvoicePaymentForm>({
     amount: "50",
     phone: "",
@@ -41,6 +44,9 @@ export const usePaymentLinkStore = defineStore("paymentlink", () => {
       return true;
     }
   });
+
+ 
+  
 
   
 
@@ -179,6 +185,29 @@ export const usePaymentLinkStore = defineStore("paymentlink", () => {
     }
   }
 
+  async function getPaymentLinkTemplate(template_link:string){
+
+    try{
+
+      const res = await axios.get(`${baseURL}/paymentlinktemplates/link/${template_link}`,{
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+        }
+      );
+
+      console.log(res.data)
+      paymentLinktemplate.value = res.data.data
+      console.log(paymentLinktemplate.value)
+      invoicePaymentForm.value.amount = res.data.data.amount.toString()
+      invoicePaymentForm.value.currency = res.data.data.currency.toString()
+      isPaymentLinktemplate.value = true;
+    }catch(error:any){
+        console.log(error)
+    }
+  }
+
 
   return {
     invoicePaymentForm,
@@ -194,6 +223,9 @@ export const usePaymentLinkStore = defineStore("paymentlink", () => {
     isPayingmentLoading,
     isPaymentSuccessfull,
     sendOTP,
-    payMerchant
+    payMerchant,
+    isPaymentLinktemplate,
+    getPaymentLinkTemplate,
+    paymentLinktemplate
   };
 });

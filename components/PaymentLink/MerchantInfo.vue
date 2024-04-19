@@ -1,13 +1,17 @@
 <template>
     <div class="flex flex-col w-full lg:px-5 md:px-20 px-5 lg:py-5 py-5 bg-gray-50 rounded-md">
         <div class="flex w-full lg:justify-start justify-center">
-            <div
-                class="primary-custom-bg-color text-white p-5 rounded-md flex justify-center w-20 h-20 lg:w-full lg:h-52 items-center">
-                <img src="/img/logo-dark.png" alt="logo" class="w-fit" />
-            </div>
+
+            <div class="relative  lg:max-w-md md:max-w-md    lg:h-56 h-44 rounded-lg w-full bg-cover bg-center"
+            style="background-image: url('/img/invoice-bg.png');">
+            <img src="/img/logo-white.png" alt="Logo" class="absolute top-0 right-0 m-4 h-16">
+        </div>
+
         </div>
         <span class="text-2xl font-medium mt-3 lg:text-start text-center">{{ merchant?.name }}</span>
         <p class="text-slate-400 lg:text-start text-center">{{ merchant?.merchant_industry }}</p>
+
+        <!-- payment template -->
 
         <!-- toggle contact btn -->
         <div class="flex justify-center">
@@ -41,6 +45,24 @@
             </div>
         </div>
 
+
+        <div v-if="isPaymentLinktemplate" class="border flex flex-col gap-y-5 border-gray-300 rounded-md mt-5 px-5 py-3">
+            <div class="flex items-center justify-between">
+                <div class="d-flex gap-x-3 items-center ">
+                    <h2 class="font-medium text-xl">{{ paymentLinktemplate?.name }}</h2>
+                </div>
+            </div>
+            <div class="flex items-center justify-between">
+                <div class="d-flex gap-x-3 items-center ">
+                    <p class="">Amount to be paid</p>
+                </div>
+                <h2>{{ paymentLinktemplate?.currency }}  {{ paymentLinktemplate?.amount }}</h2>
+            </div>
+
+        </div>
+
+
+
         <div class=" sm:hidden flex">
             <MazBtn color="warning" size="sm" @click="drawer = true" rounded class="w-full mt-5">
                 Make payments
@@ -72,8 +94,10 @@
 </template>
 <script setup lang="ts">
 import type { Merchant, PaymentMethods } from '~/types';
+import {usePaymentLinkStore} from '~/store/payment_links'
 
-
+const paymenntLinkStore = usePaymentLinkStore()
+const {paymentLinktemplate, isPaymentLinktemplate}  = storeToRefs(paymenntLinkStore)
 // ** toggle merchant ** //
 const showMerchantContactInfo = ref(true)
 const drawer = ref(false)

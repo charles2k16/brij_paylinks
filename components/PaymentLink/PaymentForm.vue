@@ -7,17 +7,17 @@
 
     <!-- amount & currency -->
 
-    <div class="flex w- gap-x-2 mb-2">
+    <div class="flex gap-x-2 mb-2">
       <div class="flex h-fit">
         <el-form-item prop="currency">
-          <MazSelect v-model="paymentLinkStore.invoicePaymentForm.currency" label="Select currency" color="warning"
+          <MazSelect v-model="paymentLinkStore.invoicePaymentForm.currency" :disabled="isPaymentLinktemplate" label="Select currency" color="warning"
             :options="['GHS', 'NGN', 'KSH']" />
         </el-form-item>
       </div>
       <!-- Input for amount -->
       <div class="flex-1">
         <el-form-item prop="amount">
-          <MazInput class="w-full" key="lg" color="warning" v-model="paymentLinkStore.invoicePaymentForm.amount"
+          <MazInput class="w-full" key="lg" :disabled="isPaymentLinktemplate" color="warning" v-model="paymentLinkStore.invoicePaymentForm.amount"
             label="Enter Amount" size="md" />
         </el-form-item>
       </div>
@@ -75,7 +75,7 @@
 
 
     <!-- success payment modal -->
-    <MazDialog v-model="success" :on-close="handleClose">
+    <MazDialog v-model="isPaymentSuccessfull" :on-close="handleClose">
       <div class="flex flex-col justify-center items-center">
         <Icon class="text-6xl text-green-700" name="ri:send-plane-line" />
         <h2 class="text-2xl mt-3">Merchant Paid Successfull</h2>
@@ -119,10 +119,9 @@ import { ElMessage } from 'element-plus'
 // instance of store
 const paymentLinkStore = usePaymentLinkStore()
 const paymentOptiosnStore = usePaymentOptions()
-const { isPaymentMethodSelected, isOTPSuccessfull, isPayingmentLoading, isPaymentSuccessfull } = storeToRefs(paymentLinkStore)
+const { isPaymentMethodSelected, isOTPSuccessfull, isPayingmentLoading, isPaymentSuccessfull, isPaymentLinktemplate, paymentLinktemplate } = storeToRefs(paymentLinkStore)
 const { isPaymentMethodDataLoading } = storeToRefs(paymentOptiosnStore)
 const dialogVisible = ref(false)
-const success = ref(true)
 const invoicePaymentFormz = ref<FormInstance>()
 const rules = reactive<FormRules<InvoicePaymentForm>>({
   amount: [
