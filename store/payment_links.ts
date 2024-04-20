@@ -1,6 +1,5 @@
 import { defineStore } from "pinia";
 import type {
-  PaymentMethods,
   PaymentOption,
   InvoicePaymentForm,
   MerchantResponse,
@@ -8,88 +7,88 @@ import type {
 } from "~/types";
 import axios from "axios";
 
-export const usePaymentLinkStore = defineStore("paymentlink", () => {
+export const usePaymentLinkStore = defineStore( "paymentlink", () => {
 
   // import runtime config
   const runtimeConfig = useRuntimeConfig();
   const baseURL = runtimeConfig.public.baseURL;
 
   // data
-  const paymentLinkResponse = ref<MerchantResponse | null>(null);
-  const selectedPaymentOption = ref<PaymentOption | null>(null);
-  const isOTPView = ref(false);
+  const paymentLinkResponse = ref<MerchantResponse | null>( null );
+  const selectedPaymentOption = ref<PaymentOption | null>( null );
+  const isOTPView = ref( false );
   const OTPCode = ref();
-  const isSendOTPLoading = ref(false);
-  const isOTPSuccessfull = ref(false);
-  const isPaymentSuccessfull = ref(false);
-  const isPayingmentLoading = ref(false);
-  const isPaymentLinktemplate = ref(false);
+  const isSendOTPLoading = ref( false );
+  const isOTPSuccessfull = ref( false );
+  const isPaymentSuccessfull = ref( false );
+  const isPayingmentLoading = ref( false );
+  const isPaymentLinktemplate = ref( false );
   const paymentLinktemplate = ref<PaymentLinkTemplate | null>()
-  const invoicePaymentForm = ref<InvoicePaymentForm>({
-    amount: "50",
+  const invoicePaymentForm = ref<InvoicePaymentForm>( {
+    amount: "0",
     phone: "",
     currency: "GHS",
     reference: "",
     email: "",
-  });
+  } );
 
 
 
 
   // computed
-  const isPaymentMethodSelected = computed(() => {
-    if (selectedPaymentOption.value === null) {
+  const isPaymentMethodSelected = computed( () => {
+    if ( selectedPaymentOption.value === null ) {
       return false;
     } else {
       return true;
     }
-  });
+  } );
 
- 
-  
 
-  
+
+
+
 
   // confirmation otp code
 
   // verify OTP
   const verifyOTP = () => {
-    ElNotification({
+    ElNotification( {
       title: "Payment made successfully",
       type: "success",
       message: "You  have successfully donated to this campaign",
       duration: 0,
-    });
+    } );
   };
 
   // verify and get merchant info
-  async function verifyPaymentLink(payment_link: string) {
+  async function verifyPaymentLink ( payment_link: string ) {
     try {
       const res = await axios.get(
-        `${baseURL}/m/${payment_link}`,
+        `${ baseURL }/m/${ payment_link }`,
         {
           headers: getHeaders(),
         }
       );
 
-      if (res.status === 200) {
-        console.log("payment link verified successfully");
+      if ( res.status === 200 ) {
+        console.log( "payment link verified successfully" );
         paymentLinkResponse.value = res.data;
         return 200;
       } else {
         return res.status;
       }
-    } catch (error: any) {
-      console.error("Error verifying payment link:", error);
+    } catch ( error: any ) {
+      console.error( "Error verifying payment link:", error );
       // showToast('Failed to verify link', `${error.response.data.message}`, true)
       return error.response ? error.response.status : 500;
     }
   }
-  
+
 
   //send otp
-  async function sendOTP( payment_link:string) {
-    console.log("hitting .. otp");
+  async function sendOTP ( payment_link: string ) {
+    console.log( "hitting .. otp" );
 
     try {
       isSendOTPLoading.value = true;
@@ -98,40 +97,40 @@ export const usePaymentLinkStore = defineStore("paymentlink", () => {
         payment_link: payment_link,
       };
 
-      const res = await axios.post(`${baseURL}/pwb/send-otp`, payload, {
+      const res = await axios.post( `${ baseURL }/pwb/send-otp`, payload, {
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
         },
-      });
+      } );
 
-      console.log(res.data);
-      ElNotification({
+      console.log( res.data );
+      ElNotification( {
         title: "OPT Sent Successfully",
-        message: `${res.data.message}`,
+        message: `${ res.data.message }`,
         duration: 0,
         type: "success",
-      });
+      } );
 
       isSendOTPLoading.value = false;
       isOTPSuccessfull.value = true;
-    } catch (error: any) {
+    } catch ( error: any ) {
       isSendOTPLoading.value = false;
       isOTPSuccessfull.value = false;
-      console.log(error);
-      ElNotification({
+      console.log( error );
+      ElNotification( {
         title: "Failed to send OTP ",
-        message: `${error.response.data.message}`,
+        message: `${ error.response.data.message }`,
         duration: 0,
         type: "error",
-      });
+      } );
     }
   }
 
-  async function payMerchant(payment_link: string) {
+  async function payMerchant ( payment_link: string ) {
     try {
       isPayingmentLoading.value = true;
-      
+
       const payload = {
         payment_method_id: selectedPaymentOption.value?.id,
         payment_details: {
@@ -151,7 +150,7 @@ export const usePaymentLinkStore = defineStore("paymentlink", () => {
       };
 
       const res = await axios.post(
-        `${baseURL}/m/${payment_link}`,
+        `${ baseURL }/m/${ payment_link }`,
         payload,
         {
           headers: {
@@ -161,50 +160,50 @@ export const usePaymentLinkStore = defineStore("paymentlink", () => {
         }
       );
 
-      console.log(res);
+      console.log( res );
       isPaymentSuccessfull.value = true;
-      ElNotification({
+      ElNotification( {
         title: "Payment made successfully",
-        message: `${res.data.message}`,
+        message: `${ res.data.message }`,
         duration: 0,
         type: "success",
-      });
+      } );
 
       isPayingmentLoading.value = false;
-    } catch (error: any) {
+    } catch ( error: any ) {
       isPayingmentLoading.value = false;
       isPaymentSuccessfull.value = false;
 
-      console.log(error);
-      ElNotification({
+      console.log( error );
+      ElNotification( {
         title: "Failed to make transactions ",
-        message: `${error.response.data.message}`,
+        message: `${ error.response.data.message }`,
         duration: 0,
         type: "error",
-      });
+      } );
     }
   }
 
-  async function getPaymentLinkTemplate(template_link:string){
+  async function getPaymentLinkTemplate ( template_link: string ) {
 
-    try{
+    try {
 
-      const res = await axios.get(`${baseURL}/paymentlinktemplates/link/${template_link}`,{
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-        }
+      const res = await axios.get( `${ baseURL }/paymentlinktemplates/link/${ template_link }`, {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      }
       );
 
-      console.log(res.data)
+      console.log( res.data )
       paymentLinktemplate.value = res.data.data
-      console.log(paymentLinktemplate.value)
+      console.log( paymentLinktemplate.value )
       invoicePaymentForm.value.amount = res.data.data.amount.toString()
       invoicePaymentForm.value.currency = res.data.data.currency.toString()
       isPaymentLinktemplate.value = true;
-    }catch(error:any){
-        console.log(error)
+    } catch ( error: any ) {
+      console.log( error )
     }
   }
 
@@ -228,4 +227,4 @@ export const usePaymentLinkStore = defineStore("paymentlink", () => {
     getPaymentLinkTemplate,
     paymentLinktemplate
   };
-});
+} );

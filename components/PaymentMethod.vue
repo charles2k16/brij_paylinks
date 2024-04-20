@@ -1,12 +1,16 @@
 <template>
-
-  <!-- Select payment -->
-  <div class="flex flex-col ">
+  <div class="flex flex-col">
     <p class="font-bold text-base text-black">Choose Payment Method</p>
-    <!-- options -->
-    <div class="flex flex-row w-[100%] justify-between flex-wrap gap-y-2  gap-x-1 mt-5">
-      <div v-for="(option, index) in options" :key="index" @click=onSelectPaymentMethod(option)
-        :class="{ 'border-amber-600 border-2': modelValue === option, 'border-gray-300': modelValue !== option }"
+
+    <div class="flex flex-row w-[100%] justify-between flex-wrap gap-y-2 gap-x-1 mt-5">
+      <div
+        v-for="(option, index) in options"
+        :key="index"
+        @click="onSelectPaymentMethod(option)"
+        :class="{
+          'border-amber-600 border-2': modelValue === option,
+          'border-gray-300': modelValue !== option,
+        }"
         class="flex lg:w-[32%] w-[49%] h-28 flex-col items-center justify-center border rounded-lg py-3 px-2 cursor-pointer">
         <input :id="option.channel" type="radio" :value="option.channel" class="hidden" />
         <label :for="option.channel" class="sr-only">{{ option.name }}</label>
@@ -15,26 +19,25 @@
       </div>
     </div>
   </div>
-
 </template>
 
 <script setup lang="ts">
-import {type PaymentOption } from '~/types/index';
+import { type PaymentOption } from '~/types/index';
 
 // props
 const props = defineProps<{
-  options: PaymentOption[] | null,
-  modelValue?: PaymentOption | null
-}>()
+  options: PaymentOption[] | null;
+  modelValue?: PaymentOption | null;
+}>();
 
 // emit
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue']);
 
 const modelValue = ref(props.modelValue);
 
 watch(
   () => props.modelValue,
-  (newValue) => {
+  newValue => {
     modelValue.value = newValue;
   }
 );
@@ -43,18 +46,14 @@ watch(
 
 // on select
 function onSelectPaymentMethod(value: PaymentOption) {
-  modelValue.value = value
+  modelValue.value = value;
   emit('update:modelValue', value);
 }
-
-
-
-
 </script>
 
 <style scoped>
 .secondary-custom-bg-color {
-  background-color: #F9AB10;
+  background-color: #f9ab10;
   color: var(--color-primary);
 }
 
