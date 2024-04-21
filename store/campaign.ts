@@ -55,7 +55,6 @@ export const useCampaignStore = defineStore( "campaign", () => {
       );
 
       if ( res.status === 200 ) {
-        console.log( "campaign link verified successfully" );
         campaignResponse.value = res.data;
         // get merhcant details
         getMerhant();
