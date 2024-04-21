@@ -63,8 +63,6 @@ export const useCampaignStore = defineStore( "campaign", () => {
         return res.status;
       }
     } catch ( error: any ) {
-      console.error( "Error verifying campaign link:", error );
-      // showToast('Failed to verify link', `${error.response.data.message}`, true)
       return error.response ? error.response.status : 500;
     }
   }
