@@ -284,7 +284,6 @@ async function payMerchant () {
       };
 
       const res = await $api.paymentLinks.payMerchant(props.paymentLink, payload)
-      console.log(res)
 
       isPaymentSuccessfull.value = true;
       ElNotification( {
@@ -296,7 +295,6 @@ async function payMerchant () {
 
       isPayingmentLoading.value = false;
     } catch ( error: any ) {
-      console.log(error)
       isPayingmentLoading.value = false;
       isPaymentSuccessfull.value = false;
 

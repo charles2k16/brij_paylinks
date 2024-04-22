@@ -58,14 +58,12 @@ async function getPaymentLinkTemplateInfo(template_link: string) {
 
   try {
     const res = await $api.paymentLinks.getPaymentLinksTemplate(template_link)
-    console.log(res)
+
 
     paymentLinkStore.paymentLinktemplate = res.data
     paymentLinkStore.invoicePaymentForm.amount = res.data.amount.toString()
     paymentLinkStore.invoicePaymentForm.currency = res.data.currency.toString()
     paymentLinkStore.isPaymentLinktemplate = true;
-    console.log(isPaymentLinktemplate.value)
-    console.log(paymentLinkStore.invoicePaymentForm)
 
   } catch (error: any) {
 

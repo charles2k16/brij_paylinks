@@ -336,7 +336,6 @@ async function payMerchantCampaign(payload: PaymentPayload) {
     isPayingmentLoading.value = true;
 
     const res = await $api.campaign.payMerchantCampaign(campaign.value?.payment_link, payload)
-    console.log(res)
 
     isPaymentSuccessfull.value = true;
     ElNotification({
@@ -348,7 +347,6 @@ async function payMerchantCampaign(payload: PaymentPayload) {
 
     isPayingmentLoading.value = false;
   } catch (error: any) {
-    console.log(error)
     isPayingmentLoading.value = false;
     isPaymentSuccessfull.value = false;
 

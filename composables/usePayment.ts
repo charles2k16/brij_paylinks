@@ -17,7 +17,6 @@ export default function useSendOTP(){
 
     
           const res = await $api.paymentLinks.payMerchant(paymentLink, payload)
-          console.log(res)
     
           isPaymentSuccessfull.value = true;
           ElNotification( {
@@ -29,7 +28,7 @@ export default function useSendOTP(){
     
           isPayingmentLoading.value = false;
         } catch ( error: any ) {
-          console.log(error)
+     
           isPayingmentLoading.value = false;
           isPaymentSuccessfull.value = false;
     

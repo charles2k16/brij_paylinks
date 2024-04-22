@@ -11,11 +11,11 @@ export default defineNuxtRouteMiddleware(async (to) => {
       paymentLink,
     );
 
-    console.log(res)
+
 
     if (res.status === 200) {
       paymentLinkStore.merchant = res
-      console.log(paymentLinkStore.merchant)
+   
       // return;
     } else {
       // return navigateTo(`/error`);

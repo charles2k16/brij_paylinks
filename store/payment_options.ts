@@ -22,7 +22,7 @@ export const usePaymentOptions = defineStore( "payment_options", () => {
     try {
     isPaymentMethodDataLoading.value = true;
       const  res = await $api.paymentMethods.getPaymentMethods(currency)
-      console.log(res)
+    
       if ( res.status === 200 ) {
         paymentOptions.value = res;
         isPaymentMethodDataLoading.value = false;
@@ -30,7 +30,7 @@ export const usePaymentOptions = defineStore( "payment_options", () => {
         isPaymentMethodDataLoading.value = false;
       }
     } catch ( error: any ) {
-      console.log()
+
       isPaymentMethodDataLoading.value = false;
     }
   }

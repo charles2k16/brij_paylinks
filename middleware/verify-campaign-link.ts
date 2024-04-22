@@ -12,7 +12,7 @@ export default defineNuxtRouteMiddleware( async ( to ) => {
   async function getCampaign ( campaign_link: string ) {
     try {
       const res = await $api.campaign.getCampaign(campaign_link)
-      console.log(res)
+   
 
       if ( res.status === 200 ) {
         campaignStore.campaign = res.data;
@@ -34,7 +34,6 @@ export default defineNuxtRouteMiddleware( async ( to ) => {
     try {
       // merhant details
       const res = await $api.campaign.getMerchantInfo(campaignStore.campaign?.payment_link)
-      console.log(res)
       if(res.status === 200){
         campaignStore.merchant = res.data
       }

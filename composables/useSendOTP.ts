@@ -17,7 +17,7 @@ export default function useSendOTP(){
           };
           
           const res = await $api.paymentMethods.sendOTP(payload)
-          console.log(res)
+       
           
           ElNotification({
             title: "OPT Sent Successfully",
