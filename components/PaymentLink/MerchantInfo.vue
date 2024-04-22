@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col w-full lg:px-5 md:px-20 px-5 lg:py-5 py-5 bg-gray-50 rounded-md">
+    <div class="flex flex-col w-full lg:px-5 md:px-20 px-2 lg:py-5 py-2 bg-gray-50 rounded-md">
         <div class="flex w-full lg:justify-start justify-center">
 
             <div class="relative  lg:max-w-md md:max-w-md    lg:h-56 h-44 rounded-lg w-full bg-cover bg-center"
@@ -69,18 +69,17 @@
             </MazBtn>
 
             <!-- Drawer for payment form on mobile -->
-            <MazBottomSheet v-model="drawer" :noClose="true" :noPadding="false" cl>
-                <div class="h-screen">
+            <MazBottomSheet class="" v-model="drawer" :noClose="true" noPadding cl>
+                <div class="h-screen w-full">
                     <div class="h-full overflow-y-auto py-10">
-                        <div class="flex justify-between items-center mb-5">
-                            <p class="text-gray-500">Payment form</p>
+                        <div class="flex justify-end items-center mb-2">
                             <MazBtn  @click="drawer = false"  color="transparent">
                                 <Icon name="ic:sharp-close" />
                             </MazBtn>
 
                         </div>
                         <!-- content here -->
-                        <PaymentLinkPaymentForm :paymentOptions="paymentOptions!" :payment-link="paymentLink" :countries="countries" />
+                        <PaymentLinkPaymentForm :paymentOptions="paymentOptions!" :payment-link="paymentLink" :countries="countries" :merchant="merchant" />
 
                     </div>
                 </div>
@@ -116,4 +115,15 @@ function toggleContactInfo() {
 
 
 </script>
-<style></style>
+<style scoped>
+.m-backdrop-content{
+ background-color: bisque;
+}
+
+.m-bottom-sheet__container{
+ background-color: rgb(144, 96, 37);
+margin: 0px;
+padding: 0px;
+}
+
+</style>

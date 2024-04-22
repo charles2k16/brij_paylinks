@@ -19,7 +19,7 @@
       <!-- Campaign Info -->
       <div class="lg:w-[50%] w-full hidden sm:block md:flex md:justify-center pt-5 lg:pt-0">
         <div class="lg:max-w-md md:max-w-2xl w-full">
-          <PaymentLinkPaymentForm :paymentOptions="paymentOptions!" :paymentLink="route.params.id" :countries="cty_abbr" />
+          <PaymentLinkPaymentForm :paymentOptions="paymentOptions!" :paymentLink="route.params.id" :countries="cty_abbr" :merchant="paymentLinkResponse?.data" />
         </div>
       </div>
     </div>

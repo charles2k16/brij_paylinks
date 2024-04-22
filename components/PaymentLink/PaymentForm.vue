@@ -47,7 +47,7 @@
     <MazDialog @close="handleClose" v-model="dialogVisible" :persistent="false" scrollable>
       <!-- <p class="text-lg">Confirm Payment</p> -->
 
-      <PaymentLinkConfirmPayment :countries="countries" :paymentLink v-if="!isOTPSuccessfull" />
+      <PaymentLinkConfirmPayment :countries="countries" :paymentLink v-if="!isOTPSuccessfull" :merchant="merchant" />
       <div v-else class="flex flex-col items-center">
         <!-- OT Field -->
 
@@ -111,7 +111,7 @@ import { reactive, ref } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import { usePaymentLinkStore } from '~/store/payment_links'
 import { usePaymentOptions } from '~/store/payment_options'
-import type { InvoicePaymentForm } from '~/types/index'
+import type { InvoicePaymentForm, Merchant } from '~/types/index'
 import type { PaymentMethods } from '~/types/index'
 import { ElMessage } from 'element-plus'
 
@@ -154,7 +154,9 @@ watch(
 const props = defineProps<{
   paymentOptions: PaymentMethods
   countries: any[]
-  paymentLink: string | string[]
+  paymentLink: string | string[],
+  merchant: Merchant | undefined
+
 }>()
 
 

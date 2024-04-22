@@ -3,7 +3,7 @@
         <!-- Amount to be paid -->
         <h2 class="text-2xl font-semibold text-black">{{ invoicePaymentForm.amount }} {{ invoicePaymentForm.currency }}
         </h2>
-        <p class="text-sm text-gray-400">Pay Bloom Impact Ltd.</p> {{ paymentLink }}
+        <p class="text-sm text-gray-400">{{merchant?.name}}</p>
 
         <hr class="my-5">
         <el-form ref="invoicePaymentPopupFormz" style="max-width: 600px" :model="paymentLinkStore.invoicePaymentForm"
@@ -33,12 +33,13 @@
 <script setup lang="ts">
 import type { FormInstance, FormRules } from 'element-plus'
 import { usePaymentLinkStore } from '~/store/payment_links'
-import type {  InvoicePaymentForm, SelectCountryResult } from '~/types/index'
+import type {  InvoicePaymentForm, Merchant, SelectCountryResult } from '~/types/index'
 
 // props
 const props = defineProps<{
     countries: any[],
-    paymentLink: string | string[]
+    paymentLink: string | string[],
+    merchant: Merchant | undefined
 }>()
 
 // instance of staore
