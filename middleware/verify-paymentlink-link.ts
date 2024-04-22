@@ -9,11 +9,9 @@ export default defineNuxtRouteMiddleware(async (to) => {
   if (paymentLink) {
     const statusCode = await paymentLinkStore.verifyPaymentLink(paymentLink.toString());
 
-    console.log(statusCode)
     if (statusCode === 200) {
       return;
     } else {
-      console.log('payment_link is invalid ');
       // return navigateTo(`/error`);
        throw createError({
         statusCode: 404,
@@ -26,7 +24,6 @@ export default defineNuxtRouteMiddleware(async (to) => {
     }
   } else {
     // return navigateTo(`/error`);
-    console.log('link  is invalid or expired');
 
     throw createError({
       statusCode: 404,

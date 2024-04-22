@@ -83,7 +83,8 @@
       <PaymentLinkConfirmPayment
         :countries="countries"
         :paymentLink
-        v-if="!isOTPSuccessfull" />
+        v-if="!isOTPSuccessfull"
+        :merchant="merchant" />
       <div v-else class="flex flex-col items-center">
         <!-- OT Field -->
 
@@ -144,7 +145,7 @@ import { reactive, ref } from 'vue';
 import type { FormInstance, FormRules } from 'element-plus';
 import { usePaymentLinkStore } from '~/store/payment_links';
 import { usePaymentOptions } from '~/store/payment_options';
-import type { InvoicePaymentForm } from '~/types/index';
+import type { InvoicePaymentForm, Merchant } from '~/types/index';
 import type { PaymentMethods } from '~/types/index';
 import { ElMessage } from 'element-plus';
 
@@ -178,7 +179,6 @@ const rules = reactive<FormRules<InvoicePaymentForm>>({
 watch(
   () => paymentLinkStore.invoicePaymentForm.currency,
   (newValue, oldValue) => {
-    console.log(`Age changed from ${oldValue} to ${newValue}`);
     paymentOptiosnStore.getPaymentMethod(paymentLinkStore.invoicePaymentForm.currency);
   }
 );
@@ -188,17 +188,16 @@ const props = defineProps<{
   paymentOptions: PaymentMethods;
   countries: any[];
   paymentLink: string | string[];
+  merchant: Merchant | undefined;
 }>();
 
 // ** Dialogue **//
 const handleClose = (done: () => void) => {
   paymentLinkStore.isOTPView = false;
-  console.log('close');
   paymentLinkStore.invoicePaymentForm.email = '';
   paymentLinkStore.invoicePaymentForm.phone = '';
   paymentLinkStore.OTPCode = '';
   paymentLinkStore.isOTPSuccessfull = false;
-  console.log(paymentLinkStore.isOTPSuccessfull);
 };
 
 // ** Form **//
@@ -222,7 +221,6 @@ function submitForm(invoicePaymentFormz: any) {
 
       //asign form values to store values
     } else {
-      console.log('error submit!!');
       return false;
     }
   });

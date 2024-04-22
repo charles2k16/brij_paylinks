@@ -6,6 +6,7 @@ import type {
   PaymentLinkTemplate,
 } from "~/types";
 import axios from "axios";
+import useSendOTP from '~/composables/useSendOTP';
 
 export const usePaymentLinkStore = defineStore( "paymentlink", () => {
 
@@ -18,7 +19,6 @@ export const usePaymentLinkStore = defineStore( "paymentlink", () => {
   const selectedPaymentOption = ref<PaymentOption | null>( null );
   const isOTPView = ref( false );
   const OTPCode = ref();
-  const isSendOTPLoading = ref( false );
   const isOTPSuccessfull = ref( false );
   const isPaymentSuccessfull = ref( false );
   const isPayingmentLoading = ref( false );
@@ -48,19 +48,6 @@ export const usePaymentLinkStore = defineStore( "paymentlink", () => {
 
 
 
-
-  // confirmation otp code
-
-  // verify OTP
-  const verifyOTP = () => {
-    ElNotification( {
-      title: "Payment made successfully",
-      type: "success",
-      message: "You  have successfully donated to this campaign",
-      duration: 0,
-    } );
-  };
-
   // verify and get merchant info
   async function verifyPaymentLink ( payment_link: string ) {
     try {
@@ -72,7 +59,6 @@ export const usePaymentLinkStore = defineStore( "paymentlink", () => {
       );
 
       if ( res.status === 200 ) {
-
         paymentLinkResponse.value = res.data;
         return 200;
       } else {
@@ -87,45 +73,8 @@ export const usePaymentLinkStore = defineStore( "paymentlink", () => {
 
 
   //send otp
-  async function sendOTP ( payment_link: string ) {
 
 
-    try {
-      isSendOTPLoading.value = true;
-      const payload = {
-        customer_contact: invoicePaymentForm.value.phone,
-        payment_link: payment_link,
-      };
-
-      const res = await axios.post( `${ baseURL }/pwb/send-otp`, payload, {
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-      } );
-
-
-      ElNotification( {
-        title: "OPT Sent Successfully",
-        message: `${ res.data.message }`,
-        duration: 0,
-        type: "success",
-      } );
-
-      isSendOTPLoading.value = false;
-      isOTPSuccessfull.value = true;
-    } catch ( error: any ) {
-      isSendOTPLoading.value = false;
-      isOTPSuccessfull.value = false;
-      console.log( error );
-      ElNotification( {
-        title: "Failed to send OTP ",
-        message: `${ error.response.data.message }`,
-        duration: 0,
-        type: "error",
-      } );
-    }
-  }
 
   async function payMerchant ( payment_link: string ) {
     try {
@@ -160,7 +109,6 @@ export const usePaymentLinkStore = defineStore( "paymentlink", () => {
         }
       );
 
-
       isPaymentSuccessfull.value = true;
       ElNotification( {
         title: "Payment made successfully",
@@ -173,7 +121,6 @@ export const usePaymentLinkStore = defineStore( "paymentlink", () => {
     } catch ( error: any ) {
       isPayingmentLoading.value = false;
       isPaymentSuccessfull.value = false;
-
 
       ElNotification( {
         title: "Failed to make transactions ",
@@ -196,9 +143,7 @@ export const usePaymentLinkStore = defineStore( "paymentlink", () => {
       }
       );
 
-
       paymentLinktemplate.value = res.data.data
-
       invoicePaymentForm.value.amount = res.data.data.amount.toString()
       invoicePaymentForm.value.currency = res.data.data.currency.toString()
       isPaymentLinktemplate.value = true;
@@ -214,14 +159,11 @@ export const usePaymentLinkStore = defineStore( "paymentlink", () => {
     selectedPaymentOption,
     OTPCode,
     isOTPView,
-    verifyOTP,
     verifyPaymentLink,
     paymentLinkResponse,
-    isSendOTPLoading,
     isOTPSuccessfull,
     isPayingmentLoading,
     isPaymentSuccessfull,
-    sendOTP,
     payMerchant,
     isPaymentLinktemplate,
     getPaymentLinkTemplate,

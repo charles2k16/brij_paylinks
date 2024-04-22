@@ -19,7 +19,8 @@
           <PaymentLinkPaymentForm
             :paymentOptions="paymentOptions!"
             :paymentLink="route.params.id"
-            :countries="cty_abbr" />
+            :countries="cty_abbr"
+            :merchant="paymentLinkResponse?.data" />
         </div>
       </div>
     </div>
@@ -45,16 +46,13 @@ let cty_abbr = ['GH'];
 onMounted(() => {
   campaignStore.verifyCampaignLink(route.params.id.toString());
   paymentOptiosnStore.getPaymentMethod('GHS');
-
   if (route.query) {
     const payment_link = route.query;
-
     paymentLinkStore.getPaymentLinkTemplate(
       payment_link.payment_template_link?.toString()!
     );
   }
   getCountriesAsync();
-  console.log(cty_abbr);
 });
 
 // methods

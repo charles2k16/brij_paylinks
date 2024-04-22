@@ -22,15 +22,12 @@ export const usePaymentOptions = defineStore( "payment_options", () => {
         `${ baseURL }/paymentlinks/paymentmethods?currency=${ currency }`
       );
       if ( res.data.status === 200 ) {
-
         paymentOptions.value = res.data;
         isPaymentMethodDataLoading.value = false;
       } else {
-
         isPaymentMethodDataLoading.value = false;
       }
     } catch ( error: any ) {
-      console.log( error );
       isPaymentMethodDataLoading.value = false;
     }
   }

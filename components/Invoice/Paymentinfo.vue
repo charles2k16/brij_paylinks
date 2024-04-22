@@ -208,11 +208,18 @@ watch(copied, newValue => {
       type: 'success',
     });
   }
+watch(copied, (newValue) => {
+    if (newValue === true) {
+        ElMessage({
+            message: "Merchnat contac copied successfully",
+            type: 'success',
+        })
+    }
 });
 
 function toggleSheet() {
-  drawer.value = !drawer.value;
-  console.log(drawer.value);
+    drawer.value = !drawer.value
+
 }
 </script>
 <style></style>

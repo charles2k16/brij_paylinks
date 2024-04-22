@@ -147,7 +147,6 @@ const rules = reactive<FormRules<InvoicePaymentForm>>({
 watch(
     () => invoiceStore.invoicePaymentForm.currency,
     (newValue, oldValue) => {
-        console.log(`Age changed from ${oldValue} to ${newValue}`);
         paymentOptiosnStore.getPaymentMethod(invoiceStore.invoicePaymentForm.currency)
     }
 );
@@ -162,14 +161,13 @@ const props = defineProps<{
 // ** Dialogue **//
 const handleClose = (done: () => void) => {
     invoiceStore.isOTPView = false;
-    console.log('close');
     // done();
     invoiceStore.invoicePaymentForm.email = "";
     invoiceStore.invoicePaymentForm.phone = "";
     invoiceStore.OTPCode = ""
     invoiceStore.SelectedPaymentOption = null;
-    invoiceStore.isOTPSuccessfull = false,
-        invoiceStore.isSendOTPLoading = false
+    invoiceStore.isOTPSuccessfull = false
+    
 }
 
 // ** Form **//
@@ -197,7 +195,6 @@ function submitForm(invoicePaymentFormz: any) {
 
             //asign form values to store values
         } else {
-            console.log('error submit!!');
             return false;
         }
     });
