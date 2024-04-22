@@ -200,14 +200,7 @@ function toggleInvoiceItems() {
   showInvoiceItems.value = !showInvoiceItems.value;
 }
 
-// watch if contact is copied
-watch(copied, newValue => {
-  if (newValue === true) {
-    ElMessage({
-      message: 'Merchnat contac copied successfully',
-      type: 'success',
-    });
-  }
+
 watch(copied, (newValue) => {
     if (newValue === true) {
         ElMessage({

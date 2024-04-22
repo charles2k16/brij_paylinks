@@ -44,13 +44,12 @@
         Continue
       </MazBtn>
     </el-form>
-  </div>
+
             <!-- submit button -->
             <MazBtn :loading="isSendOTPLoading" color="warning" size="sm" @click="submitForm(invoicePaymentPopupFormz)"
                 class="w-full mt-5">
                 Continue
             </MazBtn>
-        </el-form>
     </div>
 </template>
 
