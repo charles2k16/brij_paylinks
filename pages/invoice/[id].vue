@@ -4,7 +4,7 @@
     <div class="flex flex-row justify-center md:space-x-4">
       <div class="lg:max-w-lg md:max-w-xl  w-full bg-gray-100 lg:p-5 md:p-5 pb-32 p-2 rounded-md ">
         <!-- Campaign Info -->
-        <InvoicePaymentInfo :merchant="merchant?.data!" :invoice="invoice" :contries="cty_abbr" :payment-options="paymentOptions!"  />
+        <InvoicePaymentinfo :merchant="merchant?.data!" :invoice="invoice" :contries="cty_abbr" :payment-options="paymentOptions!"  />
       </div>
 
       <!-- Campaign Info -->
@@ -86,7 +86,6 @@ function getCountriesAsync() {
 
 function toggleSheet(){
   drawer.value = ! drawer.value
-console.log(drawer.value)
 
 }
 

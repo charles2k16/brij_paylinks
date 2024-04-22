@@ -12,21 +12,6 @@
         <!-- Campaign title for sm screen only-->
         <h2 class="text-gray-900 mt-2 text-2xl lg:pe-16 block sm:hidden">{{ props.campaign?.title }}</h2>
 
-        <!-- Amount raised card -->
-        <!-- <div class="flex bg-gray-50 py-3 px-3 rounded-md items-center flex-wrap sm:hidden">
-            <img src="~/assets/images/ghana.png" class="lg:me-3 me-2" height="27" width="27" alt="ghana_flag">
-            <div class="flex gap-x-1 lg:me-5 me-3">
-                <p class="primary-custom-text-color font-bold ">₵0.00</p>
-                <p>raised</p>
-            </div>
-            <div class="rounded-full p-0.5 primary-custom-bg-color lg:me-5 me-3"></div>
-            <div class="flex gap-x-1">
-                <p>0</p>
-                <p>donations</p>
-            </div>
-        </div> -->
-
-
         <!-- User info for small screens only -->
         <div class="flex mt-4 w-full items-center gap-x-2 flex-wrap my-4  sm:hidden">
           <!-- Avatar -->

@@ -81,9 +81,7 @@ let cty_abbr = ['GH']
 onMounted(() => {
   // campaignStore.verifyCampaignLink(route.params.id.toString())
   paymentOptiosnStore.getPaymentMethod('GHS')
-  console.log(route.params.id)
   getCountriesAsync()
-  console.log(cty_abbr)
 })
 
 // methods
@@ -98,7 +96,6 @@ function getCountriesAsync() {
 
 function toggleSheet(){
   drawer.value = ! drawer.value
-console.log(drawer.value)
 
 }
 

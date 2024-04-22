@@ -57,8 +57,7 @@
         <!-- Buttons -->
         <div class="flex flex-row gap-y-2 md:flex-col gap-x-3 mt-3">
             <!-- Make paymnet button -->
-            <MazBtn @click="submitForm(ruleFormRef)" size="sm" color="warning" class="w-full" >
-                <Icon name="ep:money" size="25" />
+            <MazBtn @click="submitForm(ruleFormRef)" size="sm" color="warning" class="w-full">
                 Continue
             </MazBtn>
             <!-- select payment menthod dialog -->
@@ -73,10 +72,8 @@
 
 
                     <MazBtn :loading="isSendOTPLoading" v-if="isPaymentMethodSelected" class="w-full mt-4"
-                        :disabled="!isPaymentMethodSelected" @click="initiateOTPRequest" size="sm" color="warning"
-                        >
+                        :disabled="!isPaymentMethodSelected" @click="initiateOTPRequest" size="sm" color="warning">
                         <div class="flex gap-x-2">
-                            <Icon name="ep:money" size="25" />
                             <p class="font-bold">Continue</p>
                         </div>
                     </MazBtn>
@@ -172,12 +169,13 @@ import { type PaymentMethods } from '~/types/index'
 import { usePaymentOptions } from '~/store/payment_options'
 import MazPhoneNumberInput from 'maz-ui/components/MazPhoneNumberInput'
 import { extractAbbr } from '~/utils/index'
+const { isOTPSuccessfull, isSendOTPLoading, sendOTP } = useSendOTP();
 
 
 // instance of tpayment store
 const campaignStore = useCampaignStore();
 const paymentOptiosnStore = usePaymentOptions();
-const { dialogueTitle, isOTPSuccessfull, isPaymentMethodSelected, isPayingmentLoading, otpCode, isSendOTPLoading, isPaymentSuccessfull } = storeToRefs(campaignStore);
+const { dialogueTitle, isPaymentMethodSelected, isPayingmentLoading, otpCode, isPaymentSuccessfull, campaignResponse } = storeToRefs(campaignStore);
 // props
 const props = defineProps<{
     paymentOptions: PaymentMethods,
@@ -231,10 +229,15 @@ const amountChips = reactive([
 watch(
     () => paymentForm.currency,
     (newValue, oldValue) => {
-        console.log(`Age changed from ${oldValue} to ${newValue}`);
         paymentOptiosnStore.getPaymentMethod(paymentForm.currency)
     }
 );
+
+// Watch for changes in the 'isOTPSuccessfull' variable and assign it to the store var
+watch(isOTPSuccessfull, (newValue, oldValue) => {
+    // Trigger something when the value changes
+    campaignStore.isOTPSuccessfull = newValue
+});
 
 
 
@@ -244,16 +247,16 @@ function submitForm(ruleFormRef: any) {
         if (valid) {
             paymentMethodialogVisible.value = true
         } else {
-            console.log('error submit!!');
             return false;
         }
     });
 }
 // initiate OTP
 function initiateOTPRequest() {
-    console.log('send ot test')
-    campaignStore.sendOTP(paymentForm.phone)
+    sendOTP(paymentForm.phone, campaignResponse.value?.data.payment_link!)
 }
+
+
 
 async function onChipClick(amount: string) {
     paymentForm.amount = amount
@@ -261,7 +264,6 @@ async function onChipClick(amount: string) {
 
 const handleClose = () => {
     // done();
-    console.log('closing modal ..')
     campaignStore.isOTPSuccessfull = false;
     campaignStore.selectedPaymentOption = null;
     campaignStore.isPaymentSuccessfull = false;

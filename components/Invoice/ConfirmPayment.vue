@@ -23,7 +23,8 @@
 
 
             <!-- submit button -->
-            <MazBtn color="warning" :loading="isSendOTPLoading" size="sm" @click="submitForm(invoicePaymentPopupFormz)" class="w-full mt-5">
+            <MazBtn color="warning" :loading="isSendOTPLoading" size="sm" @click="submitForm(invoicePaymentPopupFormz)"
+                class="w-full mt-5">
                 Continue
             </MazBtn>
         </el-form>
@@ -33,7 +34,7 @@
 <script setup lang="ts">
 import type { FormInstance, FormRules } from 'element-plus'
 import { useInvoiceStore } from '~/store/invoice'
-import type {  InvoicePaymentForm, SelectCountryResult } from '~/types/index'
+import type { InvoicePaymentForm, SelectCountryResult } from '~/types/index'
 
 // props
 const props = defineProps<{
@@ -42,9 +43,11 @@ const props = defineProps<{
 
 // instance of staore
 const invoiceStore = useInvoiceStore()
-const { invoicePaymentForm, isSendOTPLoading, merchant } = storeToRefs(invoiceStore)
+const { invoicePaymentForm, merchant, invoice,  } = storeToRefs(invoiceStore)
 const invoicePaymentPopupFormz = ref<FormInstance>()
 const phoneResult = ref<SelectCountryResult>()
+const { isOTPSuccessfull, isSendOTPLoading, sendOTP } = useSendOTP();
+
 
 // rules
 const rules = reactive<FormRules<InvoicePaymentForm>>({
@@ -65,11 +68,16 @@ function submitForm(invoicePaymentPopupFormz: any) {
             invoiceStore.isOTPView = true;
             invoiceStore.invoicePaymentForm.phone = phoneResult.value?.e164!
 
-            invoiceStore.sendOTP()
+            sendOTP(invoicePaymentForm.value.phone!, invoice.value?.payment_code!)
+
+            // Watch for changes in the 'isOTPSuccessfull' variable and assign it to the store var
+            watch(isOTPSuccessfull, (newValue, oldValue) => {
+                // Trigger something when the value changes
+                invoiceStore.isOTPSuccessfull = newValue
+            });
 
             //asign form values to store values
         } else {
-            console.log('error submit!!');
             return false;
         }
     });

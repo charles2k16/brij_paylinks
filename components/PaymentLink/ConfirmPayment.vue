@@ -3,7 +3,7 @@
         <!-- Amount to be paid -->
         <h2 class="text-2xl font-semibold text-black">{{ invoicePaymentForm.amount }} {{ invoicePaymentForm.currency }}
         </h2>
-        <p class="text-sm text-gray-400">{{merchant?.name}}</p>
+        <p class="text-sm text-gray-400">{{ merchant?.name }}</p>
 
         <hr class="my-5">
         <el-form ref="invoicePaymentPopupFormz" style="max-width: 600px" :model="paymentLinkStore.invoicePaymentForm"
@@ -17,13 +17,15 @@
 
             <!-- Email -->
             <el-form-item prop="email">
-                <MazInput class="w-full mt-5" key="lg" color="warning" v-model="paymentLinkStore.invoicePaymentForm.email"
-                    label="Enter Email (Optional)" placeholder="johndoe@gmail.com" size="md" />
+                <MazInput class="w-full mt-5" key="lg" color="warning"
+                    v-model="paymentLinkStore.invoicePaymentForm.email" label="Enter Email (Optional)"
+                    placeholder="johndoe@gmail.com" size="md" />
             </el-form-item>
 
 
             <!-- submit button -->
-            <MazBtn  :loading="isSendOTPLoading"  color="warning" size="sm" @click="submitForm(invoicePaymentPopupFormz)" class="w-full mt-5">
+            <MazBtn :loading="isSendOTPLoading" color="warning" size="sm" @click="submitForm(invoicePaymentPopupFormz)"
+                class="w-full mt-5">
                 Continue
             </MazBtn>
         </el-form>
@@ -33,7 +35,7 @@
 <script setup lang="ts">
 import type { FormInstance, FormRules } from 'element-plus'
 import { usePaymentLinkStore } from '~/store/payment_links'
-import type {  InvoicePaymentForm, Merchant, SelectCountryResult } from '~/types/index'
+import type { InvoicePaymentForm, Merchant, SelectCountryResult } from '~/types/index'
 
 // props
 const props = defineProps<{
@@ -44,9 +46,10 @@ const props = defineProps<{
 
 // instance of staore
 const paymentLinkStore = usePaymentLinkStore()
-const { invoicePaymentForm, isSendOTPLoading } = storeToRefs(paymentLinkStore)
+const { invoicePaymentForm } = storeToRefs(paymentLinkStore)
 const invoicePaymentPopupFormz = ref<FormInstance>()
 const phoneResult = ref<SelectCountryResult>()
+const { isOTPSuccessfull, isSendOTPLoading, sendOTP } = useSendOTP();
 
 // rules
 const rules = reactive<FormRules<InvoicePaymentForm>>({
@@ -59,19 +62,23 @@ const rules = reactive<FormRules<InvoicePaymentForm>>({
 })
 
 
+// Watch for changes in the 'isOTPSuccessfull' variable and assign it to the store var
+watch(isOTPSuccessfull, (newValue, oldValue) => {
+    // Trigger something when the value changes
+    paymentLinkStore.isOTPSuccessfull = newValue
+});
+
 
 // submit form function
 function submitForm(invoicePaymentPopupFormz: any) {
     invoicePaymentPopupFormz.validate((valid: any) => {
         if (valid) {
-            console.log(valid)
             paymentLinkStore.isOTPView = true;
             paymentLinkStore.invoicePaymentForm.phone = phoneResult.value?.e164!
-            console.log(paymentLinkStore.invoicePaymentForm.phone)
             // send otp
-            paymentLinkStore.sendOTP(props.paymentLink.toString())
+            sendOTP(paymentLinkStore.invoicePaymentForm.phone, props.paymentLink.toString())
+
         } else {
-            console.log('error submit!!');
             return false;
         }
     });

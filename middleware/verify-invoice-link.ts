@@ -10,11 +10,9 @@ export default defineNuxtRouteMiddleware(async (to) => {
   if (invoice_id) {
     const statusCode = await invoiceStore.verifyInvoiceLink(invoice_id.toString());
 
-    // console.log(statusCode)
     if (statusCode === 200) {
       return;
     } else {
-      console.log('link  is invalid');
       // return navigateTo(`/error`);
        throw createError({
         statusCode: 404,
@@ -27,7 +25,6 @@ export default defineNuxtRouteMiddleware(async (to) => {
     }
   } else {
     // return navigateTo(`/error`);
-    console.log('link  is invalid or expired');
 
     throw createError({
       statusCode: 404,

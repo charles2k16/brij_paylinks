@@ -17,7 +17,6 @@ export const useCampaignStore = defineStore("campaign", () => {
   // data
   const selectedPaymentOption = ref<PaymentOption | null>(null);
   const otpCode = ref('');
-  const isSendOTPLoading = ref(false);
   const isOTPSuccessfull = ref(false);
   const merchantResponse = ref<MerchantResponse>();
   const campaignResponse = ref<CampaignResponse | null>(null);
@@ -55,7 +54,6 @@ export const useCampaignStore = defineStore("campaign", () => {
       );
 
       if (res.status === 200) {
-        console.log("campaign link verified successfully");
         campaignResponse.value = res.data;
         // get merhcant details
         getMerhant();
@@ -78,52 +76,11 @@ export const useCampaignStore = defineStore("campaign", () => {
         { headers: getHeaders() }
       );
       merchantResponse.value = response.data;
-      console.log(response);
     } catch (error: any) {
-      console.log(error);
     }
   }
 
 
-  async function sendOTP(customer_contact: string) {
-    console.log("hitting .. otp");
-
-    try {
-      isSendOTPLoading.value = true;
-      const payload = {
-        customer_contact: customer_contact,
-        payment_link: campaignResponse.value?.data.payment_link,
-      };
-
-      const res = await axios.post(`${baseURL}/pwb/send-otp`, payload, {
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-      });
-
-      console.log(res.data);
-      ElNotification({
-        title: "OPT Sent Successfully",
-        message: `${res.data.message}`,
-        duration: 0,
-        type: "success",
-      });
-
-      isSendOTPLoading.value = false;
-      isOTPSuccessfull.value = true;
-    } catch (error: any) {
-      isSendOTPLoading.value = false;
-      isOTPSuccessfull.value = false;
-      console.log(error);
-      ElNotification({
-        title: "Failed to send OTP ",
-        message: `${error.response.data.message}`,
-        duration: 0,
-        type: "error",
-      });
-    }
-  }
 
 
   async function payDonation(
@@ -163,7 +120,6 @@ export const useCampaignStore = defineStore("campaign", () => {
         }
       );
 
-      console.log(res);
       isPaymentSuccessfull.value = true;
       ElNotification({
         title: "OPT Donation made successfully",
@@ -177,7 +133,6 @@ export const useCampaignStore = defineStore("campaign", () => {
       isPayingmentLoading.value = false;
       isPaymentSuccessfull.value = false;
 
-      console.log(error);
       ElNotification({
         title: "Failed to make transactions ",
         message: `${error.response.data.message}`,
@@ -196,8 +151,6 @@ export const useCampaignStore = defineStore("campaign", () => {
     dialogueTitle,
     verifyCampaignLink,
     campaignResponse,
-    sendOTP,
-    isSendOTPLoading,
     payDonation,
     isOTPSuccessfull,
     isPayingmentLoading,

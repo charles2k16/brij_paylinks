@@ -21,7 +21,6 @@ export const useInvoiceStore = defineStore("invoice", () => {
   const invoice = ref<Invoice | null>(null);
   const OTPCode = ref();
   const isOTPView = ref(false);
-  const isSendOTPLoading = ref(false);
   const isOTPSuccessfull = ref(false);
   const isPayingmentLoading = ref(false);
   const isPaymentSuccessfull = ref(false);
@@ -43,16 +42,6 @@ export const useInvoiceStore = defineStore("invoice", () => {
     }
   });
 
-
-  // methods
-  const verifyOTP = () => {
-    ElNotification({
-      title: "Payment made successfully",
-      type: "success",
-      message: "You  have successfully donated to this campaign",
-      duration: 0,
-    });
-  };
 
 
   async function verifyInvoiceLink(invoice_id: string) {
@@ -83,7 +72,6 @@ export const useInvoiceStore = defineStore("invoice", () => {
       );
 
       if (res.status === 200) {
-        console.log("got invoice successfully");
         invoice.value = res.data.data;
         return 200;
       } else {
@@ -91,9 +79,6 @@ export const useInvoiceStore = defineStore("invoice", () => {
       }
     } catch (error: any) {
       throw error
-      // console.error("Error verifying payment link:", error);
-      // showToast('Failed to verify link', `${error.response.data.message}`, true)
-      // return error.response ? error.response.status : 500;
     }
   }
 
@@ -110,7 +95,6 @@ export const useInvoiceStore = defineStore("invoice", () => {
         );
   
         if (res.status === 200) {
-          console.log("Got merhant successfully");
           merchant.value = res.data;
           return 200;
         } else {
@@ -124,45 +108,7 @@ export const useInvoiceStore = defineStore("invoice", () => {
       }
     }
 
-    async function sendOTP() {
-      console.log("hitting .. otp");
-  
-      try {
-        isSendOTPLoading.value = true;
-        const payload = {
-          customer_contact: invoicePaymentForm.value.phone,
-          payment_link: invoice.value?.payment_code,
-        };
-  
-        const res = await axios.post(`${baseURL}/pwb/send-otp`, payload, {
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-        });
-  
-        console.log(res.data);
-        ElNotification({
-          title: "OPT Sent Successfully",
-          message: `${res.data.message}`,
-          duration: 0,
-          type: "success",
-        });
-  
-        isSendOTPLoading.value = false;
-        isOTPSuccessfull.value = true;
-      } catch (error: any) {
-        isSendOTPLoading.value = false;
-        isOTPSuccessfull.value = false;
-        console.log(error);
-        ElNotification({
-          title: "Failed to send OTP ",
-          message: `${error.response.data.message}`,
-          duration: 0,
-          type: "error",
-        });
-      }
-    }
+
 
     async function payInvoice(
       amount: string,
@@ -190,7 +136,6 @@ export const useInvoiceStore = defineStore("invoice", () => {
           },
         };
 
-        console.log(payload)
   
         const res = await axios.post(
           `${baseURL}/m/${invoice.value?.payment_code}`,
@@ -203,7 +148,6 @@ export const useInvoiceStore = defineStore("invoice", () => {
           }
         );
   
-        console.log(res);
         isPaymentSuccessfull.value = true;
         ElNotification({
           title: "OPT Donation made successfully",
@@ -217,7 +161,6 @@ export const useInvoiceStore = defineStore("invoice", () => {
         isPayingmentLoading.value = false;
         isPaymentSuccessfull.value = false;
   
-        console.log(error);
         ElNotification({
           title: "Failed to make transactions ",
           message: `${error.response.data.message}`,
@@ -234,13 +177,10 @@ export const useInvoiceStore = defineStore("invoice", () => {
     SelectedPaymentOption,
     OTPCode,
     isOTPView,
-    verifyOTP,
     verifyInvoiceLink,
     merchant,
     invoice,
-    sendOTP,
     isOTPSuccessfull,
-    isSendOTPLoading,
     isPayingmentLoading,
     isPaymentSuccessfull,
     payInvoice

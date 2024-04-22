@@ -209,7 +209,6 @@ function toggleInvoiceItems() {
 // watch if contact is copied
 watch(copied, (newValue) => {
     if (newValue === true) {
-        console.log('Value copied to clipboard!');
         ElMessage({
             message: "Merchnat contac copied successfully",
             type: 'success',
@@ -220,7 +219,6 @@ watch(copied, (newValue) => {
 
 function toggleSheet() {
     drawer.value = !drawer.value
-    console.log(drawer.value)
 
 }
 
