@@ -3,7 +3,7 @@
         <!-- Amount to be paid -->
         <h2 class="text-2xl font-semibold text-black">{{ invoicePaymentForm.amount }} {{ invoicePaymentForm.currency }}
         </h2>
-        <p class="text-sm text-gray-400">{{ merchant?.data.name }}</p>
+        <p class="text-sm text-gray-400">{{ merchant?.name }}</p>
 
         <hr class="my-5">
         <el-form ref="invoicePaymentPopupFormz" style="max-width: 600px" :model="invoiceStore.invoicePaymentForm"
@@ -43,7 +43,7 @@ const props = defineProps<{
 
 // instance of staore
 const invoiceStore = useInvoiceStore()
-const { invoicePaymentForm, merchant, invoice,  } = storeToRefs(invoiceStore)
+const { invoicePaymentForm, merchant, invoice, } = storeToRefs(invoiceStore)
 const invoicePaymentPopupFormz = ref<FormInstance>()
 const phoneResult = ref<SelectCountryResult>()
 const { isOTPSuccessfull, isSendOTPLoading, sendOTP } = useSendOTP();
@@ -60,6 +60,12 @@ const rules = reactive<FormRules<InvoicePaymentForm>>({
 })
 
 
+// Watch for changes in the 'isOTPSuccessfull' variable and assign it to the store var
+watch(isOTPSuccessfull, (newValue, oldValue) => {
+    // Trigger something when the value changes
+    invoiceStore.isOTPSuccessfull = newValue
+});
+
 
 // submit form function
 function submitForm(invoicePaymentPopupFormz: any) {
@@ -70,13 +76,6 @@ function submitForm(invoicePaymentPopupFormz: any) {
 
             sendOTP(invoicePaymentForm.value.phone!, invoice.value?.payment_code!)
 
-            // Watch for changes in the 'isOTPSuccessfull' variable and assign it to the store var
-            watch(isOTPSuccessfull, (newValue, oldValue) => {
-                // Trigger something when the value changes
-                invoiceStore.isOTPSuccessfull = newValue
-            });
-
-            //asign form values to store values
         } else {
             return false;
         }

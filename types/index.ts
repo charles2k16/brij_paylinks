@@ -83,12 +83,12 @@ export interface Image {
 export interface CampaignPaymentData {
   payment_method_id: string;
   payment_details: PaymentDetails;
-  meta: Meta;
+  meta?: Meta;
 }
 
 export interface Meta {
-  payment_type: string;
-  payment_type_id: string;
+  payment_type?: string;
+  payment_type_id?: string;
 }
 
 export interface PaymentDetails {
@@ -232,6 +232,22 @@ export interface PaymentLinkTemplate {
   template_link: string;
   payment_link: string;
 }
+
+export interface PaymentPayload {
+  payment_method_id?: string
+  payment_details?: {
+    momo_number: string
+    description: string,
+    amount: string,
+    currency: string
+    otp: string,
+    customer_firstname: string,
+    customer_lastname: string,
+    customer_email: string
+  },
+  meta?: Meta
+}
+
 
 
 

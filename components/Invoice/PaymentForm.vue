@@ -58,7 +58,7 @@
                     <p class="mb-5 text-gray-400 text-center">OTP code has been sent to your momo number, please enter
                         to continue</p>
                     <MazInputCode :code-length="6" size="xs" v-model="invoiceStore.OTPCode"
-                        class="flex flex-wrap justify-center" @completed="invoiceStore.payInvoice" color="warning" />
+                        class="flex flex-wrap justify-center" @completed="handlePayment()" color="warning" />
                 </div>
 
                 <Loading v-else message="Initiating payment authorization" />
@@ -114,17 +114,29 @@ import { usePaymentOptions } from '~/store/payment_options'
 import type { InvoicePaymentForm } from '~/types/index'
 import type { PaymentMethods } from '~/types/index'
 import { ElMessage } from 'element-plus'
+import { ElNotification } from 'element-plus'
 
 
 // instance of store
 const invoiceStore = useInvoiceStore()
 const paymentOptiosnStore = usePaymentOptions()
-const { isPaymentMethodSelected, isOTPSuccessfull, isPayingmentLoading, isPaymentSuccessfull } = storeToRefs(invoiceStore)
+const { isPaymentMethodSelected, isOTPSuccessfull, invoicePaymentForm } = storeToRefs(invoiceStore)
 const { isPaymentMethodDataLoading } = storeToRefs(paymentOptiosnStore)
-const { merchant, invoice } = storeToRefs(invoiceStore)
+const {invoice } = storeToRefs(invoiceStore)
 
+const { isPayingmentLoading, isPaymentSuccessfull, pay } = usePayment();
+
+
+// instance of api
+const { $api } = useNuxtApp();
+
+// toggle dialogue
 const dialogVisible = ref(false)
+
+// form instance
 const invoicePaymentFormz = ref<FormInstance>()
+
+// validation rules
 const rules = reactive<FormRules<InvoicePaymentForm>>({
     amount: [
         { required: true, message: 'Please input Amount to pay ', trigger: 'blur' },
@@ -151,6 +163,13 @@ watch(
     }
 );
 
+
+watch(isPaymentSuccessfull, (newValue, oldValue) => {
+    // Trigger something when the value changes
+    invoiceStore.isPaymentSuccessfull = newValue
+});
+
+
 // props
 const props = defineProps<{
     paymentOptions: PaymentMethods
@@ -170,10 +189,6 @@ const handleClose = (done: () => void) => {
     
 }
 
-// ** Form **//
-
-// rules
-
 
 // submit form function
 function submitForm(invoicePaymentFormz: any) {
@@ -184,15 +199,11 @@ function submitForm(invoicePaymentFormz: any) {
                 dialogVisible.value = true
                 // alert('success')
             } else {
-
                 ElMessage({
                     message: 'Please select a payment method to continue.',
                     type: 'warning',
                 })
-
-
             }
-
             //asign form values to store values
         } else {
             return false;
@@ -200,7 +211,31 @@ function submitForm(invoicePaymentFormz: any) {
     });
 }
 
+function handlePayment() {
+  const payload = {
+    payment_method_id: invoiceStore.SelectedPaymentOption?.id,
+    payment_details: {
+      momo_number: invoiceStore.invoicePaymentForm.phone!,
+          description: invoiceStore.invoicePaymentForm.reference!,
+          amount: invoiceStore.invoicePaymentForm.amount!,
+          currency: invoiceStore.invoicePaymentForm.currency!,
+          otp: invoiceStore.OTPCode,
+          customer_firstname: "john",
+          customer_lastname: "doe",
+          customer_email: invoiceStore.invoicePaymentForm.email!
+    },
+    "meta": {
+        payment_type: "invoice",
+        payment_type_id: invoice.value?.id
+    }
+  }
 
+
+
+  pay(payload, invoice.value?.payment_code!)
+}
+
+// make payment
 
 
 

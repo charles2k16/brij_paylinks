@@ -32,7 +32,7 @@
                     <Icon name="material-symbols:call-outline" />
                     <p class="font-medium">{{ merchant?.contact }}</p>
                 </div>
-                <el-button type="warning" circle>
+                <el-button @click="copy(source)" type="warning" circle>
                     <Icon class="text-teal-950" name="mdi:content-copy" />
                 </el-button>
             </div>
@@ -94,6 +94,7 @@
 <script setup lang="ts">
 import type { Merchant, PaymentMethods } from '~/types';
 import {usePaymentLinkStore} from '~/store/payment_links'
+import { useClipboard } from '@vueuse/core'
 
 const paymenntLinkStore = usePaymentLinkStore()
 const {paymentLinktemplate, isPaymentLinktemplate}  = storeToRefs(paymenntLinkStore)
@@ -111,6 +112,22 @@ const props = defineProps<{
 function toggleContactInfo() {
     showMerchantContactInfo.value = !showMerchantContactInfo.value
 }
+
+
+// copy of merchant portal
+const source = ref(`${props.merchant?.contact}`)
+const {copy, copied } = useClipboard({ source })
+
+// alert if contact is copied
+watch(copied, (newValue) => {
+    if (newValue === true) {
+        ElMessage({
+            message: 'Campaign url copied successfully',
+            type: 'success',
+        })
+    }
+});
+
 
 
 

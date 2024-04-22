@@ -7,13 +7,13 @@
     <div class="flex flex-row justify-center md:space-x-4 h-full">
       <div class="lg:w-[60%] md:w-[50%] w-full hidden sm:block h-full bg-gray-50 rounded-md">
         <!-- Campaign Info -->
-        <CampaignInfo :campaign="campaignResponse?.data!" :merchant="merchantResponse" />
+        <CampaignInfo :campaign="campaign!" :merchant="merchant!" />
       </div>
 
       <!-- Campaign Info -->
       <div class=" lg:w-[40%] md:w-[50%] w-full">
-        <CampaignPayment :paymentOptions="paymentOptions!" :countries="cty_abbr" :merchant="merchantResponse"
-          :campaign="campaignResponse?.data!" />
+        <CampaignPayment :paymentOptions="paymentOptions!" :countries="cty_abbr" :merchant="merchant!"
+          :campaign="campaign!" />
       </div>
     </div>
 
@@ -40,7 +40,7 @@
 
             </div>
             <!-- content here -->
-            <CampaignPaymentForm :campaign="campaignResponse?.data!" :countries="cty_abbr" :merchant="merchantResponse"
+            <CampaignPaymentForm :campaign="campaign!" :countries="cty_abbr" :merchant="merchant"
           :paymentOptions="paymentOptions!" />
           </div>
         </div>
@@ -69,7 +69,7 @@ const campaignStore = useCampaignStore();
 const route = useRoute()
 const paymentOptiosnStore = usePaymentOptions()
 const { paymentOptions } = storeToRefs(paymentOptiosnStore)
-const { campaignResponse, merchantResponse } = storeToRefs(campaignStore)
+const { campaign, merchant } = storeToRefs(campaignStore)
 import { supportedCountries } from '~/assets/data';
 
 

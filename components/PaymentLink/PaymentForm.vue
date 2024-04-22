@@ -100,7 +100,7 @@
             size="xs"
             v-model="paymentLinkStore.OTPCode"
             class="flex flex-wrap justify-center"
-            @completed="paymentLinkStore.payMerchant(paymentLink.toString())"
+            @completed="handlePayment()"
             color="warning" />
         </div>
 
@@ -147,22 +147,28 @@ import { usePaymentLinkStore } from '~/store/payment_links';
 import { usePaymentOptions } from '~/store/payment_options';
 import type { InvoicePaymentForm, Merchant } from '~/types/index';
 import type { PaymentMethods } from '~/types/index';
-import { ElMessage } from 'element-plus';
+import { ElNotification } from 'element-plus'
+import { ElMessage } from 'element-plus'
 
 // instance of store
 const paymentLinkStore = usePaymentLinkStore();
 const paymentOptiosnStore = usePaymentOptions();
-const {
-  isPaymentMethodSelected,
-  isOTPSuccessfull,
-  isPayingmentLoading,
-  isPaymentSuccessfull,
-  isPaymentLinktemplate,
-  paymentLinktemplate,
-} = storeToRefs(paymentLinkStore);
+const { isPaymentMethodSelected, isOTPSuccessfull, isPaymentLinktemplate, selectedPaymentOption, invoicePaymentForm, OTPCode } = storeToRefs(paymentLinkStore);
 const { isPaymentMethodDataLoading } = storeToRefs(paymentOptiosnStore);
+
+// instance of pay 
+const { isPayingmentLoading, isPaymentSuccessfull, pay } = usePayment();
+
+// instance of api
+const { $api } = useNuxtApp();
+
+// togge dialog
 const dialogVisible = ref(false);
+
+// form instance
 const invoicePaymentFormz = ref<FormInstance>();
+
+// validation rukes
 const rules = reactive<FormRules<InvoicePaymentForm>>({
   amount: [{ required: true, message: 'Please input Amount to pay ', trigger: 'blur' }],
   reference: [{ required: true, message: 'Please input Reference ', trigger: 'blur' }],
@@ -183,6 +189,11 @@ watch(
   }
 );
 
+watch(isPaymentSuccessfull, (newValue, oldValue) => {
+    // Trigger something when the value changes
+    paymentLinkStore.isPaymentSuccessfull = newValue
+});
+
 // props
 const props = defineProps<{
   paymentOptions: PaymentMethods;
@@ -200,9 +211,6 @@ const handleClose = (done: () => void) => {
   paymentLinkStore.isOTPSuccessfull = false;
 };
 
-// ** Form **//
-
-// rules
 
 // submit form function
 function submitForm(invoicePaymentFormz: any) {
@@ -225,6 +233,81 @@ function submitForm(invoicePaymentFormz: any) {
     }
   });
 }
+
+function handlePayment() {
+  const payload = {
+    payment_method_id: selectedPaymentOption.value?.id,
+    payment_details: {
+      momo_number: invoicePaymentForm.value.phone!,
+      description: "Payment link transaction",
+      amount: invoicePaymentForm.value.amount!,
+      currency: invoicePaymentForm.value.currency!,
+      otp: OTPCode.value,
+      customer_firstname: "john",
+      customer_lastname: "doe",
+      customer_email:invoicePaymentForm.value.email!
+    },
+    // meta: {
+    //   payment_type: "paymentcampaign",
+    //   payment_type_id:  "campaign.value?.id"
+    // }
+  }
+
+
+
+  pay(payload, props.paymentLink.toString())
+}
+
+
+
+// make payment
+async function payMerchant () {
+    try {
+      isPayingmentLoading.value = true;
+
+      const payload = {
+        payment_method_id: selectedPaymentOption.value?.id,
+        payment_details: {
+          momo_number: invoicePaymentForm.value.phone,
+          description: invoicePaymentForm.value.reference,
+          amount: invoicePaymentForm.value.amount,
+          currency: invoicePaymentForm.value.currency,
+          otp: OTPCode.value,
+          customer_firstname: "john",
+          customer_lastname: "doe",
+          customer_email: invoicePaymentForm.value.email
+        },
+        // meta: {
+        //   payment_type: "paymentcampaign",
+        //   payment_type_id: campaignResponse.value?.data.id,
+        // },
+      };
+
+      const res = await $api.paymentLinks.payMerchant(props.paymentLink, payload)
+      console.log(res)
+
+      isPaymentSuccessfull.value = true;
+      ElNotification( {
+        title: "Payment made successfully",
+        message: `${ res.message }`,
+        duration: 0,
+        type: "success",
+      } );
+
+      isPayingmentLoading.value = false;
+    } catch ( error: any ) {
+      console.log(error)
+      isPayingmentLoading.value = false;
+      isPaymentSuccessfull.value = false;
+
+      ElNotification( {
+        title: "Failed to make transactions ",
+        message: `${ error.response._data.message }`,
+        duration: 0,
+        type: "error",
+      } );
+    }
+  }
 </script>
 
 <style scoped>

@@ -1,11 +1,9 @@
-import axios from 'axios';
 import {ref} from 'vue';
 
 export default function useSendOTP(){
 
-      // import runtime config
-    const runtimeConfig = useRuntimeConfig();
-    const baseURL = runtimeConfig.public.baseURL;
+    // instance of api
+    const {$api} = useNuxtApp()
 
     const isSendOTPLoading = ref(false)
     const isOTPSuccessfull =ref(false)
@@ -17,18 +15,13 @@ export default function useSendOTP(){
             customer_contact: phone_number,
             payment_link: payment_link,
           };
-    
-          const res = await axios.post(`${baseURL}/pwb/send-otp`, payload, {
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json",
-            },
-          });
-    
-   
+          
+          const res = await $api.paymentMethods.sendOTP(payload)
+          console.log(res)
+          
           ElNotification({
             title: "OPT Sent Successfully",
-            message: `${res.data.message}`,
+            message: `${res.message}`,
             duration: 0,
             type: "success",
           });
@@ -40,7 +33,7 @@ export default function useSendOTP(){
           isOTPSuccessfull.value = false;
           ElNotification({
             title: "Failed to send OTP ",
-            message: `${error.response.data.message}`,
+            message: `${error.response._data.message}`,
             duration: 0,
             type: "error",
           });

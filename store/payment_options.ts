@@ -8,6 +8,9 @@ export const usePaymentOptions = defineStore( "payment_options", () => {
   const config = useRuntimeConfig();
   const baseURL = config.public.baseURL;
 
+  // instance of api
+  const { $api } = useNuxtApp();
+
   // check loading state for payment options
   const isPaymentMethodDataLoading = ref( false );
 
@@ -17,17 +20,17 @@ export const usePaymentOptions = defineStore( "payment_options", () => {
   // payment options
   async function getPaymentMethod ( currency: string ) {
     try {
-      isPaymentMethodDataLoading.value = true;
-      const res = await axios.get(
-        `${ baseURL }/paymentlinks/paymentmethods?currency=${ currency }`
-      );
-      if ( res.data.status === 200 ) {
-        paymentOptions.value = res.data;
+    isPaymentMethodDataLoading.value = true;
+      const  res = await $api.paymentMethods.getPaymentMethods(currency)
+      console.log(res)
+      if ( res.status === 200 ) {
+        paymentOptions.value = res;
         isPaymentMethodDataLoading.value = false;
       } else {
         isPaymentMethodDataLoading.value = false;
       }
     } catch ( error: any ) {
+      console.log()
       isPaymentMethodDataLoading.value = false;
     }
   }

@@ -25,19 +25,19 @@
                     <p class="text-sm text-amber-600">Merhant details</p>
 
                  <div class="flex flex-col">
-                    <h2 class="text-base font-bold">{{ merchant?.data.name}}</h2>
-                    <p class="text-sm text-gray-400">{{ merchant?.data.contact }}</p>
+                    <h2 class="text-base font-bold">{{ merchant?.name}}</h2>
+                    <p class="text-sm text-gray-400">{{ merchant?.contact }}</p>
                  </div>
 
                     <hr>
-                    <p class="text-sm text-gray-400">Address - {{ merchant?.data.address}}</p>
+                    <p class="text-sm text-gray-400">Address - {{ merchant?.address}}</p>
 
                  </div>
             </el-popover>
                         <!-- Orginizer name -->
                         <div class="flex flex-col">
                 <div class="flex items-center gap-x-2">
-                    <h2 class="text-base font-bold">{{  merchant?.data.address }}</h2>
+                    <h2 class="text-base font-bold">{{  merchant?.address }}</h2>
                     <p class="text-base">is organizing a Champaign</p>
                 </div>
                 <p class="text-sm text-gray-400">Created on {{ formateDate(props.campaign?.created_at!, 'ddd Do MMM, YYYY') }}</p>
@@ -69,13 +69,13 @@
     </div>
 </template>
 <script setup lang="ts">
-import type { Campaign, MerchantResponse, PaymentMethods  } from '~/types';
+import type { Campaign, Merchant, PaymentMethods  } from '~/types';
 
 
 const props = defineProps<{
     campaign: Campaign
     paymentOptions: PaymentMethods 
-    merchant: MerchantResponse | undefined
+    merchant: Merchant | undefined
     countries: any[]
 
 }>()
