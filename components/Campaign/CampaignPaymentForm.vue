@@ -5,7 +5,7 @@
       <div class="flex h-fit">
         <el-form-item prop="currency">
           <MazSelect v-model="paymentForm.currency" label="Select currency" color="warning"
-            :options="extractAbbr(merchant?.data.accepted_currencies!)" />
+            :options="extractAbbr(merchant?.accepted_currencies!)" />
         </el-form-item>
       </div>
       <!-- Input for amount -->
@@ -175,7 +175,7 @@ import {
   type Campaign,
   type CampaignPaymentForm,
   type Merchant,
-  type MerchantResponse,
+  type PaymentPayload,
   type SelectCountryResult,
 } from '~/types/index';
 import { useCampaignStore } from '~/store/campaign';
@@ -183,25 +183,38 @@ import { type PaymentMethods } from '~/types/index'
 import { usePaymentOptions } from '~/store/payment_options'
 import MazPhoneNumberInput from 'maz-ui/components/MazPhoneNumberInput'
 import { extractAbbr } from '~/utils/index'
-const { isOTPSuccessfull, isSendOTPLoading, sendOTP } = useSendOTP();
 
+
+// instance of sentOTP composable
+const { isOTPSuccessfull, isSendOTPLoading, sendOTP } = useSendOTP();
+const { isPayingmentLoading, isPaymentSuccessfull, pay } = usePayment();
+
+// instance of pay 
 
 // instance of tpayment store
 const campaignStore = useCampaignStore();
 const paymentOptiosnStore = usePaymentOptions();
-const { dialogueTitle, isPaymentMethodSelected, isPayingmentLoading, otpCode, isPaymentSuccessfull, campaignResponse } = storeToRefs(campaignStore);
+const { dialogueTitle, isPaymentMethodSelected, otpCode, campaign } = storeToRefs(campaignStore);
 // props
 const props = defineProps<{
   paymentOptions: PaymentMethods;
   campaign: Campaign;
-  merchant: MerchantResponse | undefined;
+  merchant: Merchant | undefined;
   countries: any[];
 }>();
 
-// data
+// form instance
 const ruleFormRef = ref<FormInstance>();
+
+// instance of api
+const { $api } = useNuxtApp();
+
+// toggle dialog
 const paymentMethodialogVisible = ref(false);
+
+// phone result
 const phoneResult = ref<SelectCountryResult>();
+// form rule validation
 const rules = reactive<FormRules<CampaignPaymentForm>>({
   amount: [{ required: true, message: 'Please input amount', trigger: 'blur' }],
   phone: [
@@ -216,11 +229,15 @@ const rules = reactive<FormRules<CampaignPaymentForm>>({
     },
   ],
 });
+
+// payment form fields
 const paymentForm = reactive<CampaignPaymentForm>({
   amount: '',
   phone: phoneResult.value?.e164!,
   currency: '',
 });
+
+// chips data
 const amountChips = reactive([
   { amount: '5000' },
   { amount: '4000' },
@@ -250,6 +267,11 @@ watch(isOTPSuccessfull, (newValue, oldValue) => {
   campaignStore.isOTPSuccessfull = newValue
 });
 
+// watch for changes in the "isPaymentSuccessful" var and assign it to the store
+watch(isPaymentSuccessfull, (newValue, oldValue) => {
+  // Trigger something when the value changes
+  campaignStore.isPaymentSuccessfull = newValue
+});
 
 
 // functions & methids
@@ -264,7 +286,7 @@ function submitForm(ruleFormRef: any) {
 }
 // initiate OTP
 function initiateOTPRequest() {
-  sendOTP(paymentForm.phone, campaignResponse.value?.data.payment_link!)
+  sendOTP(paymentForm.phone, campaign.value?.payment_link!)
 }
 
 
@@ -281,10 +303,62 @@ const handleClose = () => {
   campaignStore.otpCode = '';
 }
 
-// on complete pin field
+
 function handlePayment() {
-  campaignStore.payDonation(paymentForm.amount, paymentForm.currency, paymentForm.phone);
+  const payload = {
+    payment_method_id: campaignStore.selectedPaymentOption?.id,
+    payment_details: {
+      momo_number: paymentForm.phone,
+      description: "Payment link transaction",
+      amount: paymentForm.amount,
+      currency: paymentForm.currency,
+      otp: otpCode.value,
+      customer_firstname: "john",
+      customer_lastname: "doe",
+      customer_email: "me@you.com"
+    },
+    meta: {
+      payment_type: "paymentcampaign",
+      payment_type_id:  campaign.value?.id
+    }
+  }
+
+
+
+  pay(payload, campaign.value?.payment_link!)
 }
+
+
+
+
+async function payMerchantCampaign(payload: PaymentPayload) {
+  try {
+    isPayingmentLoading.value = true;
+
+    const res = await $api.campaign.payMerchantCampaign(campaign.value?.payment_link, payload)
+
+    isPaymentSuccessfull.value = true;
+    ElNotification({
+      title: "Payment made successfully",
+      message: `${res.data.message}`,
+      duration: 0,
+      type: "success",
+    });
+
+    isPayingmentLoading.value = false;
+  } catch (error: any) {
+    isPayingmentLoading.value = false;
+    isPaymentSuccessfull.value = false;
+
+    ElNotification({
+      title: "Failed to make transactions ",
+      message: `${error.response._data.message}`,
+      duration: 0,
+      type: "error",
+    });
+  }
+}
+
 </script>
 <style scoped>
 .primary-custom-bg-color {
