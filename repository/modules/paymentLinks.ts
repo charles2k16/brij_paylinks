@@ -9,7 +9,7 @@ import FetchFactory from '../factory';
 
 class PaymentLinksModule extends FetchFactory<PaymentMethods[]> {
   private RESOURCE = '/m';
-
+  private TEMPLATE_RESOURCE = '/paymentlinktemplates/link'
   /**
    * Return the data as array 
    * @param asyncDataOptions options for `useAsyncData`
@@ -19,6 +19,13 @@ class PaymentLinksModule extends FetchFactory<PaymentMethods[]> {
     return await this.call(
       'GET',
       `${ this.RESOURCE }/${ payment_link }`
+    )
+  }
+
+  async getPaymentLinksTemplate ( template_link: String ) {
+    return await this.call(
+      'GET',
+      `${ this.TEMPLATE_RESOURCE }/${ template_link }`
     )
   }
 

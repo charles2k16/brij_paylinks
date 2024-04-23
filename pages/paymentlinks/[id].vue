@@ -5,7 +5,7 @@
         <div
           class="lg:max-w-md md:max-w-2xl w-full flex justify-center lg:m-0 md:m-0 m-3">
           <PaymentLinkMerchantInfo
-            :merchant="paymentLinkResponse?.data"
+            :merchant="merchant?.data"
             :paymentLink="route.params.id"
             :paymentOptions="paymentOptions!"
             :countries="cty_abbr" />
@@ -20,37 +20,33 @@
             :paymentOptions="paymentOptions!"
             :paymentLink="route.params.id"
             :countries="cty_abbr"
-            :merchant="paymentLinkResponse?.data" />
+            :merchant="merchant?.data" />
         </div>
       </div>
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import { useCampaignStore } from '~/store/campaign';
 import { usePaymentOptions } from '~/store/payment_options';
 import { usePaymentLinkStore } from '~/store/payment_links';
 import { supportedCountries } from '~/assets/data';
 
-const campaignStore = useCampaignStore();
 const route = useRoute();
 const paymentOptiosnStore = usePaymentOptions();
 const paymentLinkStore = usePaymentLinkStore();
 const { paymentOptions } = storeToRefs(paymentOptiosnStore);
-const { paymentLinkResponse } = storeToRefs(paymentLinkStore);
+const { merchant, isPaymentLinktemplate } = storeToRefs(paymentLinkStore);
+const { $api } = useNuxtApp();
 
 // data
 let cty_abbr = ['GH'];
 
 // onmounted
 onMounted(() => {
-  campaignStore.verifyCampaignLink(route.params.id.toString());
   paymentOptiosnStore.getPaymentMethod('GHS');
-  if (route.query) {
-    const payment_link = route.query;
-    paymentLinkStore.getPaymentLinkTemplate(
-      payment_link.payment_template_link?.toString()!
-    );
+  if (route.query.payment_template_link) {
+    const payment_link = route.query.payment_template_link;
+    getPaymentLinkTemplateInfo(payment_link?.toString()!);
   }
   getCountriesAsync();
 });
@@ -60,6 +56,22 @@ function getCountriesAsync() {
   cty_abbr = supportedCountries.map((country: { abbreviation: string }) => {
     return country.abbreviation;
   });
+}
+
+// check and get payment link template info
+
+async function getPaymentLinkTemplateInfo(template_link: string) {
+  try {
+    const res = await $api.paymentLinks.getPaymentLinksTemplate(template_link);
+
+    console.log(res, 'hv,ndbchsvdc,nbslcjkvnnbslckhj,gskhcujvsgjdh');
+    paymentLinkStore.paymentLinktemplate = res.data;
+    paymentLinkStore.invoicePaymentForm.amount = res.data.amount.toString();
+    paymentLinkStore.invoicePaymentForm.currency = res.data.currency.toString();
+    paymentLinkStore.isPaymentLinktemplate = true;
+  } catch (error: any) {
+    console.log(error);
+  }
 }
 
 definePageMeta({

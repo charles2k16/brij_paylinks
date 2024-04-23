@@ -10,11 +10,11 @@
       <div class="border-b border-gray-100 my-4"></div>
       <!-- toggle contact btn -->
 
-      <h2 class="text-lg">{{ merchant?.data.name }}</h2>
+      <h2 class="text-lg">{{ merchant?.name }}</h2>
       <div class="flex items-center justify-between">
         <div class="d-flex gap-x-3 items-center">
           <Icon name="material-symbols:call-outline" />
-          <p class="text-base">{{ merchant?.data.contact }}</p>
+          <p class="text-base">{{ merchant?.contact }}</p>
         </div>
         <el-button type="warning" circle @click="copy(source)">
           <Icon class="text-teal-950" name="mdi:content-copy" />
@@ -23,7 +23,7 @@
       <div class="flex items-center justify-between">
         <div class="d-flex gap-x-3 items-center">
           <Icon name="tdesign:location-1" />
-          <p class="text-base">{{ merchant?.data.address }}</p>
+          <p class="text-base">{{ merchant?.address }}</p>
         </div>
         <!-- <el-button type="warning" circle><Icon class="text-teal-950" name="mdi:content-copy"/></el-button> -->
       </div>
@@ -182,7 +182,7 @@ import { ElMessage } from 'element-plus';
 import type { Invoice, Merchant, PaymentMethods } from '~/types';
 
 const { merchant, invoice } = storeToRefs(invoiceStore);
-const source = ref(`${merchant.value?.data.contact}`);
+const source = ref(`${merchant.value?.contact}`);
 const { text, copy, copied } = useClipboard({ source });
 
 // props

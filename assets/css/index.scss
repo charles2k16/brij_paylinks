@@ -3,7 +3,7 @@
   --color-primary: #063941;
   --text-white: #ffffff;
   --danger-red: #f42424;
-    --base-yellow: #f9aa0e;
+  --base-yellow: #f9aa0e;
   --font-primary-light: TTCommonsLight;
   --font-primary: TTCommonsRegular;
   --font-primary-md: TTCommonsMedium;
@@ -15,21 +15,21 @@
   font-family: "TTCommonsLight";
   src: url("../fonts/TTCommonsLight.otf");
   // font-weight: normal;
-    font-style: normal;
+  font-style: normal;
 }
 
 @font-face {
   font-family: "TTCommonsRegular";
   src: url("../fonts/TTCommonsRegular.otf");
   // font-weight: normal;
-    font-style: normal;
+  font-style: normal;
 }
 
 @font-face {
   font-family: "TTCommonsMedium";
   src: url("../fonts/TTCommonsMedium.otf");
   // font-weight: normal;
-    font-style: normal;
+  font-style: normal;
 }
 
 @font-face {
@@ -549,4 +549,9 @@ span {
   /* Firefox */
   appearance: textfield;
   /* Other browsers */
+}
+
+.m-bottom-sheet__container[data-v-46b34248] {
+  padding-left: 1.2rem !important;
+  padding-right: 1.2rem !important;
 }
