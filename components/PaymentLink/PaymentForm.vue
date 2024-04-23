@@ -149,6 +149,7 @@ import type { InvoicePaymentForm, Merchant } from '~/types/index';
 import type { PaymentMethods } from '~/types/index';
 import { ElNotification } from 'element-plus'
 import { ElMessage } from 'element-plus'
+import usePayment from '~/composables/usePayment';
 
 // instance of store
 const paymentLinkStore = usePaymentLinkStore();
