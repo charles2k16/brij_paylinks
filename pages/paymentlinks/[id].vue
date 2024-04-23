@@ -63,8 +63,6 @@ function getCountriesAsync() {
 async function getPaymentLinkTemplateInfo(template_link: string) {
   try {
     const res = await $api.paymentLinks.getPaymentLinksTemplate(template_link);
-
-    console.log(res, 'hv,ndbchsvdc,nbslcjkvnnbslckhj,gskhcujvsgjdh');
     paymentLinkStore.paymentLinktemplate = res.data;
     paymentLinkStore.invoicePaymentForm.amount = res.data.amount.toString();
     paymentLinkStore.invoicePaymentForm.currency = res.data.currency.toString();
