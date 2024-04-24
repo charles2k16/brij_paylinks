@@ -20,7 +20,7 @@ export default function useSendOTP () {
       const res = await $api.paymentLinks.payMerchant( paymentLink, payload )
 
       // waiting for payment confirmation nortification
-      // completePayment( res );
+      completePayment( res );
 
     } catch ( error: any ) {
       isPayingmentLoading.value = false;
@@ -39,7 +39,7 @@ export default function useSendOTP () {
 
     const { socket_channel } = res.data;
     const channel = socket_channel;
-
+    console.log( channel )
     // waiting to receive payment notification
 
     Pusher.logToConsole = true;
