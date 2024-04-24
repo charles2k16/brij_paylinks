@@ -175,7 +175,6 @@ import {
   type Campaign,
   type CampaignPaymentForm,
   type Merchant,
-  type PaymentPayload,
   type SelectCountryResult,
 } from '~/types/index';
 import { useCampaignStore } from '~/store/campaign';
@@ -329,35 +328,6 @@ function handlePayment() {
 }
 
 
-
-
-async function payMerchantCampaign(payload: PaymentPayload) {
-  try {
-    isPayingmentLoading.value = true;
-
-    const res = await $api.campaign.payMerchantCampaign(campaign.value?.payment_link, payload)
-
-    isPaymentSuccessfull.value = true;
-    ElNotification({
-      title: "Payment made successfully",
-      message: `${res.data.message}`,
-      duration: 0,
-      type: "success",
-    });
-
-    isPayingmentLoading.value = false;
-  } catch (error: any) {
-    isPayingmentLoading.value = false;
-    isPaymentSuccessfull.value = false;
-
-    ElNotification({
-      title: "Failed to make transactions ",
-      message: `${error.response._data.message}`,
-      duration: 0,
-      type: "error",
-    });
-  }
-}
 
 </script>
 <style scoped>

@@ -28,7 +28,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
     // get merchnat
     async function getMerchnat ( payment_link: string | undefined ) {
       try {
-        const res = await $api.invoice.getMerchantInfo(payment_link)
+        const res = await $api.paymentLinks.getMerchantInfo(payment_link)
 
   
         if ( res.status === 200 ) {
@@ -73,7 +73,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
       // return navigateTo(`/error`);
        throw createError({
         statusCode: 404,
-        statusMessage: 'Oooops, The link is either invalid',
+        statusMessage: 'Oooops, The link is invalid',
         data: {
           myCustomField: true
         }

@@ -9,7 +9,6 @@ import FetchFactory from '../factory';
 
 class InvoiceModule extends FetchFactory<PaymentMethods[]> {
   private RESOURCE = '/merchants/invoices';
-  private MERCHANT_RESOURCE = '/m';
   /**
    * Return the data as array 
    * @param asyncDataOptions options for `useAsyncData`
@@ -19,20 +18,6 @@ class InvoiceModule extends FetchFactory<PaymentMethods[]> {
     return await this.call(
       'GET',
       `${ this.RESOURCE }/${ invoice_id }`
-    )
-  }
-
-  async getMerchantInfo( payment_link: String | undefined ) {
-    return await this.call(
-      'GET',
-      `${ this.MERCHANT_RESOURCE}/${ payment_link }`
-    )
-  }
-
-  async payMerchantInvoice ( payment_link: String, paylaod: {} ) {
-    return await this.call(
-      'POST',
-      `${ this.MERCHANT_RESOURCE }/${ payment_link }`, paylaod
     )
   }
 }

@@ -4,7 +4,8 @@ import PaymentMethodsModule from '~/repository/modules/paymentMethods';
 import PaymentLinksModule from '~/repository/modules/paymentLinks';
 import CampaignModule from '~/repository/modules/campaign';
 import InvoiceModule from '~/repository/modules/invoice';
-import { objectPick } from '@vueuse/core';
+import OTPModule from '~/repository/modules/otp';
+import PaymentLinkTemplate from '~/repository/modules/paymentlinkTemplate';
 
 export default defineNuxtPlugin( ( nuxtApp ) => {
   const config = useRuntimeConfig();
@@ -21,7 +22,9 @@ export default defineNuxtPlugin( ( nuxtApp ) => {
     paymentMethods: new PaymentMethodsModule( apiFecther ),
     paymentLinks: new PaymentLinksModule( apiFecther ),
     invoice: new InvoiceModule( apiFecther ),
-    campaign: new CampaignModule( apiFecther )
+    campaign: new CampaignModule( apiFecther ),
+    otp: new OTPModule( apiFecther ),
+    paymentlinkTemplate: new PaymentLinkTemplate( apiFecther )
   };
 
   return {

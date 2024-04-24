@@ -34,8 +34,7 @@
       <MazBottomSheet v-model="drawer" :no-close="true">
         <div class="h-screen">
           <div class="h-full overflow-y-auto py-10">
-            <div class="flex justify-between items-center">
-              <p class="text-gray-600">Payment form</p>
+            <div class="flex justify-end items-center">
               <MazBtn @click="toggleSheet" color="transparent">
                 <icon name="ic:sharp-close" />
               </MazBtn>

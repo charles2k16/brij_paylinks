@@ -7,8 +7,11 @@
     </div>
 
     <!-- toggle buttom -->
+    <div>
+    
+    </div>
     <button @click="drawer = true" style="margin-left: 16px;"
-      class="inline-flex items-center p-1 ml-3 text-xl rounded-lg md:hidden">
+      class="items-center p-1 ml-3 text-xl rounded-lg hidden">
       <Icon class="w-6 h-6 text-black" name="ic:baseline-menu" />
     </button>
 
@@ -35,7 +38,7 @@
           <slot></slot>
         </div>
 
-        <div class="flex gap-x-1">
+        <div class=" gap-x-1 hidden">
           <!-- Get Started -->
           <MazBtn color="transparent" size="sm">Merchant Login</MazBtn>
           <!-- Login  -->

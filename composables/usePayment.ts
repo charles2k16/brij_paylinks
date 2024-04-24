@@ -11,7 +11,7 @@ export default function useSendOTP(){
     const isPayingmentLoading = ref(false)
     const isPaymentSuccessfull =ref(false)
     
-    async function pay (payload:PaymentPayload, paymentLink:string) {
+    async function pay (payload:PaymentPayload | any, paymentLink:string) {
         try {
           isPayingmentLoading.value = true;
 

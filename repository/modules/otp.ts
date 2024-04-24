@@ -8,17 +8,19 @@ import type { PaymentMethods } from '~/types/index';
 import FetchFactory from '../factory';
 
 class PaymentMethodsModule extends FetchFactory<PaymentMethods[]> {
-  private RESOURCE = '/paymentlinks/paymentmethods';
+
+  private OTP_RESOURCE = '/pwb/send-otp';
   
   /**
    * Return the data as array 
    * @param asyncDataOptions options for `useAsyncData`
    * @returns 
    */
-  async getPaymentMethods ( currency: String ) {
+  
+  async sendOTP ( paylaod: {} ) {
     return await this.call(
-      'GET',
-      `${ this.RESOURCE }?currency=${ currency }`
+      'POST',
+      `${ this.OTP_RESOURCE }/`, paylaod
     )
   }
 }

@@ -147,31 +147,6 @@
         <h2 class="text-lg">{{ invoice?.currency }} {{ invoice?.total }}</h2>
       </div>
     </div>
-
-    <div class="border-b border-gray-100 my-4"></div>
-
-    <!-- for tablet screens only -->
-    <div class="hidden md:block">
-      <MazBtn @click="toggleSheet" color="warning" size="sm" class="w-full">
-        Pay Invoice {{ invoice?.total }}
-      </MazBtn>
-
-      <!-- Drawer for payment form on mobile -->
-      <MazBottomSheet v-model="drawer" :no-close="true">
-        <div class="h-screen">
-          <div class="h-full overflow-y-auto py-10">
-            <div class="flex justify-between items-center">
-              <p class="text-gray-600">Payment form</p>
-              <MazBtn @click="toggleSheet" color="transparent">
-                <icon name="ic:sharp-close" />
-              </MazBtn>
-            </div>
-            <!-- content here -->
-            <InvoicePaymentForm :paymentOptions="paymentOptions!" :countries="contries" />
-          </div>
-        </div>
-      </MazBottomSheet>
-    </div>
   </div>
 </template>
 <script setup lang="ts">

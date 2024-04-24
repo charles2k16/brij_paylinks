@@ -249,6 +249,12 @@ export interface PaymentPayload {
 }
 
 
+export interface PaymentDefaultValues {
+  total: string,
+  currency: string,
+  isDefualt:boolean
+}
+
 
 
 
