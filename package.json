@@ -32,6 +32,7 @@
     "libphonenumber-js": "^1.10.60",
     "maz-ui": "^3.37.8",
     "pinia": "^2.1.7",
+    "pusher-js": "^8.4.0-rc2",
     "string-width": "^1.0.2 || 2 || 3 || 4"
   }
 }
