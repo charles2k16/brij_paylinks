@@ -1,9 +1,9 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-export default defineNuxtConfig({
+export default defineNuxtConfig( {
   devtools: { enabled: true },
   runtimeConfig: {
     public: {
-      baseURL: 'https://uat-api.brij.money/api/v2',
+      baseURL: 'https://api.brij.money/api/v2',
     },
   },
   components: [
@@ -16,7 +16,7 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     '@vueuse/nuxt',
     'maz-ui/nuxt'
-],
+  ],
   css: [
     '~/assets/css/element/index.scss',
     '~/assets/css/index.scss',
@@ -33,4 +33,4 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
-})
+} )

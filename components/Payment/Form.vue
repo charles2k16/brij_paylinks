@@ -182,7 +182,6 @@ const isOTPSuccessful = ref(false);
 
 // on otp successfull
 function handleOTPSuccess(val: any) {
-  console.log(val);
   isOTPSuccessful.value = val;
 }
 
@@ -241,7 +240,6 @@ watch(isOTPSuccessful, (newValue, oldValue) => {
 // ** Dialogue **//
 const handleClose = (done: () => void) => {
   isOTPSuccessful.value = false;
-  resetForm();
   selectedPaymentOption.value = null;
 };
 
@@ -249,8 +247,6 @@ function handleSendOTP(data: any) {
   console.log(data);
   ruleForm.value.phone = data.phone;
   ruleForm.value.email = data.email;
-
-  console.log(ruleForm.value);
 }
 
 // submit form function
@@ -276,9 +272,9 @@ function submitForm(invoicePaymentFormz: any) {
   });
 }
 
-function resetForm() {
-  invoicePaymentFormz.value!.resetFields();
-}
+// function resetForm() {
+//   invoicePaymentFormz.value!.resetFields();
+// }
 
 function handlePayment() {
   if (props.routeName === 'paymentlinks-id') {
