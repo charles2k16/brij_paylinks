@@ -4,6 +4,7 @@ import type {
   InvoicePaymentForm,
   MerchantResponse,
   PaymentLinkTemplate,
+  Merchant,
 } from "~/types";
 import axios from "axios";
 import useSendOTP from '~/composables/useSendOTP';
@@ -15,7 +16,7 @@ export const usePaymentLinkStore = defineStore( "paymentlink", () => {
   const baseURL = runtimeConfig.public.baseURL;
 
   // data
-  const merchant = ref<MerchantResponse | null>( null );
+  const merchant = ref<Merchant | null>( null );
   const selectedPaymentOption = ref<PaymentOption | null>( null );
   const isOTPView = ref( false );
   const OTPCode = ref();

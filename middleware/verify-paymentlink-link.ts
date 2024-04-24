@@ -5,34 +5,45 @@ export default defineNuxtRouteMiddleware(async (to) => {
   const paymentLink = to.params.id;
   const { $api } = useNuxtApp();
 
+  async function getMerchnat(payment_link: string | undefined) {
+    try {
+      const res = await $api.paymentLinks.getMerchantInfo(payment_link);
+      console.log(res)
+      if (res.status === 200) {
+        paymentLinkStore.merchant = res.data;
+        return 200;
+      } else {
+        return res.status;
+      }
+    } catch (error: any) {
+      console.log(error)
+      throw error;
+      // return error.response ? error.response.status : 500;
+    }
+  }
+
   if (paymentLink) {
-    // const statusCode = await paymentLinkStore.verifyPaymentLink(paymentLink.toString());
-    const res = await $api.paymentLinks.getPaymentLinksInfo(
-      paymentLink,
-    );
+     const statusCode = await getMerchnat(paymentLink.toString());
 
-
-
-    if (res.status === 200) {
-      paymentLinkStore.merchant = res
-   
-      // return;
-    } else {
+     if(statusCode === 200){
+        return;
+     }else {
       // return navigateTo(`/error`);
-      throw createError({
+       throw createError({
         statusCode: 404,
-        statusMessage: "Oooops, The link is either invalid ",
+        statusMessage: 'Oooops, The link is invalid',
         data: {
-          myCustomField: true,
-        },
-      });
+          myCustomField: true
+        }
+      })
+      
     }
   } else {
     // return navigateTo(`/error`);
 
     throw createError({
       statusCode: 404,
-      statusMessage: "Oooops, The link is either invalid ",
+      statusMessage: "Oooops, The link is invalid ",
       data: {
         myCustomField: true,
       },

@@ -23,7 +23,7 @@ export default defineNuxtRouteMiddleware( async ( to ) => {
         return res.status;
       }
     } catch ( error: any ) {
-      console.error( "Error verifying campaign link:", error );
+      console.error( error );
       // showToast('Failed to verify link', `${error.response.data.message}`, true)
       return error.response ? error.response.status : 500;
     }
@@ -33,7 +33,7 @@ export default defineNuxtRouteMiddleware( async ( to ) => {
   async function getMerhant () {
     try {
       // merhant details
-      const res = await $api.campaign.getMerchantInfo(campaignStore.campaign?.payment_link)
+      const res = await $api.paymentLinks.getMerchantInfo(campaignStore.campaign?.payment_link)
       if(res.status === 200){
         campaignStore.merchant = res.data
       }
@@ -52,7 +52,7 @@ export default defineNuxtRouteMiddleware( async ( to ) => {
       // return navigateTo(`/error`);
       throw createError( {
         statusCode: 404,
-        statusMessage: 'Oooops, The link is either invalid',
+        statusMessage: 'Oooops, The link is invalid',
         data: {
           myCustomField: true
         }

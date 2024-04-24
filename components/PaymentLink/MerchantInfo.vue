@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col w-full lg:px-5 md:px-20 px-2 lg:py-5 py-2 bg-gray-50 rounded-md">
+    <div class="flex flex-col w-full lg:px-5 md:px-5 md:py-5 px-2 lg:py-5 py-2 bg-gray-50 rounded-md">
         <div class="flex w-full lg:justify-start justify-center">
 
             <div class="relative  lg:max-w-md md:max-w-md    lg:h-56 h-44 rounded-lg w-full bg-cover bg-center"
@@ -63,31 +63,6 @@
 
 
 
-        <div class=" sm:hidden flex">
-            <MazBtn color="warning" size="sm" @click="drawer = true" rounded class="w-full mt-5">
-                Make payments
-            </MazBtn>
-
-            <!-- Drawer for payment form on mobile -->
-            <MazBottomSheet class="" v-model="drawer" :noClose="true" noPadding cl>
-                <div class="h-screen w-full">
-                    <div class="h-full overflow-y-auto py-10">
-                        <div class="flex justify-end items-center mb-2">
-                            <MazBtn  @click="drawer = false"  color="transparent">
-                                <Icon name="ic:sharp-close" />
-                            </MazBtn>
-
-                        </div>
-                        <!-- content here -->
-                        <PaymentLinkPaymentForm :paymentOptions="paymentOptions!" :payment-link="paymentLink" :countries="countries" :merchant="merchant" />
-
-                    </div>
-                </div>
-
-
-            </MazBottomSheet>
-
-        </div>
 
     </div>
 </template>
@@ -100,13 +75,9 @@ const paymenntLinkStore = usePaymentLinkStore()
 const {paymentLinktemplate, isPaymentLinktemplate}  = storeToRefs(paymenntLinkStore)
 // ** toggle merchant ** //
 const showMerchantContactInfo = ref(true)
-const drawer = ref(false)
 
 const props = defineProps<{
-    paymentOptions: PaymentMethods
-    countries: any[],
     merchant: Merchant | undefined
-    paymentLink:string | string[]
 }>()
 
 function toggleContactInfo() {

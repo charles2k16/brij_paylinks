@@ -16,7 +16,7 @@ export default function useSendOTP(){
             payment_link: payment_link,
           };
           
-          const res = await $api.paymentMethods.sendOTP(payload)
+          const res = await $api.otp.sendOTP(payload)
        
           
           ElNotification({

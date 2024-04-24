@@ -7,20 +7,22 @@ import type { PaymentMethods } from '~/types/index';
 // locals
 import FetchFactory from '../factory';
 
-class PaymentMethodsModule extends FetchFactory<PaymentMethods[]> {
-  private RESOURCE = '/paymentlinks/paymentmethods';
-  
+class campaignModule extends FetchFactory<PaymentMethods[]> {
+  private RESOURCE = '/paymentlinktemplates/link';
+
   /**
    * Return the data as array 
    * @param asyncDataOptions options for `useAsyncData`
    * @returns 
    */
-  async getPaymentMethods ( currency: String ) {
+
+
+  async getPaymentLinksTemplate ( template_link: String ) {
     return await this.call(
       'GET',
-      `${ this.RESOURCE }?currency=${ currency }`
+      `${ this.RESOURCE }/${ template_link }`
     )
   }
 }
 
-export default PaymentMethodsModule;
+export default campaignModule;
