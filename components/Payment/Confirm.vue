@@ -84,7 +84,7 @@ const ruleForm = ref({
 // rules
 const rules = reactive<FormRules<InvoicePaymentForm>>({
   phone: [{ required: true, message: 'Please input phone number', trigger: 'blur' }],
-  email: [{ required: true, message: 'Please input  a valid email ', trigger: 'blur' }],
+  email: [{ required: false, message: 'Please input  a valid email ', trigger: 'blur' }],
 });
 
 // Watch for changes in the 'isOTPSuccessfull' variable and assign it to the store var

@@ -14,7 +14,7 @@
       <!-- Campaign Info -->
       <div class="lg:w-[40%] md:w-[50%] w-full">
         <CampaignPayment
-          :paymentOptions="paymentOptions!"
+          :paymentOptions="paymentMethods!" 
           :countries="cty_abbr"
           :merchant="merchant!"
           :campaign="campaign!" />
@@ -44,7 +44,8 @@
               :campaign="campaign!"
               :countries="cty_abbr"
               :merchant="merchant"
-              :paymentOptions="paymentOptions!" />
+              @on-currency-change="handleCurrencyChange"
+              :paymentOptions="paymentMethods!" />
           </div>
         </div>
       </MazBottomSheet>
@@ -59,17 +60,13 @@
   </div>
 </template>
 <script setup lang="ts">
-import { type Campaign } from '~/types/index';
-import { ArrowLeftBold } from '@element-plus/icons-vue';
 import { useCampaignStore } from '~/store/campaign';
-import { usePaymentOptions } from '~/store/payment_options';
+import { supportedCountries } from '~/assets/data';
+import usePaymentMethods from '~/composables/usePaymentMethods'
 
 const campaignStore = useCampaignStore();
-const route = useRoute();
-const paymentOptiosnStore = usePaymentOptions();
-const { paymentOptions } = storeToRefs(paymentOptiosnStore);
 const { campaign, merchant } = storeToRefs(campaignStore);
-import { supportedCountries } from '~/assets/data';
+const {getPaymentMethod, paymentMethods, isPaymentMethodDataLoading} = usePaymentMethods()
 
 // data
 const drawer = ref(false);
@@ -78,7 +75,7 @@ let cty_abbr = ['GH'];
 // onmounted
 onMounted(() => {
   // campaignStore.verifyCampaignLink(route.params.id.toString())
-  paymentOptiosnStore.getPaymentMethod('GHS');
+  getPaymentMethod('GHS');
   getCountriesAsync();
 });
 
@@ -92,6 +89,12 @@ function getCountriesAsync() {
 function toggleSheet() {
   drawer.value = !drawer.value;
 }
+
+function handleCurrencyChange(val:any){
+  console.log(val)
+  getPaymentMethod(val);
+}
+
 
 definePageMeta({
   layout: 'campaign-layout',
