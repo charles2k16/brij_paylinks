@@ -11,6 +11,8 @@ export default function useSendOTP () {
 
   const isPayingmentLoading = ref( false )
   const isPaymentSuccessfull = ref( false )
+  const isPaymentFailed= ref( false )
+  const statusText = ref( '' )
 
   async function pay ( payload: PaymentPayload | any, paymentLink: string ) {
     try {
@@ -19,17 +21,27 @@ export default function useSendOTP () {
 
       const res = await $api.paymentLinks.payMerchant( paymentLink, payload )
 
+      if(res.status === 200){
+        isPayingmentLoading.value = false;
+        isPaymentSuccessfull.value = true
+        isPaymentSuccessfull.value = true
+
+      }
       // waiting for payment confirmation nortification
+      statusText.value = 'waiting for payment confirmation nortification';
       // completePayment( res );
 
     } catch ( error: any ) {
       isPayingmentLoading.value = false;
       isPaymentSuccessfull.value = false;
+      isPaymentFailed.value = true;
 
+
+      statusText.value = '';
       ElNotification( {
         title: "Failed to make transactions ",
         message: `${ error.response._data.message }`,
-        duration: 0,
+        // duration: 0,
         type: "error",
       } );
     }
@@ -41,7 +53,8 @@ export default function useSendOTP () {
     const channel = socket_channel;
 
     // waiting to receive payment notification
-
+    statusText.value = 'waiting to receive payment notification';
+  
     Pusher.logToConsole = true;
 
     var pusher = new Pusher( '4f9d3b832ddf4e8ca29a', {
@@ -53,16 +66,19 @@ export default function useSendOTP () {
       if ( data.status == 200 ) {
         isPaymentSuccessfull.value = true;
         isPayingmentLoading.value = false;
+        statusText.value = '';
         console.log( 'paym', data )
         ElNotification( {
           title: "Payment made successfully",
           message: `${ res.message }`,
-          duration: 0,
+          // duration: 0,
           type: "success",
         } );
 
       } else {
         isPayingmentLoading.value = false;
+        statusText.value = '';
+
         //  show a failed pop up
       }
     } );
@@ -72,6 +88,7 @@ export default function useSendOTP () {
   return {
     isPayingmentLoading,
     isPaymentSuccessfull,
+    isPaymentFailed,
     pay
   }
 }

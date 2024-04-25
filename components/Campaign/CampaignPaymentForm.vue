@@ -55,7 +55,7 @@
         scrollable>
         <div v-if="!isOTPSuccessfull" class="flex flex-col">
           <!-- payment methods -->
-          <PaymentMethod :options="props.paymentOptions.data" v-model="campaignStore.selectedPaymentOption"
+          <PaymentMethod :options="props.paymentOptions" v-model="campaignStore.selectedPaymentOption"
             class="flex-1" />
           <!-- Continue -->
 
@@ -109,29 +109,7 @@
 
     <!-- success payment modal -->
 
-    <MazDialog v-model="isPaymentSuccessfull" :on-close="handleClose">
-      <div class="flex flex-col justify-center items-center">
-        <Icon class="text-6xl text-green-700" name="ri:send-plane-line" />
-        <h2 class="text-2xl mt-3">Donation Made Successfull</h2>
-        <p class="text-center">
-          You have successfully made donated to this campaign. Share this campaign by copy
-          the URL below.
-        </p>
 
-        <div class="w-full border border-gray-200 p-5 mt-5 rounded-md">
-          <p class="text-lg">
-            You donated an amount of <span class="font-semibold">GHS 200 </span>to
-            <span class="font-semibold">Fund Raising for new School Build in Newton</span>'s Campaign on
-            <span>{{ formateDate(new Date(), 'Mo MMM YYYY h:ss a') }}</span>
-          </p>
-          <div class="flex w-full">
-            <CampaignCopyLink class="w-full mt-5" :campaignLink="campaign?.campaign_link!" />
-          </div>
-        </div>
-
-
-      </div>
-    </MazDialog>
 
 
 
@@ -140,7 +118,7 @@
 
     <!-- success payment modal -->
 
-    <MazDialog v-model="isPaymentSuccessfull" :on-close="handleClose">
+    <MazDialog v-model="isPaymentSuccessfull" width="400px" :on-close="handleClose">
       <div class="flex flex-col justify-center items-center">
         <Icon class="text-6xl text-green-700" name="ri:send-plane-line" />
         <h2 class="text-2xl mt-3">Donation Made Successfull</h2>
@@ -167,6 +145,20 @@
       </template>
     </MazDialog>
 
+    <MazDialog v-model="isPaymentFailed" width="400px" :on-close="handleClose">
+      <div class="flex flex-col justify-center items-center">
+        <Icon class="text-6xl text-red-600" name="bxs:error-alt" />
+        <h2 class="text-2xl mt-3">Payment failed</h2>
+        <p class="text-center">Oops! It seems there was an issue processing your payment. Please check your payment
+          details
+          and try again..</p>
+        <div class="mt-10"></div>
+      </div>
+      <!-- <template #footer="{ close }">
+        <MazBtn color="warning" @click="close"> Go back </MazBtn>
+      </template> -->
+    </MazDialog>
+
   </el-form>
 </template>
 <script setup lang="ts">
@@ -175,38 +167,39 @@ import {
   type Campaign,
   type CampaignPaymentForm,
   type Merchant,
+  type PaymentOption,
   type SelectCountryResult,
 } from '~/types/index';
 import { useCampaignStore } from '~/store/campaign';
 import { type PaymentMethods } from '~/types/index'
-import { usePaymentOptions } from '~/store/payment_options'
 import MazPhoneNumberInput from 'maz-ui/components/MazPhoneNumberInput'
 import { extractAbbr } from '~/utils/index'
 
 
 // instance of sentOTP composable
 const { isOTPSuccessfull, isSendOTPLoading, sendOTP } = useSendOTP();
-const { isPayingmentLoading, isPaymentSuccessfull, pay } = usePayment();
+const { isPayingmentLoading, isPaymentFailed, isPaymentSuccessfull, pay } = usePayment();
 
-// instance of pay 
+
 
 // instance of tpayment store
 const campaignStore = useCampaignStore();
-const paymentOptiosnStore = usePaymentOptions();
 const { dialogueTitle, isPaymentMethodSelected, otpCode, campaign } = storeToRefs(campaignStore);
 // props
 const props = defineProps<{
-  paymentOptions: PaymentMethods;
+  paymentOptions: PaymentOption[] | null;
   campaign: Campaign;
   merchant: Merchant | undefined;
   countries: any[];
 }>();
 
+// emits
+const emit = defineEmits(['on-currency-change'])
+
 // form instance
 const ruleFormRef = ref<FormInstance>();
 
-// instance of api
-const { $api } = useNuxtApp();
+
 
 // toggle dialog
 const paymentMethodialogVisible = ref(false);
@@ -256,7 +249,7 @@ const amountChips = reactive([
 watch(
   () => paymentForm.currency,
   (newValue, oldValue) => {
-    paymentOptiosnStore.getPaymentMethod(paymentForm.currency)
+    emit('on-currency-change', newValue);
   }
 );
 
