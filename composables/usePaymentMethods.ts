@@ -1,5 +1,5 @@
 import { ref } from 'vue';
-import type { PaymentMethods, PaymentOption } from '~/types';
+import type { PaymentOption } from '~/types';
 
 export default function usePaymentMethods () {
 
@@ -16,13 +16,11 @@ export default function usePaymentMethods () {
       isPaymentMethodDataLoading.value = true;
       const res = await $api.paymentMethods.getPaymentMethods( currency )
 
-      if ( res.status === 200 ) {
-        paymentMethods.value = res.data;
-        isGetPaymentMethodsSuccessfull.value = true;
-        isPaymentMethodDataLoading.value = false;
-      } else {
-        isPaymentMethodDataLoading.value = false;
-      }
+
+      paymentMethods.value = res.data;
+      isGetPaymentMethodsSuccessfull.value = true;
+      isPaymentMethodDataLoading.value = false;
+
     } catch ( error: any ) {
       console.log( error )
 

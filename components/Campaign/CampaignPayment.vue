@@ -69,12 +69,12 @@
     </div>
 </template>
 <script setup lang="ts">
-import type { Campaign, Merchant, PaymentMethods  } from '~/types';
+import type { Campaign, Merchant, PaymentOption  } from '~/types';
 
 
 const props = defineProps<{
     campaign: Campaign
-    paymentOptions: PaymentMethods 
+    paymentOptions: PaymentOption[] | null 
     merchant: Merchant | undefined
     countries: any[]
 

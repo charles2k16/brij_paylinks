@@ -5,31 +5,38 @@ import Pusher from 'pusher-js'
 
 export default function useSendOTP () {
 
-
-  // instance of api
   const { $api } = useNuxtApp()
 
   const isPayingmentLoading = ref( false )
   const isPaymentSuccessfull = ref( false )
+  const isPaymentFailed = ref( false )
+  const statusText = ref( '' )
 
   async function pay ( payload: PaymentPayload | any, paymentLink: string ) {
     try {
       isPayingmentLoading.value = true;
 
-
       const res = await $api.paymentLinks.payMerchant( paymentLink, payload )
 
-      // waiting for payment confirmation nortification
-      completePayment( res );
+      if ( res.status === 200 ) {
+        isPayingmentLoading.value = false;
+        isPaymentSuccessfull.value = true
+        isPaymentSuccessfull.value = true
+
+      }
+
+      statusText.value = 'waiting for payment confirmation nortification';
+      // completePayment( res );
 
     } catch ( error: any ) {
       isPayingmentLoading.value = false;
-      isPaymentSuccessfull.value = false;
 
+
+      statusText.value = '';
       ElNotification( {
         title: "Failed to make transactions ",
         message: `${ error.response._data.message }`,
-        duration: 0,
+        // duration: 0,
         type: "error",
       } );
     }
@@ -39,8 +46,9 @@ export default function useSendOTP () {
 
     const { socket_channel } = res.data;
     const channel = socket_channel;
-    console.log( channel )
+
     // waiting to receive payment notification
+    statusText.value = 'waiting to receive payment notification';
 
     Pusher.logToConsole = true;
 
@@ -53,17 +61,19 @@ export default function useSendOTP () {
       if ( data.status == 200 ) {
         isPaymentSuccessfull.value = true;
         isPayingmentLoading.value = false;
+        statusText.value = '';
         console.log( 'paym', data )
         ElNotification( {
           title: "Payment made successfully",
           message: `${ res.message }`,
-          duration: 0,
+          // duration: 0,
           type: "success",
         } );
 
       } else {
         isPayingmentLoading.value = false;
-        //  show a failed pop up
+        statusText.value = '';
+        isPaymentFailed.value = true;
       }
     } );
 
@@ -72,6 +82,7 @@ export default function useSendOTP () {
   return {
     isPayingmentLoading,
     isPaymentSuccessfull,
+    isPaymentFailed,
     pay
   }
 }

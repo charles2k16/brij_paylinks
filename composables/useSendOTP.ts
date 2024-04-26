@@ -22,7 +22,6 @@ export default function useSendOTP(){
           ElNotification({
             title: "OPT Sent Successfully",
             message: `${res.message}`,
-            duration: 0,
             type: "success",
           });
     
@@ -34,7 +33,6 @@ export default function useSendOTP(){
           ElNotification({
             title: "Failed to send OTP ",
             message: `${error.response._data.message}`,
-            duration: 0,
             type: "error",
           });
         }
