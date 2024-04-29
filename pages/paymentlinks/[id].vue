@@ -1,15 +1,15 @@
 <template>
-  <div class="w-full flex flex-col section">
+  <div class="w-full flex flex-col bg-slate-100">
     <div class="flex lg:flex-row flex-col justify-center md:space-x-4 h-full lg:mt-10">
-      <div class="lg:w-[50%] w-full h-fit rounded-md flex justify-center">
-        <div class="lg:max-w-md md:max-w-2xl w-full flex justify-center lg:m-0 md:m-0 m-3">
+      <div class="lg:w-[50%] w-full h-screen rounded-md flex justify-end ">
+        <div class="lg:max-w-md md:max-w-2xl w-full flex justify-center lg:m-0 md:m-0 m-3 h-fit">
           <PaymentLinkMerchantInfo :merchant="merchant!" />
         </div>
       </div>
 
       <!-- Campaign Info -->
       <div class="lg:w-[50%] w-full hidden lg:block pt-5 lg:pt-0">
-        <div class="lg:max-w-md md:max-w-2xl w-full">
+        <div class="lg:max-w-md md:max-w-2xl w-full bg-white p-10 rounded-md">
           <PaymentForm  :payment-methods="paymentMethods!" :paymentCode="paymentCode" :is-payent-methods-loading="isPaymentMethodDataLoading" :route-name="routeName"  :payment-link="route.params.id"
               :countries="cty_abbr" :merchant="merchant!" :default-values="defaultValues"  :payment-link-template-link="paymentLinktemplate!" @on-currency-change="handleCurrencyChange" />
         </div>

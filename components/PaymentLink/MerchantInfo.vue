@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col w-full lg:px-5 md:px-5 md:py-5 px-2 lg:py-5 py-2 bg-gray-50 rounded-md">
+    <div class="flex flex-col w-full lg:px-5 md:px-5 md:py-5 px-2 lg:py-5 py-2 bg-white rounded-md">
         <div class="flex w-full lg:justify-start justify-center">
 
             <div class="relative  lg:max-w-md md:max-w-md    lg:h-56 h-44 rounded-lg w-full bg-cover bg-center"
