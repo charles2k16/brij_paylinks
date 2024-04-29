@@ -1,7 +1,8 @@
 <template>
-  <div class="w-full flex flex-col bg-slate-100">
+  <div class="w-full bg-slate-100">
+    <div class="w-full flex flex-col section">
     <div class="flex lg:flex-row flex-col justify-center md:space-x-4 h-full lg:mt-10">
-      <div class="lg:w-[50%] w-full h-screen rounded-md flex justify-end ">
+      <div class="lg:w-[50%] w-full h-screen rounded-md flex lg:justify-end justify-center">
         <div class="lg:max-w-md md:max-w-2xl w-full flex justify-center lg:m-0 md:m-0 m-3 h-fit">
           <PaymentLinkMerchantInfo :merchant="merchant!" />
         </div>
@@ -19,7 +20,7 @@
     <div
       class="lg:hidden fixed bottom-0 left-0 right-0 flex gap-x-2 items-center justify-center bg-white p-4 shadow-lg">
       <!-- Pay  -->
-      <MazBtn color="warning" size="sm" @click="isbottomSheetShow = true" rounded class="w-full mt-5">
+      <MazBtn color="warning" size="sm" @click="isbottomSheetShow = true" rounded class="w-full">
         Make payments {{paymentLinktemplate?.amount}}
       </MazBtn>
 
@@ -41,6 +42,8 @@
     </div>
 
   </div>
+  </div>
+
 </template>
 <script setup lang="ts">
 import { usePaymentLinkStore } from '~/store/payment_links';
