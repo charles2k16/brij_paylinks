@@ -154,7 +154,7 @@ import { useInvoiceStore } from '~/store/invoice';
 const invoiceStore = useInvoiceStore();
 import { useClipboard } from '@vueuse/core';
 import { ElMessage } from 'element-plus';
-import type { Invoice, Merchant, PaymentMethods } from '~/types';
+import type { Invoice, Merchant, PaymentMethods, PaymentOption } from '~/types';
 
 const { merchant, invoice } = storeToRefs(invoiceStore);
 const source = ref(`${merchant.value?.contact}`);
@@ -164,7 +164,7 @@ const { text, copy, copied } = useClipboard({ source });
 const props = defineProps<{
   invoice: Invoice | null;
   merchant: Merchant | undefined;
-  paymentOptions: PaymentMethods;
+  paymentOptions: PaymentOption[] | null;
   contries: any[];
 }>();
 

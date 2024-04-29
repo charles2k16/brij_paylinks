@@ -5,7 +5,7 @@
       <div class="lg:max-w-lg md:max-w-xl w-full bg-gray-100 lg:p-5 md:p-5 pb-32 p-2 rounded-md">
         <!-- Campaign Info -->
         <InvoicePaymentinfo :merchant="merchant!" :invoice="invoice" :contries="cty_abbr"
-          :payment-options="paymentOptions!" />
+          :payment-options="paymentMethods!" />
       </div>
 
       <!-- Campaign Info -->
@@ -55,11 +55,8 @@
 </template>
 
 <script setup lang="ts">
-import { usePaymentOptions } from '~/store/payment_options';
 import { useInvoiceStore } from '~/store/invoice';
-const paymentOptiosnStore = usePaymentOptions();
 const invoiceStore = useInvoiceStore();
-const { paymentOptions } = storeToRefs(paymentOptiosnStore);
 const { invoice, merchant } = storeToRefs(invoiceStore);
 import { supportedCountries } from '~/assets/data';
 import usePaymentMethods from '~/composables/usePaymentMethods'
