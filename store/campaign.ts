@@ -9,12 +9,10 @@ import axios from "axios";
 export const useCampaignStore = defineStore( "campaign", () => {
   // import runtime config
   const runtimeConfig = useRuntimeConfig();
-  const baseURL = runtimeConfig.public.baseURL;
 
   // data
   const selectedPaymentOption = ref<PaymentOption | null>( null );
   const otpCode = ref( '' );
-  const isOTPSuccessfull = ref( false );
   const merchant = ref<Merchant>();
   const campaign = ref<Campaign | null>( null );
   const isPaymentSuccessfull = ref( false );
@@ -31,13 +29,6 @@ export const useCampaignStore = defineStore( "campaign", () => {
     }
   } );
 
-  const dialogueTitle = computed( () => {
-    if ( isOTPSuccessfull.value === false ) {
-      return "Payment Options";
-    } else {
-      return "Payment OTP";
-    }
-  } );
 
 
 
@@ -48,9 +39,7 @@ export const useCampaignStore = defineStore( "campaign", () => {
     isPaymentMethodSelected,
     otpCode,
     selectedPaymentOption,
-    dialogueTitle,
     campaign,
-    isOTPSuccessfull,
     merchant,
     isPaymentSuccessfull,
 
