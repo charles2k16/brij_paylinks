@@ -154,7 +154,7 @@ import { useInvoiceStore } from '~/store/invoice';
 const invoiceStore = useInvoiceStore();
 import { useClipboard } from '@vueuse/core';
 import { ElMessage } from 'element-plus';
-import type { Invoice, Merchant, PaymentMethods } from '~/types';
+import type { Invoice, Merchant } from '~/types';
 
 const { merchant, invoice } = storeToRefs(invoiceStore);
 const source = ref(`${merchant.value?.contact}`);
@@ -164,7 +164,6 @@ const { text, copy, copied } = useClipboard({ source });
 const props = defineProps<{
   invoice: Invoice | null;
   merchant: Merchant | undefined;
-  paymentOptions: PaymentMethods;
   contries: any[];
 }>();
 
@@ -175,19 +174,17 @@ function toggleInvoiceItems() {
   showInvoiceItems.value = !showInvoiceItems.value;
 }
 
-
-watch(copied, (newValue) => {
-    if (newValue === true) {
-        ElMessage({
-            message: "Merchnat contac copied successfully",
-            type: 'success',
-        })
-    }
+watch(copied, newValue => {
+  if (newValue === true) {
+    ElMessage({
+      message: 'Merchnat contac copied successfully',
+      type: 'success',
+    });
+  }
 });
 
 function toggleSheet() {
-    drawer.value = !drawer.value
-
+  drawer.value = !drawer.value;
 }
 </script>
 <style></style>
