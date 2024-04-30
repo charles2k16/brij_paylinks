@@ -1,39 +1,26 @@
 <template>
-  <div class="w-full flex flex-col section">
+  <div class="w-full bg-slate-100 ">
+    <div class="w-full flex flex-col section h-screen">
     <div class="flex lg:flex-row flex-col justify-center md:space-x-4 h-full lg:mt-10">
-      <div class="lg:w-[50%] w-full h-fit rounded-md flex justify-center">
-        <div
-          class="lg:max-w-md md:max-w-2xl w-full flex justify-center lg:m-0 md:m-0 m-3">
+      <div class="lg:w-[50%] w-full h-fit rounded-md flex justify-end">
+        <div class="lg:max-w-md md:max-w-2xl w-full flex justify-center lg:m-0 md:m-0 m-3">
           <PaymentLinkMerchantInfo :merchant="merchant!" />
         </div>
       </div>
 
       <div class="lg:w-[50%] w-full hidden lg:block pt-5 lg:pt-0">
-        <div class="lg:max-w-md md:max-w-2xl w-full">
-          <PaymentForm
-            :payment-methods="paymentMethods!"
-            :paymentCode="paymentCode"
-            :is-payent-methods-loading="isPaymentMethodDataLoading"
-            :route-name="routeName"
-            :payment-link="route.params.id"
-            :countries="cty_abbr"
-            :merchant="merchant!"
-            :default-values="defaultValues"
-            :payment-link-template-link="paymentLinktemplate!"
-            @on-currency-change="handleCurrencyChange" />
+        <div class="lg:max-w-md md:max-w-2xl w-full bg-white p-5 rounded-md">
+          <PaymentForm  :payment-methods="paymentMethods!" :paymentCode="paymentCode" :is-payent-methods-loading="isPaymentMethodDataLoading" :route-name="routeName"  :payment-link="route.params.id"
+              :countries="cty_abbr" :merchant="merchant!" :default-values="defaultValues"  :payment-link-template-link="paymentLinktemplate!" @on-currency-change="handleCurrencyChange" />
         </div>
       </div>
     </div>
 
     <div
       class="lg:hidden fixed bottom-0 left-0 right-0 flex gap-x-2 items-center justify-center bg-white p-4 shadow-lg">
-      <MazBtn
-        color="warning"
-        size="sm"
-        @click="isbottomSheetShow = true"
-        rounded
-        class="w-full mt-5">
-        Make payments {{ paymentLinktemplate?.amount }}
+      <!-- Pay  -->
+      <MazBtn color="warning" size="sm" @click="isbottomSheetShow = true" rounded class="w-full mt-5">
+        Make payments {{paymentLinktemplate?.amount}}
       </MazBtn>
 
       <MazBottomSheet v-model="isbottomSheetShow" :noClose="true" noPadding cl>
@@ -61,6 +48,8 @@
       </MazBottomSheet>
     </div>
   </div>
+  </div>
+
 </template>
 
 <script setup lang="ts">
