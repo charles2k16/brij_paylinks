@@ -226,7 +226,7 @@ const rules = reactive<FormRules<CampaignPaymentForm>>({
 const paymentForm = reactive<CampaignPaymentForm>({
   amount: '',
   phone: phoneResult.value?.e164!,
-  currency: '',
+  currency: 'GHS',
 });
 
 // chips data
