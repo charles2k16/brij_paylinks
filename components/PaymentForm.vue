@@ -14,7 +14,7 @@
       <div class="flex h-fit">
         <el-form-item prop="currency">
           <MazSelect
-            v-model="paymentForm.currency"
+            v-model="paymentForm.value.currency"
             :disabled="disableDefaultFields"
             label="Select currency"
             color="warning"
@@ -29,7 +29,7 @@
             key="lg"
             color="warning"
             :disabled="disableDefaultFields"
-            v-model="paymentForm.amount"
+            v-model="paymentForm.value.amount"
             label="Enter Amount"
             size="md" />
         </el-form-item>
@@ -43,7 +43,7 @@
         class="w-full"
         key="lg"
         color="warning"
-        v-model="paymentForm.reference"
+        v-model="paymentForm.value.reference"
         label="Reference"
         placeholder="Pay for services"
         size="md" />
@@ -80,8 +80,8 @@
       <PaymentConfirm
         :countries="countries"
         :paymentLink="paymentLink!"
-        :amount="paymentForm.amount"
-        :currency="paymentForm.currency"
+        :amount="paymentForm.value.amount"
+        :currency="paymentForm.value.currency"
         v-if="!isOTPSuccessful"
         :merchant="merchant"
         @send-otp="handleSendOTP"
@@ -100,7 +100,7 @@
           <MazInputCode
             :code-length="6"
             size="xs"
-            v-model="paymentForm.otp"
+            v-model="paymentForm.value.otp"
             class="flex flex-wrap justify-center"
             @completed="handlePayment"
             color="warning" />
@@ -228,7 +228,7 @@ function handleOTPSuccess(val: any) {
 
 // opt re-send
 function handleOTPResend() {
-  sendOTP(paymentForm.value.phone, props.paymentLink?.toString()!);
+  sendOTP(paymentForm.value.value.phone, props.paymentLink?.toString()!);
 }
 
 // props
@@ -247,10 +247,28 @@ const props = defineProps<{
 
 const emit = defineEmits(['on-currency-change']);
 
-const paymentForm = ref({
+const paymentForm = computed(() => {
+  if(props.defaultValues.currency){
+    return paymentFormWithDefaultVals
+  }else{
+    return paymentFormWithoutDefaultVals
+  }
+})
+const paymentFormWithDefaultVals = ref({
   amount: props.defaultValues.total,
   reference: '',
   currency: props.defaultValues.currency,
+  payment_method: '',
+  otp: '',
+  phone: '',
+  email: '',
+  phoneResult: '',
+});
+
+const paymentFormWithoutDefaultVals = ref({
+  amount: '',
+  reference: '',
+  currency: 'GHS',
   payment_method: '',
   otp: '',
   phone: '',
@@ -272,7 +290,7 @@ const rules = reactive<FormRules<InvoicePaymentForm>>({
 });
 
 watch(
-  () => paymentForm.value.currency,
+  () => paymentForm.value.value.currency,
   (newValue, oldValue) => {
     emit('on-currency-change', newValue);
   }
@@ -292,8 +310,8 @@ const handleClose = () => {
 };
 
 function handleSendOTP(data: any) {
-  paymentForm.value.phone = data.phone;
-  paymentForm.value.email = data.email;
+  paymentForm.value.value.phone = data.phone;
+  paymentForm.value.value.email = data.email;
 }
 
 // submit form function
@@ -339,14 +357,14 @@ function handlePaymentLinksPayment() {
   const payload = {
     payment_method_id: selectedPaymentOption.value?.id,
     payment_details: {
-      momo_number: paymentForm.value.phone,
+      momo_number: paymentForm.value.value.phone,
       description: 'Payment link transaction',
-      amount: paymentForm.value.amount,
-      currency: paymentForm.value.currency,
-      otp: paymentForm.value.otp,
+      amount: paymentForm.value.value.amount,
+      currency: paymentForm.value.value.currency,
+      otp: paymentForm.value.value.otp,
       customer_firstname: 'john',
       customer_lastname: 'doe',
-      customer_email: paymentForm.value.email ? paymentForm.value.email : 'me@you.com',
+      customer_email: paymentForm.value.value.email ? paymentForm.value.value.email : 'me@you.com',
     },
   };
 
@@ -357,14 +375,14 @@ function handlePaymentLinksTemplatePayment() {
   const payload = {
     payment_method_id: selectedPaymentOption.value?.id,
     payment_details: {
-      momo_number: paymentForm.value.phone,
+      momo_number: paymentForm.value.value.phone,
       description: 'Payment link transaction',
-      amount: paymentForm.value.amount,
-      currency: paymentForm.value.currency,
-      otp: paymentForm.value.otp,
+      amount: paymentForm.value.value.amount,
+      currency: paymentForm.value.value.currency,
+      otp: paymentForm.value.value.otp,
       customer_firstname: 'john',
       customer_lastname: 'doe',
-      customer_email: paymentForm.value.email,
+      customer_email: paymentForm.value.value.email,
     },
     meta: {
       payment_type: 'paymentlinktemplate',
@@ -378,14 +396,14 @@ function handlePaymentInvoice() {
   const payload = {
     payment_method_id: selectedPaymentOption.value?.id,
     payment_details: {
-      momo_number: paymentForm.value.phone,
+      momo_number: paymentForm.value.value.phone,
       description: 'Payment link transaction',
-      amount: paymentForm.value.amount,
-      currency: paymentForm.value.currency,
-      otp: paymentForm.value.otp,
+      amount: paymentForm.value.value.amount,
+      currency: paymentForm.value.value.currency,
+      otp: paymentForm.value.value.otp,
       customer_firstname: 'john',
       customer_lastname: 'doe',
-      customer_email: paymentForm.value.email,
+      customer_email: paymentForm.value.value.email,
     },
     meta: {
       payment_type: 'invoice',
