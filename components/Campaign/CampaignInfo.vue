@@ -25,7 +25,7 @@
                     </div>
                 </template>
                  <div class="flex flex-col gap-y-2">
-                    <p class="text-sm text-amber-600">Merhant details</p>
+                    <p class="text-sm text-amber-600">Merchant details</p>
 
                  <div class="flex flex-col">
                     <h2 class="text-base font-bold text-white">{{ merchant?.name }}</h2>
