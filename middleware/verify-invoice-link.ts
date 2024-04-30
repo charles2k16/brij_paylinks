@@ -26,7 +26,7 @@ export default defineNuxtRouteMiddleware( async ( to ) => {
 
 
   // get merchnat
-  async function getMerchnat ( payment_link: string | undefined ) {
+  async function getMerchant ( payment_link: string | undefined ) {
     try {
       const res = await $api.paymentLinks.getMerchantInfo( payment_link )
 
@@ -51,7 +51,7 @@ export default defineNuxtRouteMiddleware( async ( to ) => {
 
       await getInvoice( invoice_id )
 
-      await getMerchnat( invoiceStore.invoice?.payment_code )
+      await getMerchant( invoiceStore.invoice?.payment_code )
 
       return 200;
 

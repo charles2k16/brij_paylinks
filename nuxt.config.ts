@@ -15,22 +15,30 @@ export default defineNuxtConfig( {
     'nuxt-icon',
     '@pinia/nuxt',
     '@vueuse/nuxt',
-    'maz-ui/nuxt'
+    'maz-ui/nuxt',
+    '@nuxtjs/color-mode',
+    '@nuxtjs/tailwindcss'
   ],
+  colorMode:{
+    classSuffix:'',
+    preference: 'system',
+    fallback: 'dark'
+  },
+  tailwindcss: {
+    cssPath: '~/assets/css/tailwind.css',
+    configPath: 'tailwind.config',
+    exposeConfig: false,
+    config: {},
+    injectPosition:0,
+    viewer: true,
+  },
   css: [
     '~/assets/css/element/index.scss',
     '~/assets/css/index.scss',
     'element-plus/theme-chalk/display.css',
-    '~/assets/css/main.css'
   ],
   elementPlus: {
     icon: 'ElIcon',
     importStyle: 'scss',
-  },
-  postcss: {
-    plugins: {
-      tailwindcss: {},
-      autoprefixer: {},
-    },
   },
 } )

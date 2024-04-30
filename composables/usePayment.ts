@@ -73,8 +73,8 @@ export default function useSendOTP () {
   }
 
   return {
-    isPayingmentLoading: isPaymentLoading,
-    isPaymentSuccessfull: isPaymentSuccessful,
+    isPaymentLoading,
+     isPaymentSuccessful,
     isPaymentFailed,
     pay
   }

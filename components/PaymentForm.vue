@@ -1,15 +1,17 @@
 <template>
   <el-form
-    ref="invoicePaymentFormz"
+    ref="invoicePaymentForm"
     :model="paymentForm"
     :rules="rules"
     class="demo-ruleForm max-w-"
     size="default"
     status-icon>
-    <h2 class="text-2xl">Make payment</h2>
-    <p class="mb-5">Enter amount to pay and select payment method</p>
+    <h2 class="text-2xl dark:text-white">Make payment</h2>
+    <p class="mb-20 dark:text-white">Enter amount to pay and select payment method</p>
 
     <!-- amount & currency -->
+    <p class="mb-2 font-semibold dark:text-white">Amount to be paid</p>
+
     <div class="flex gap-x-2 mb-2">
       <div class="flex h-fit">
         <el-form-item prop="currency">
@@ -38,7 +40,7 @@
 
     <!-- Reference -->
     <el-form-item prop="reference">
-      <p class="mb-2 font-semibold">Reference</p>
+      <p class="mb-2 font-semibold dark:text-white">Reference</p>
       <MazInput
         class="w-full"
         key="lg"
@@ -49,15 +51,15 @@
         size="md" />
     </el-form-item>
 
-    <div v-if="isPayentMethodsLoading" class="flex flex-col items-center w-full gap-y-3">
+    <div v-if="isPaymentMethodsLoading" class="flex flex-col items-center w-full gap-y-3">
       <Icon class="text-2xl text-amber-600" name="eos-icons:bubble-loading" />
       <p class="text-sm">Loading payment options</p>
     </div>
 
-    <!-- paymethodd -->
+    <!-- payment_method -->
     <PaymentMethods
       v-else
-      :options="paymentMethods!"
+      :options="paymentMethods || []"
       v-model="selectedPaymentOption"
       class="flex-1" />
 
@@ -65,8 +67,8 @@
     <MazBtn
       color="warning"
       size="sm"
-      @click="submitForm(invoicePaymentFormz)"
-      class="w-full mt-5">
+      @click="submitForm(invoicePaymentForm)"
+      class="w-full mt-8">
       Proceed to payment {{ defaultValues.total }}
     </MazBtn>
 
@@ -85,12 +87,12 @@
         v-if="!isOTPSuccessful"
         :merchant="merchant"
         @send-otp="handleSendOTP"
-        @on-opt-successfull="handleOTPSuccess" />
+        @on-opt-successful="handleOTPSuccess" />
 
       <div v-else class="flex flex-col items-center">
         <!-- OT Field -->
 
-        <Loading v-if="isPayingmentLoading" message="initiating payment authorizations" />
+        <Loading v-if="isPaymentLoading" message="initiating payment authorizations" />
 
         <div v-else class="flex flex-col">
           <h2 class="text-2xl text-center">Enter OTP Code</h2>
@@ -117,19 +119,19 @@
       </div>
       <template #footer>
         <div
-          class="w-full flex justify-center items-center gap-x-4 bg-gray-100 p-3 rounded-md">
-          <Icon class="text-xl text-teal-950" name="tdesign:secured" />
-          <p class="text-gray-600 font-bold text-sm">Secured by Brij</p>
-          <img src="/img/logo-dark.png" alt="logo" class="w-6" />
+          class="w-full flex justify-center items-center gap-x-4 bg-gray-100 dark:bg-gray-900 p-3 rounded-md">
+          <Icon class="text-xl text-teal-950 dark:text-white" name="tdesign:secured" />
+          <p class="text-gray-600 font-bold text-sm dark:text-white">Secured by Brij</p>
+          <img src="/img/logo-dark.png" alt="logo" class="w-6 dark:text-white" />
         </div>
       </template>
     </MazDialog>
 
     <!-- success payment modal -->
-    <MazDialog v-model="successPrompt" width="400px" :on-close="handleClose">
+    <MazDialog v-model="isPaymentSuccessful" width="400px" :on-close="handleClose">
       <div class="flex flex-col justify-center items-center">
         <Icon class="text-6xl text-green-700" name="ri:send-plane-line" />
-        <h2 class="text-2xl mt-3">Merchant Paid Successfull</h2>
+        <h2 class="text-2xl mt-3">Merchant Paid Successful</h2>
         <p class="text-center">You have successfully made payment to this merchant.</p>
 
         <div class="w-full border border-gray-200 p-5 mt-5 rounded-md">
@@ -146,7 +148,7 @@
       </template>
     </MazDialog>
 
-    <MazDialog v-model="failedPrompt" width="400px" :on-close="handleClose">
+    <MazDialog v-model="isPaymentLoading" width="400px" :on-close="handleClose">
       <div class="flex flex-col justify-center items-center">
         <Icon class="text-6xl text-red-600" name="bxs:error-alt" />
         <h2 class="text-2xl mt-3">Payment failed</h2>
@@ -171,14 +173,14 @@ import type {
   InvoicePaymentForm,
   Merchant,
   PaymentDefaultValues,
-  PaymentLinkTemplate,
+  paymentLinkTemplate,
   PaymentOption,
 } from '~/types/index';
 import { ElMessage } from 'element-plus';
 import usePayment from '~/composables/usePayment';
 
 // instance of pay
-const { isPayingmentLoading, isPaymentFailed, isPaymentSuccessfull, pay } = usePayment();
+const { isPaymentLoading, isPaymentFailed, isPaymentSuccessful, pay } = usePayment();
 
 // instance of otp
 const { isSendOTPLoading, sendOTP } = useSendOTP();
@@ -186,27 +188,26 @@ const { isSendOTPLoading, sendOTP } = useSendOTP();
 // togge dialog
 const dialogVisible = ref(false);
 
-const successPrompt = ref(false);
-const failedPrompt = ref(false);
+
 
 watch(
-  () => isPaymentSuccessfull.value,
+  () => isPaymentSuccessful.value,
   (newValue, oldValue) => {
-    successPrompt.value = newValue;
+    isPaymentSuccessful.value = newValue;
   }
 );
 
 watch(
   () => isPaymentFailed.value,
   (newValue, oldValue) => {
-    failedPrompt.value = newValue;
+    isPaymentFailed.value = newValue;
   }
 );
 
 // form instance
-const invoicePaymentFormz = ref<FormInstance>();
+const invoicePaymentForm = ref<FormInstance>();
 
-// disable defualt fields
+// disable default fields
 const disableDefaultFields = computed(() => {
   if (props.defaultValues.currency) {
     return true;
@@ -221,7 +222,7 @@ const selectedPaymentOption = ref<PaymentOption | null>(null);
 // is OTP Successful
 const isOTPSuccessful = ref(false);
 
-// on otp successfull
+// on otp successful
 function handleOTPSuccess(val: any) {
   isOTPSuccessful.value = val;
 }
@@ -234,13 +235,13 @@ function handleOTPResend() {
 // props
 const props = defineProps<{
   paymentMethods: PaymentOption[];
-  isPayentMethodsLoading: boolean;
+  isPaymentMethodsLoading: boolean;
   countries: any[];
   paymentLink?: string | string[];
   merchant: Merchant | undefined;
   routeName: string | null;
   invoice?: Invoice | undefined;
-  paymentLinkTemplateLink?: PaymentLinkTemplate | undefined;
+  paymentLinkTemplateLink?: paymentLinkTemplate | undefined;
   paymentCode: string | undefined;
   defaultValues: PaymentDefaultValues;
 }>();
@@ -276,7 +277,7 @@ const paymentFormWithoutDefaultVals = ref({
   phoneResult: '',
 });
 
-// validation rukes
+// validation rules
 const rules = reactive<FormRules<InvoicePaymentForm>>({
   amount: [{ required: true, message: 'Please input Amount to pay ', trigger: 'blur' }],
   reference: [{ required: true, message: 'Please input Reference ', trigger: 'blur' }],
@@ -304,7 +305,7 @@ watch(isOTPSuccessful, (newValue, oldValue) => {
 // ** Dialogue **//
 const handleClose = () => {
   isOTPSuccessful.value = false;
-  isPaymentSuccessfull.value = false;
+  isPaymentSuccessful.value = false;
   selectedPaymentOption.value = null;
   isPaymentFailed.value = false;
 };
@@ -315,8 +316,8 @@ function handleSendOTP(data: any) {
 }
 
 // submit form function
-function submitForm(invoicePaymentFormz: any) {
-  invoicePaymentFormz.validate((valid: any) => {
+function submitForm(invoicePaymentForm: any) {
+  invoicePaymentForm.validate((valid: any) => {
     if (valid) {
       if (selectedPaymentOption.value !== null) {
         // show popup
@@ -337,7 +338,7 @@ function submitForm(invoicePaymentFormz: any) {
 }
 
 // function resetForm() {
-//   invoicePaymentFormz.value!.resetFields();
+//   invoicePaymentForm.value!.resetFields();
 // }
 
 function handlePayment() {
@@ -386,7 +387,7 @@ function handlePaymentLinksTemplatePayment() {
       customer_email: paymentForm.value.value.email,
     },
     meta: {
-      payment_type: 'paymentlinktemplate',
+      payment_type: 'paymentLinkTemplate',
     },
   };
 
