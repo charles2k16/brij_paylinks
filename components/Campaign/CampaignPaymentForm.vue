@@ -51,11 +51,11 @@
         Continue
       </MazBtn>
       <!-- select payment menthod dialog -->
-      <MazDialog @close="handleClose" v-model="paymentMethodialogVisible" :title="dialogueTitle" :persistent="false"
+      <MazDialog @close="handleClose" v-model="paymentMethodialogVisible" :persistent="false"
         scrollable>
         <div v-if="!isOTPSuccessfull" class="flex flex-col">
           <!-- payment methods -->
-          <PaymentMethod :options="props.paymentOptions" v-model="campaignStore.selectedPaymentOption"
+          <PaymentMethods :options="props.paymentOptions" v-model="campaignStore.selectedPaymentOption"
             class="flex-1" />
           <!-- Continue -->
 
@@ -184,7 +184,7 @@ const { isPayingmentLoading, isPaymentFailed, isPaymentSuccessfull, pay } = useP
 
 // instance of tpayment store
 const campaignStore = useCampaignStore();
-const { dialogueTitle, isPaymentMethodSelected, otpCode, campaign } = storeToRefs(campaignStore);
+const { isPaymentMethodSelected, otpCode, campaign } = storeToRefs(campaignStore);
 // props
 const props = defineProps<{
   paymentOptions: PaymentOption[] | null;
@@ -253,11 +253,6 @@ watch(
   }
 );
 
-// Watch for changes in the 'isOTPSuccessfull' variable and assign it to the store var
-watch(isOTPSuccessfull, (newValue, oldValue) => {
-  // Trigger something when the value changes
-  campaignStore.isOTPSuccessfull = newValue
-});
 
 // watch for changes in the "isPaymentSuccessful" var and assign it to the store
 watch(isPaymentSuccessfull, (newValue, oldValue) => {
@@ -289,7 +284,7 @@ async function onChipClick(amount: string) {
 
 const handleClose = () => {
   // done();
-  campaignStore.isOTPSuccessfull = false;
+  isOTPSuccessfull.value = false;
   campaignStore.selectedPaymentOption = null;
   campaignStore.isPaymentSuccessfull = false;
   campaignStore.otpCode = '';

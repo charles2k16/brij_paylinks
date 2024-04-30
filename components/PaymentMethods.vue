@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col">
-    <p class="font-bold text-base text-black">Choose Payment Method</p>
+    <div class="font-bold text-black mt-2 text-xl">Choose Payment Method</div>
     <!-- options -->
     <div class="flex flex-row w-[100%] justify-between flex-wrap gap-y-2 gap-x-1 mt-5">
       <div
