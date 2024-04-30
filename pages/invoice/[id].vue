@@ -125,7 +125,6 @@ const defaultValues = ref<PaymentDefaultValues>({
 });
 
 function handleCurrencyChange(val: any) {
-  console.log(val);
   getPaymentMethod(val);
 }
 

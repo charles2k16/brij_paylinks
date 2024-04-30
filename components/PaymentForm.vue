@@ -248,12 +248,12 @@ const props = defineProps<{
 const emit = defineEmits(['on-currency-change']);
 
 const paymentForm = computed(() => {
-  if(props.defaultValues.currency){
-    return paymentFormWithDefaultVals
-  }else{
-    return paymentFormWithoutDefaultVals
+  if (props.defaultValues.currency) {
+    return paymentFormWithDefaultVals;
+  } else {
+    return paymentFormWithoutDefaultVals;
   }
-})
+});
 const paymentFormWithDefaultVals = ref({
   amount: props.defaultValues.total,
   reference: '',
@@ -319,7 +319,6 @@ function submitForm(invoicePaymentFormz: any) {
   invoicePaymentFormz.validate((valid: any) => {
     if (valid) {
       if (selectedPaymentOption.value !== null) {
-        console.log(selectedPaymentOption.value);
         // show popup
         dialogVisible.value = true;
         // alert('success')
@@ -364,7 +363,9 @@ function handlePaymentLinksPayment() {
       otp: paymentForm.value.value.otp,
       customer_firstname: 'john',
       customer_lastname: 'doe',
-      customer_email: paymentForm.value.value.email ? paymentForm.value.value.email : 'me@you.com',
+      customer_email: paymentForm.value.value.email
+        ? paymentForm.value.value.email
+        : 'me@you.com',
     },
   };
 

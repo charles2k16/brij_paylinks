@@ -22,7 +22,7 @@ export default function usePaymentMethods () {
       isPaymentMethodDataLoading.value = false;
 
     } catch ( error: any ) {
-      console.log( error )
+
 
       isPaymentMethodDataLoading.value = false;
     }

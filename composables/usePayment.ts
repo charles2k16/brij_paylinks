@@ -62,7 +62,7 @@ export default function useSendOTP () {
         isPaymentSuccessfull.value = true;
         isPayingmentLoading.value = false;
         statusText.value = '';
-        console.log( 'paym', data )
+
         ElNotification( {
           title: "Payment made successfully",
           message: `${ res.message }`,

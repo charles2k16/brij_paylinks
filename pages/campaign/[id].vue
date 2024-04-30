@@ -91,7 +91,6 @@ function toggleSheet() {
 }
 
 function handleCurrencyChange(val: any) {
-  console.log(val);
   getPaymentMethod(val);
 }
 

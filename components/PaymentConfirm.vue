@@ -89,8 +89,6 @@ const rules = reactive<FormRules<InvoicePaymentForm>>({
 
 // Watch for changes in the 'isOTPSuccessfull' variable and assign it to the store var
 watch(isOTPSuccessfull, (newValue, oldValue) => {
-  console.log(isOTPSuccessfull.value);
-  console.log(newValue);
   // Trigger something when the value changes
   emit('on-opt-successfull', isOTPSuccessfull.value);
 });
