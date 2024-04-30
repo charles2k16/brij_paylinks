@@ -7,29 +7,22 @@ export default function useSendOTP () {
 
   const { $api } = useNuxtApp()
 
-  const isPayingmentLoading = ref( false )
-  const isPaymentSuccessfull = ref( false )
+  const isPaymentLoading = ref( false )
+  const isPaymentSuccessful = ref( false )
   const isPaymentFailed = ref( false )
   const statusText = ref( '' )
 
   async function pay ( payload: PaymentPayload | any, paymentLink: string ) {
     try {
-      isPayingmentLoading.value = true;
+      isPaymentLoading.value = true;
 
       const res = await $api.paymentLinks.payMerchant( paymentLink, payload )
 
-      if ( res.status === 200 ) {
-        isPayingmentLoading.value = false;
-        isPaymentSuccessfull.value = true
-        isPaymentSuccessfull.value = true
-
-      }
-
-      statusText.value = 'waiting for payment confirmation nortification';
-      // completePayment( res );
+      statusText.value = 'waiting for payment confirmation notification';
+      completePayment( res );
 
     } catch ( error: any ) {
-      isPayingmentLoading.value = false;
+      isPaymentLoading.value = false;
 
 
       statusText.value = '';
@@ -59,8 +52,8 @@ export default function useSendOTP () {
     pusher.subscribe( channel );
     pusher.bind( 'Domain\\PayMerchant\\Events\\MerchantPaidEvent', ( data: any ) => {
       if ( data.status == 200 ) {
-        isPaymentSuccessfull.value = true;
-        isPayingmentLoading.value = false;
+        isPaymentSuccessful.value = true;
+        isPaymentLoading.value = false;
         statusText.value = '';
 
         ElNotification( {
@@ -71,7 +64,7 @@ export default function useSendOTP () {
         } );
 
       } else {
-        isPayingmentLoading.value = false;
+        isPaymentLoading.value = false;
         statusText.value = '';
         isPaymentFailed.value = true;
       }
@@ -80,8 +73,8 @@ export default function useSendOTP () {
   }
 
   return {
-    isPayingmentLoading,
-    isPaymentSuccessfull,
+    isPayingmentLoading: isPaymentLoading,
+    isPaymentSuccessfull: isPaymentSuccessful,
     isPaymentFailed,
     pay
   }
