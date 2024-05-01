@@ -1,6 +1,6 @@
 <template>
   <el-form ref="ruleFormRef" :model="paymentForm" :rules="rules">
-    <p class="text-gray-700 text-sm mt-5 mb-2">Amount to donate</p>
+    <p class="text-gray-700 dark:text-white text-sm mt-5 mb-2">Amount to donate</p>
     <div class="flex w-full gap-x-2 mb-2">
       <div class="flex h-fit">
         <el-form-item prop="currency">
@@ -20,8 +20,8 @@
     <!-- chips -->
     <div class="flex flex-wrap rounded-md mt-1">
       <div v-for="(chip, index) in amountChips" :key="index" class="group">
-        <button type="button" class="border-2 me-2 mb-2 border-teal-900 group-hover:bg-teal-900 py-0.5 px-3 rounded-md">
-          <p class="text-teal-950 font-bold text-sm group-hover:text-white" @click="onChipClick(chip.amount)">
+        <button type="button" class="border me-2 mb-2 border-teal-900 dark:border-gray-800 group-hover:bg-teal-900 py-0.5 px-3 rounded-md">
+          <p class="text-teal-950 dark:text-white  font-bold text-sm group-hover:text-white" @click="onChipClick(chip.amount)">
             {{ chip.amount }}
           </p>
         </button>
@@ -29,7 +29,7 @@
     </div>
 
     <!--Phone number field-->
-    <p class="text-gray-700 text-sm mt-10 mb-2">Phone number</p>
+    <p class="text-gray-700 dark:text-white  text-sm mt-10 mb-2">Phone number</p>
     <div class="flex w-full gap-x-2 mb-2">
       <!-- Input for amount -->
       <div class="flex-1">
@@ -51,11 +51,11 @@
         Continue
       </MazBtn>
       <!-- select payment menthod dialog -->
-      <MazDialog @close="handleClose" v-model="paymentMethodialogVisible" :persistent="false"
+      <MazDialog @close="handleClose" v-model="paymentMethodDialogVisible" :persistent="false"
         scrollable>
-        <div v-if="!isOTPSuccessfull" class="flex flex-col">
+        <div v-if="!isOTPSuccessful" class="flex flex-col">
           <!-- payment methods -->
-          <PaymentMethods :options="props.paymentOptions" v-model="campaignStore.selectedPaymentOption"
+          <PaymentMethods :options="props.paymentOptions || []" v-model="campaignStore.selectedPaymentOption"
             class="flex-1" />
           <!-- Continue -->
 
@@ -77,23 +77,23 @@
           <!-- OT Field -->
           <!-- <OPTInput class="w-full" :digits-pin="campaignStore.otpCode" /> -->
 
-          <Loading v-if="isPayingmentLoading" message="Initializing payment, authorize payment .." />
+          <Loading v-if="isPaymentLoading" message="Initializing payment, authorize payment .." />
 
           <!-- OT Field -->
           <div v-else class="flex flex-col">
             <h2 class="text-2xl text-center">Enter OTP Code</h2>
-            <p class="mb-5 text-gray-400 text-center">
+            <p class="mb-10 text-gray-400 dark:text-white text-center">
               OTP code has been sent to your momo number, please enter to continue
             </p>
-            <MazInputCode :code-length="6" size="xs" v-model="otpCode" class="flex flex-wrap justify-center"
+            <MazInputCode :code-length="6" size="xs" v-model="otpCode" class="flex flex-wrap justify-center mt-10"
               @completed="handlePayment()" color="warning" />
           </div>
 
           <!-- Resend button -->
           <MazBtn :loading="isSendOTPLoading" color="transparent" size="mini" @click="initiateOTPRequest()"
             class="reset-btn" link>
-            <p v-if="isSendOTPLoading">Resending OTP Code ...</p>
-            <p v-else>Re-send OTP Code</p>
+            <p v-if="isSendOTPLoading" class="dark:text-amber-400">Resending OTP Code ...</p>
+            <p v-else class="dark:text-amber-400">Re-send OTP Code</p>
           </MazBtn>
         </div>
       </MazDialog>
@@ -118,16 +118,16 @@
 
     <!-- success payment modal -->
 
-    <MazDialog v-model="isPaymentSuccessfull" width="400px" :on-close="handleClose">
+    <MazDialog v-model="isPaymentSuccessful" width="400px" :on-close="handleClose">
       <div class="flex flex-col justify-center items-center">
         <Icon class="text-6xl text-green-700" name="ri:send-plane-line" />
-        <h2 class="text-2xl mt-3">Donation Made Successfull</h2>
-        <p class="text-center">You have successfully made donated to this campaign. Share this campaign by copy
+        <h2 class="text-2xl mt-3 dark:text-white">Donation Made Successful</h2>
+        <p class="text-center dark:text-white">You have successfully made donated to this campaign. Share this campaign by copy
           the URL below.</p>
 
         <div class="w-full border border-gray-200 p-5 mt-5 rounded-md">
-          <p class="text-lg">You donated an amount of <span class="font-semibold">GHS 200 </span>to <span
-              class="font-semibold">Fund Raising for new School Build in Newton</span>'s Campaign on
+          <p class="text-lg dark:text-white">You donated an amount of <span class="font-semibold">GHS 200 </span>to <span
+              class="font-semibold dark:text-white">Fund Raising for new School Build in Newton</span>'s Campaign on
             <span>{{ formateDate(new Date, 'Mo MMM YYYY h:ss a') }}</span>
           </p>
           <div class="flex w-full">
@@ -148,15 +148,14 @@
     <MazDialog v-model="isPaymentFailed" width="400px" :on-close="handleClose">
       <div class="flex flex-col justify-center items-center">
         <Icon class="text-6xl text-red-600" name="bxs:error-alt" />
-        <h2 class="text-2xl mt-3">Payment failed</h2>
-        <p class="text-center">Oops! It seems there was an issue processing your payment. Please check your payment
-          details
-          and try again..</p>
+        <h2 class="text-2xl mt-3 dark:text-white">Payment failed</h2>
+        <p class="text-center dark:text-white">Oops! It seems there was an issue processing your payment. Please check your payment
+          details and try again..</p>
         <div class="mt-10"></div>
       </div>
-      <!-- <template #footer="{ close }">
+      <template #footer="{ close }">
         <MazBtn color="warning" @click="close"> Go back </MazBtn>
-      </template> -->
+      </template>
     </MazDialog>
 
   </el-form>
@@ -171,23 +170,22 @@ import {
   type SelectCountryResult,
 } from '~/types/index';
 import { useCampaignStore } from '~/store/campaign';
-import { type PaymentMethods } from '~/types/index'
 import MazPhoneNumberInput from 'maz-ui/components/MazPhoneNumberInput'
 import { extractAbbr } from '~/utils/index'
 
 
 // instance of sentOTP composable
-const { isOTPSuccessfull, isSendOTPLoading, sendOTP } = useSendOTP();
-const { isPayingmentLoading, isPaymentFailed, isPaymentSuccessfull, pay } = usePayment();
+const { isOTPSuccessful, isSendOTPLoading, sendOTP } = useSendOTP();
+const { isPaymentLoading, isPaymentFailed, isPaymentSuccessful, pay } = usePayment();
 
 
 
-// instance of tpayment store
+// instance of payment store
 const campaignStore = useCampaignStore();
 const { isPaymentMethodSelected, otpCode, campaign } = storeToRefs(campaignStore);
 // props
 const props = defineProps<{
-  paymentOptions: PaymentOption[] | null;
+  paymentOptions: PaymentOption[];
   campaign: Campaign;
   merchant: Merchant | undefined;
   countries: any[];
@@ -202,7 +200,7 @@ const ruleFormRef = ref<FormInstance>();
 
 
 // toggle dialog
-const paymentMethodialogVisible = ref(false);
+const paymentMethodDialogVisible = ref(false);
 
 // phone result
 const phoneResult = ref<SelectCountryResult>();
@@ -255,9 +253,9 @@ watch(
 
 
 // watch for changes in the "isPaymentSuccessful" var and assign it to the store
-watch(isPaymentSuccessfull, (newValue, oldValue) => {
+watch(isPaymentSuccessful, (newValue, oldValue) => {
   // Trigger something when the value changes
-  campaignStore.isPaymentSuccessfull = newValue
+  campaignStore.isPaymentSuccessful = newValue
 });
 
 
@@ -265,7 +263,7 @@ watch(isPaymentSuccessfull, (newValue, oldValue) => {
 function submitForm(ruleFormRef: any) {
   ruleFormRef.validate((valid: any) => {
     if (valid) {
-      paymentMethodialogVisible.value = true
+      paymentMethodDialogVisible.value = true
     } else {
       return false;
     }
@@ -284,9 +282,9 @@ async function onChipClick(amount: string) {
 
 const handleClose = () => {
   // done();
-  isOTPSuccessfull.value = false;
+  isOTPSuccessful.value = false;
   campaignStore.selectedPaymentOption = null;
-  campaignStore.isPaymentSuccessfull = false;
+  campaignStore.isPaymentSuccessful = false;
   campaignStore.otpCode = '';
 }
 

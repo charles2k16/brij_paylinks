@@ -1,47 +1,47 @@
 <template>
-  <div class="w-full bg-slate-100 ">
+  <div class="w-full bg-slate-100 dark:bg-gray-950  min-h-screen">
     <div class="w-full flex flex-col section h-screen">
     <div class="flex lg:flex-row flex-col justify-center md:space-x-4 h-full lg:mt-10">
-      <div class="lg:w-[50%] w-full h-fit rounded-md flex justify-end">
+      <div class="lg:w-[50%] w-full h-fit rounded-md flex lg:justify-end justify-center">
         <div class="lg:max-w-md md:max-w-2xl w-full flex justify-center lg:m-0 md:m-0 m-3">
           <PaymentLinkMerchantInfo :merchant="merchant!" />
         </div>
       </div>
 
       <div class="lg:w-[50%] w-full hidden lg:block pt-5 lg:pt-0">
-        <div class="lg:max-w-md md:max-w-2xl w-full bg-white p-5 rounded-md">
-          <PaymentForm  :payment-methods="paymentMethods!" :paymentCode="paymentCode" :is-payent-methods-loading="isPaymentMethodDataLoading" :route-name="routeName"  :payment-link="route.params.id"
-              :countries="cty_abbr" :merchant="merchant!" :default-values="defaultValues"  :payment-link-template-link="paymentLinktemplate!" @on-currency-change="handleCurrencyChange" />
+        <div class="lg:max-w-md md:max-w-2xl w-full ring-2 ring-slate-100 dark:ring-slate-800 bg-white dark:bg-transparent p-5 rounded-md">
+          <PaymentForm  :payment-methods=" paymentMethods || []" :paymentCode="paymentCode" :is-payment-methods-loading="isPaymentMethodDataLoading" :route-name="routeName"  :payment-link="route.params.id"
+              :countries="cty_abbr" :merchant="merchant!" :default-values="defaultValues"  :payment-link-template-link="paymentLinkTemplate!" @on-currency-change="handleCurrencyChange" />
         </div>
       </div>
     </div>
 
     <div
-      class="lg:hidden fixed bottom-0 left-0 right-0 flex gap-x-2 items-center justify-center bg-white p-4 shadow-lg">
+      class="lg:hidden fixed bottom-0 left-0 right-0 flex gap-x-2 items-center justify-center bg-white dark:bg-gray-950 p-4 shadow-lg">
       <!-- Pay  -->
-      <MazBtn color="warning" size="sm" @click="isbottomSheetShow = true" rounded class="w-full mt-5">
-        Make payments {{paymentLinktemplate?.amount}}
+      <MazBtn color="warning" size="sm" @click="isBottomSheetShow = true" rounded class="w-full mt-5">
+        Make payments {{paymentLinkTemplate?.amount}}
       </MazBtn>
 
-      <MazBottomSheet v-model="isbottomSheetShow" :noClose="true" noPadding cl>
+      <MazBottomSheet v-model="isBottomSheetShow" :noClose="true" noPadding cl>
         <div class="h-screen w-full">
           <div class="h-full overflow-y-auto py-10">
             <div class="flex justify-end items-center mb-2">
-              <MazBtn @click="isbottomSheetShow = false" color="transparent">
+              <MazBtn @click="isBottomSheetShow = false" color="transparent">
                 <Icon name="ic:sharp-close" />
               </MazBtn>
             </div>
 
             <PaymentForm
-              :payment-methods="paymentMethods!"
+              :payment-methods="paymentMethods || []"
               :paymentCode="paymentCode"
-              :is-payent-methods-loading="isPaymentMethodDataLoading"
+              :is-payment-methods-loading="isPaymentMethodDataLoading"
               :route-name="routeName"
               :payment-link="route.params.id"
               :countries="cty_abbr"
               :merchant="merchant!"
               :default-values="defaultValues"
-              :payment-link-template-link="paymentLinktemplate!"
+              :payment-link-template-link="paymentLinkTemplate!"
               @on-currency-change="handleCurrencyChange" />
           </div>
         </div>
@@ -59,14 +59,14 @@ import usePaymentMethods from '~/composables/usePaymentMethods';
 import type { PaymentDefaultValues } from '~/types';
 const route = useRoute();
 const paymentLinkStore = usePaymentLinkStore();
-const { merchant, paymentLinktemplate } = storeToRefs(paymentLinkStore);
+const { merchant, paymentLinkTemplate } = storeToRefs(paymentLinkStore);
 const { $api } = useNuxtApp();
 const { getPaymentMethod, paymentMethods, isPaymentMethodDataLoading } =
   usePaymentMethods();
 
 let cty_abbr = ['GH'];
 
-const isbottomSheetShow = ref(false);
+const isBottomSheetShow = ref(false);
 
 onMounted(() => {
   getPaymentMethod('GHS');
@@ -95,24 +95,26 @@ function handleCurrencyChange(val: any) {
 
 async function getPaymentLinkTemplateInfo(template_link: string) {
   try {
-    const res = await $api.paymentlinkTemplate.getPaymentLinksTemplate(template_link);
-    paymentLinkStore.paymentLinktemplate = res.data;
+    const res = await $api.paymentLinkTemplate.getPaymentLinksTemplate(template_link);
+    paymentLinkStore.paymentLinkTemplate = res.data;
     paymentLinkStore.invoicePaymentForm.amount = res.data.amount.toString();
     paymentLinkStore.invoicePaymentForm.currency = res.data.currency.toString();
-    paymentLinkStore.isPaymentLinktemplate = true;
+    paymentLinkStore.isPaymentLinkTemplate = true;
   } catch (error: any) {
     console.log(error);
   }
 }
 
 const defaultValues = ref<PaymentDefaultValues>({
-  currency: paymentLinktemplate.value?.currency!,
-  total: paymentLinktemplate.value?.amount.toString()!,
-  isDefualt: true,
+  currency: paymentLinkTemplate.value?.currency!,
+  total: paymentLinkTemplate.value?.amount.toString()!,
+  isDefault: true,
 });
 
 definePageMeta({
-  middleware: ['verify-paymentlink-link'],
+  middleware: ['verify-payment-link-link'],
+  layout: 'campaign-layout',
+
 });
 </script>
 

@@ -7,7 +7,7 @@ export default function usePaymentMethods () {
   const { $api } = useNuxtApp()
 
   const isPaymentMethodDataLoading = ref( false )
-  const isGetPaymentMethodsSuccessfull = ref( false )
+  const isGetPaymentMethodsSuccessful = ref( false )
   const paymentMethods = ref<PaymentOption[] | null>();
 
   async function getPaymentMethod ( currency: string ) {
@@ -18,7 +18,7 @@ export default function usePaymentMethods () {
 
 
       paymentMethods.value = res.data;
-      isGetPaymentMethodsSuccessfull.value = true;
+      isGetPaymentMethodsSuccessful.value = true;
       isPaymentMethodDataLoading.value = false;
 
     } catch ( error: any ) {
@@ -30,7 +30,7 @@ export default function usePaymentMethods () {
 
   return {
     isPaymentMethodDataLoading,
-    isGetPaymentMethodsSuccessfull,
+    isGetPaymentMethodsSuccessful,
     getPaymentMethod,
     paymentMethods
   }

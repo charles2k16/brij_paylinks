@@ -7,15 +7,13 @@ import type {
 import axios from "axios";
 
 export const useCampaignStore = defineStore( "campaign", () => {
-  // import runtime config
-  const runtimeConfig = useRuntimeConfig();
 
   // data
   const selectedPaymentOption = ref<PaymentOption | null>( null );
   const otpCode = ref( '' );
   const merchant = ref<Merchant>();
   const campaign = ref<Campaign | null>( null );
-  const isPaymentSuccessfull = ref( false );
+  const isPaymentSuccessful = ref( false );
 
   // instance of api
   const { $api } = useNuxtApp();
@@ -41,7 +39,7 @@ export const useCampaignStore = defineStore( "campaign", () => {
     selectedPaymentOption,
     campaign,
     merchant,
-    isPaymentSuccessfull,
+    isPaymentSuccessful,
 
   };
 } );

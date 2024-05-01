@@ -1,28 +1,22 @@
 <template>
-  <div class="w-full flex flex-col lg:px-20 lg:py-2 section">
-    <!-- Banner -->
-
-    <!-- <CampaignBanner class="hidden sm:block" /> -->
+  <div class="w-full flex flex-col lg:px-20 lg:py-2  min-h-screen dark:bg-gray-950">
     <!-- Campaign Info & Payment -->
-    <div class="flex flex-row justify-center md:space-x-4 h-full">
-      <div
-        class="lg:w-[60%] md:w-[50%] w-full hidden sm:block h-full bg-gray-50 rounded-md">
+    <div class="flex flex-row justify-center md:space-x-4 h-full section">
+
+      <div class="lg:w-[50%] md:w-[50%] w-full hidden sm:block h-full bg-gray-50 dark:bg-gray-900 rounded-md lg:p-3">
         <!-- Campaign Info -->
         <CampaignInfo :campaign="campaign!" :merchant="merchant!" />
       </div>
 
       <!-- Campaign Info -->
-      <div class="lg:w-[40%] md:w-[50%] w-full">
-        <CampaignPayment
-          :paymentOptions="paymentMethods!"
-          :countries="cty_abbr"
-          :merchant="merchant!"
+      <div class="lg:w-[30%] md:w-[50%] w-full">
+        <CampaignPayment :paymentOptions="paymentMethods || []" :countries="cty_abbr" :merchant="merchant!"
           :campaign="campaign!" />
       </div>
     </div>
 
     <div
-      class="sm:hidden fixed bottom-0 left-0 right-0 flex gap-x-2 items-center justify-center bg-white p-4 shadow-lg">
+      class="sm:hidden fixed bottom-0 left-0 right-0 flex gap-x-2 items-center justify-center bg-white dark:bg-gray-950   ring-1 ring-slate-100 dark:ring-slate-800 p-4 shadow-lg">
       <!-- Donate  -->
 
       <MazBtn @click="toggleSheet" color="warning" size="sm" class="w-full">
@@ -34,18 +28,14 @@
       <MazBottomSheet v-model="drawer" :no-close="true">
         <div class="h-screen">
           <div class="h-full overflow-y-auto py-10">
-            <div class="flex justify-end items-center">
+            <div class="flex justify-end items-center mt-8">
               <MazBtn @click="toggleSheet" color="transparent">
                 <icon name="ic:sharp-close" />
               </MazBtn>
             </div>
             <!-- content here -->
-            <CampaignPaymentForm
-              :campaign="campaign!"
-              :countries="cty_abbr"
-              :merchant="merchant"
-              @on-currency-change="handleCurrencyChange"
-              :paymentOptions="paymentMethods!" />
+            <CampaignPaymentForm :campaign="campaign!" :countries="cty_abbr" :merchant="merchant!" 
+              @on-currency-change="handleCurrencyChange" :paymentOptions="paymentMethods || []" />
           </div>
         </div>
       </MazBottomSheet>
@@ -98,6 +88,9 @@ definePageMeta({
   layout: 'campaign-layout',
   middleware: ['verify-campaign-link'],
 });
+
+
+
 </script>
 <style scoped>
 .primary-custom-bg-color {
@@ -118,5 +111,21 @@ definePageMeta({
 
 .primary-custom-text-color {
   color: #04383f;
+}
+
+
+body {
+  background-color: #110404;
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.dark-mode body {
+  background-color: #091a28;
+  color: #ebf4f1;
+}
+
+.sepia-mode body {
+  background-color: #f1e7d0;
+  color: #433422;
 }
 </style>

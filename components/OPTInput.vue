@@ -11,12 +11,10 @@
                 v-model="digitsPin[index]" type="number" maxlength="1" @input="handleInput(index)"
                 @keydown="handleKeydown(index, $event)" />
         </div>
-
-
     </div>
 </template>
 <script setup lang="ts">
-import {useCampaignStore} from '~/store/campaign'
+import { useCampaignStore } from '~/store/campaign'
 
 // intsance of payment store
 const campaignStore = useCampaignStore();
@@ -24,7 +22,7 @@ const campaignStore = useCampaignStore();
 
 //props
 const props = defineProps<{
-  digitsPin: string[]
+    digitsPin: string[]
 }>()
 
 // emit
@@ -67,21 +65,21 @@ function handleKeydown(index: number, event: any) {
 
 
 
-    //  async function resendOtp() {
-    //   this.pageLoading = true
+//  async function resendOtp() {
+//   this.pageLoading = true
 
-    //   try {
-    //     const payload = {
-    //       phone: '+' + this.phoneNumber,
-    //     }
-    //     const response = await this.$usersApi.resendOtp(payload)
-    //     this.mixins.getNotification(response.message, 'success')
-    //     this.pageLoading = false
-    //   } catch (error) {
-    //     this.pageLoading = false
-    //     this.mixins.catchError(error)
-    //   }
-    // }
+//   try {
+//     const payload = {
+//       phone: '+' + this.phoneNumber,
+//     }
+//     const response = await this.$usersApi.resendOtp(payload)
+//     this.mixins.getNotification(response.message, 'success')
+//     this.pageLoading = false
+//   } catch (error) {
+//     this.pageLoading = false
+//     this.mixins.catchError(error)
+//   }
+// }
 </script>
 <style scoped>
 .pin-code input {
