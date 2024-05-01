@@ -3,7 +3,6 @@
     <!-- Amount to be paid -->
     <h2 class="text-2xl font-semibold text-black dark:text-white">{{ amount }} {{ currency }}</h2>
     <p class="text-sm text-gray-400 dark:text-white mb-20">{{ merchant?.name }}</p>
-
     <el-form
       ref="invoicePaymentPopupForms"
       style="max-width: 600px"
@@ -55,7 +54,7 @@
 <script setup lang="ts">
 import type { FormInstance, FormRules } from 'element-plus';
 import type { InvoicePaymentForm, Merchant, SelectCountryResult } from '~/types/index';
-
+import useSendOTP from '~/composables/useSendOTP'
 // props
 const props = defineProps<{
   countries: any[];
@@ -67,11 +66,12 @@ const props = defineProps<{
 
 // emit
 
-const emit = defineEmits(['send-otp', 'on-opt-successful']);
+const emit = defineEmits(['send-otp', 'on-otp-successful']);
 
 const invoicePaymentPopupForms = ref<FormInstance>();
 const phoneResult = ref<SelectCountryResult>();
 const { isOTPSuccessful, isSendOTPLoading, sendOTP } = useSendOTP();
+
 
 // forms
 const ruleForm = ref({
@@ -89,18 +89,27 @@ const rules = reactive<FormRules<InvoicePaymentForm>>({
 // Watch for changes in the 'isOTPSuccessful' variable and assign it to the store var
 watch(isOTPSuccessful, (newValue, oldValue) => {
   // Trigger something when the value changes
-  emit('on-opt-successful', isOTPSuccessful.value);
+  emit('on-otp-successful', isOTPSuccessful.value);
 });
+
+// initiate OTP
+function initiateOTPRequest() {
+  console.log('hit confirm')
+  console.log(phoneResult.value?.e164!)
+  console.log(props.paymentLink.toString()!)
+  sendOTP(phoneResult.value?.e164!, props.paymentLink.toString()!)
+}
+
 
 // submit form function
 function submitForm(invoicePaymentPopupForms: any) {
   invoicePaymentPopupForms.validate((valid: any) => {
     if (valid) {
-      invoicePaymentPopupForms;
 
       emit('send-otp', ruleForm.value);
+
       // send otp
-      sendOTP(phoneResult.value?.e164!, props.paymentLink.toString());
+      initiateOTPRequest()
     } else {
       return false;
     }

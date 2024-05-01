@@ -25,11 +25,12 @@ export default defineNuxtConfig( {
     fallback: 'dark'
   },
   tailwindcss: {
-    cssPath: '~/assets/css/tailwind.css',
+    // cssPath: '~/assets/css/tailwind.css',
+    cssPath: ["~/assets/css/tailwind.css", { injectPosition: 0 }],
     configPath: 'tailwind.config',
     exposeConfig: false,
     config: {},
-    injectPosition:0,
+    // injectPosition:0,  s
     viewer: true,
   },
   css: [

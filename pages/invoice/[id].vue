@@ -2,27 +2,18 @@
   <div class="w-full flex flex-col lg:px-20 lg:py-2  lg:bg-white dark:bg-gray-950  bg-gray-100">
     <!-- Campaign Info & Payment -->
     <div class="flex flex-row justify-center md:space-x-4 section">
-      <div
-        class="lg:max-w-lg md:max-w-xl w-full bg-gray-100 dark:bg-gray-900 lg:p-5 md:p-5 pb-32 p-2 rounded-md">
+      <div class="lg:max-w-lg md:max-w-xl w-full bg-gray-100 dark:bg-gray-900 lg:p-5 md:p-5 pb-32 p-2 rounded-md">
         <!-- Campaign Info -->
-        <InvoicePaymentInfo
-          :merchant="merchant!"
-          :invoice="invoice"
-          :countries="cty_abbr" />
+        <InvoicePaymentInfo :merchant="merchant!" :invoice="invoice" :countries="cty_abbr" />
       </div>
 
       <!-- Campaign Info -->
       <div class="lg:max-w-md w-full h-fit p-5 hidden lg:block ring-2 ring-slate-100 dark:ring-slate-800 rounded-md">
         <!-- content here -->
-        <PaymentForm
-          :payment-methods="paymentMethods || []"
-          :paymentCode="invoice?.payment_code"
-          :is-payment-methods-loading="isPaymentMethodDataLoading"
-          :route-name="routeName"
-          :countries="cty_abbr"
-          :merchant="merchant!"
-          :default-values="defaultValues"
-          @on-currency-change="handleCurrencyChange" />
+        <PaymentForm :payment-methods="paymentMethods || []" :paymentCode="invoice?.payment_code"
+          :is-payment-methods-loading="isPaymentMethodDataLoading" :invoice="invoice!" :route-name="routeName"
+          :payment-link="route.params.id" :countries="cty_abbr" :merchant="merchant!" :default-values="defaultValues"
+          :payment-link-template-link="undefined" @on-currency-change="handleCurrencyChange" />
       </div>
     </div>
 
@@ -44,14 +35,10 @@
               </MazBtn>
             </div>
             <!-- content here -->
-            <PaymentForm
-              :payment-methods="paymentMethods || []"
-              :paymentCode="invoice?.payment_code"
-              :is-payment-methods-loading="isPaymentMethodDataLoading"
-              :route-name="routeName"
-              :countries="cty_abbr"
-              :merchant="merchant!"
-              :default-values="defaultValues"
+            <PaymentForm :payment-methods="paymentMethods || []" :paymentCode="invoice?.payment_code"
+              :is-payment-methods-loading="isPaymentMethodDataLoading" :invoice="invoice!"  :route-name="routeName"
+              :payment-link="route.params.id" :countries="cty_abbr" :merchant="merchant!"
+              :default-values="defaultValues" :payment-link-template-link="undefined"
               @on-currency-change="handleCurrencyChange" />
           </div>
         </div>
@@ -81,6 +68,7 @@ const route = useRoute();
 
 // get payemnt method options
 onMounted(() => {
+  console.log(invoice.value?.payment_code)
   // get route name
   routeName.value = route.matched[0].name?.toString()!;
   // get pay methods

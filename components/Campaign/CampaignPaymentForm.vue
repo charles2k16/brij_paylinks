@@ -51,7 +51,7 @@
         Continue
       </MazBtn>
       <!-- select payment menthod dialog -->
-      <MazDialog @close="handleClose" v-model="paymentMethodialogVisible" :persistent="false"
+      <MazDialog @close="handleClose" v-model="paymentMethodDialogVisible" :persistent="false"
         scrollable>
         <div v-if="!isOTPSuccessful" class="flex flex-col">
           <!-- payment methods -->
@@ -121,7 +121,7 @@
     <MazDialog v-model="isPaymentSuccessful" width="400px" :on-close="handleClose">
       <div class="flex flex-col justify-center items-center">
         <Icon class="text-6xl text-green-700" name="ri:send-plane-line" />
-        <h2 class="text-2xl mt-3 dark:text-white">Donation Made Successfull</h2>
+        <h2 class="text-2xl mt-3 dark:text-white">Donation Made Successful</h2>
         <p class="text-center dark:text-white">You have successfully made donated to this campaign. Share this campaign by copy
           the URL below.</p>
 
@@ -150,13 +150,12 @@
         <Icon class="text-6xl text-red-600" name="bxs:error-alt" />
         <h2 class="text-2xl mt-3 dark:text-white">Payment failed</h2>
         <p class="text-center dark:text-white">Oops! It seems there was an issue processing your payment. Please check your payment
-          details
-          and try again..</p>
+          details and try again..</p>
         <div class="mt-10"></div>
       </div>
-      <!-- <template #footer="{ close }">
+      <template #footer="{ close }">
         <MazBtn color="warning" @click="close"> Go back </MazBtn>
-      </template> -->
+      </template>
     </MazDialog>
 
   </el-form>
@@ -181,7 +180,7 @@ const { isPaymentLoading, isPaymentFailed, isPaymentSuccessful, pay } = usePayme
 
 
 
-// instance of tpayment store
+// instance of payment store
 const campaignStore = useCampaignStore();
 const { isPaymentMethodSelected, otpCode, campaign } = storeToRefs(campaignStore);
 // props
@@ -201,7 +200,7 @@ const ruleFormRef = ref<FormInstance>();
 
 
 // toggle dialog
-const paymentMethodialogVisible = ref(false);
+const paymentMethodDialogVisible = ref(false);
 
 // phone result
 const phoneResult = ref<SelectCountryResult>();
@@ -264,7 +263,7 @@ watch(isPaymentSuccessful, (newValue, oldValue) => {
 function submitForm(ruleFormRef: any) {
   ruleFormRef.validate((valid: any) => {
     if (valid) {
-      paymentMethodialogVisible.value = true
+      paymentMethodDialogVisible.value = true
     } else {
       return false;
     }

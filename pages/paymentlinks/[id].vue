@@ -17,7 +17,7 @@
     </div>
 
     <div
-      class="lg:hidden fixed bottom-0 left-0 right-0 flex gap-x-2 items-center justify-center bg-white p-4 shadow-lg">
+      class="lg:hidden fixed bottom-0 left-0 right-0 flex gap-x-2 items-center justify-center bg-white dark:bg-gray-950 p-4 shadow-lg">
       <!-- Pay  -->
       <MazBtn color="warning" size="sm" @click="isBottomSheetShow = true" rounded class="w-full mt-5">
         Make payments {{paymentLinkTemplate?.amount}}
@@ -75,7 +75,7 @@ onMounted(() => {
   paymentCode.value = route.params.id.toString();
   if (route.query.payment_template_link) {
     const payment_link = route.query.payment_template_link;
-    getpaymentLinkTemplateInfo(payment_link?.toString()!);
+    getPaymentLinkTemplateInfo(payment_link?.toString()!);
   }
   getCountriesAsync();
 });
@@ -93,7 +93,7 @@ function handleCurrencyChange(val: any) {
   getPaymentMethod(val);
 }
 
-async function getpaymentLinkTemplateInfo(template_link: string) {
+async function getPaymentLinkTemplateInfo(template_link: string) {
   try {
     const res = await $api.paymentLinkTemplate.getPaymentLinksTemplate(template_link);
     paymentLinkStore.paymentLinkTemplate = res.data;

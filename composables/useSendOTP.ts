@@ -10,6 +10,7 @@ export default function useSendOTP(){
     
     async function sendOTP( phone_number:string, payment_link:string) {
         try {
+          console.log('hit')
           isSendOTPLoading.value = true;
           const payload = {
             customer_contact: phone_number,

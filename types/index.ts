@@ -10,7 +10,7 @@ export interface Tag {
   name: string
 }
 
-export interface Curreancy {
+export interface Currency {
   name: string,
   code: string,
   flag_url: string

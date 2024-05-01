@@ -81,13 +81,13 @@
       <!-- <p class="text-lg">Confirm Payment</p> -->
       <PaymentConfirm
         :countries="countries"
-        :paymentLink="paymentLink!"
+        :paymentLink="paymentCode!"
         :amount="paymentForm.value.amount"
         :currency="paymentForm.value.currency"
         v-if="!isOTPSuccessful"
         :merchant="merchant"
         @send-otp="handleSendOTP"
-        @on-opt-successful="handleOTPSuccess" />
+        @on-otp-successful="handleOTPSuccess"/>
 
       <div v-else class="flex flex-col items-center">
         <!-- OT Field -->
@@ -148,7 +148,7 @@
       </template>
     </MazDialog>
 
-    <MazDialog v-model="isPaymentLoading" width="400px" :on-close="handleClose">
+    <MazDialog v-model="isPaymentFailed" width="400px" :on-close="handleClose">
       <div class="flex flex-col justify-center items-center">
         <Icon class="text-6xl text-red-600" name="bxs:error-alt" />
         <h2 class="text-2xl mt-3">Payment failed</h2>
@@ -232,6 +232,9 @@ function handleOTPResend() {
   sendOTP(paymentForm.value.value.phone, props.paymentLink?.toString()!);
 }
 
+// initiate otp
+
+
 // props
 const props = defineProps<{
   paymentMethods: PaymentOption[];
@@ -250,12 +253,12 @@ const emit = defineEmits(['on-currency-change']);
 
 const paymentForm = computed(() => {
   if (props.defaultValues.currency) {
-    return paymentFormWithDefaultVals;
+    return paymentFormWithDefaultValues;
   } else {
-    return paymentFormWithoutDefaultVals;
+    return paymentFormWithoutDefaultValues;
   }
 });
-const paymentFormWithDefaultVals = ref({
+const paymentFormWithDefaultValues = ref({
   amount: props.defaultValues.total,
   reference: '',
   currency: props.defaultValues.currency,
@@ -266,7 +269,7 @@ const paymentFormWithDefaultVals = ref({
   phoneResult: '',
 });
 
-const paymentFormWithoutDefaultVals = ref({
+const paymentFormWithoutDefaultValues = ref({
   amount: '',
   reference: '',
   currency: 'GHS',
@@ -336,10 +339,6 @@ function submitForm(invoicePaymentForm: any) {
     }
   });
 }
-
-// function resetForm() {
-//   invoicePaymentForm.value!.resetFields();
-// }
 
 function handlePayment() {
   if (props.routeName === 'paymentlinks-id') {
