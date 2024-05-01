@@ -10,7 +10,7 @@ export interface Tag {
   name: string
 }
 
-export interface Curreancy {
+export interface Currency {
   name: string,
   code: string,
   flag_url: string
@@ -223,7 +223,7 @@ export interface Tax {
   created_at: string;
 }
 
-export interface PaymentLinkTemplate {
+export interface paymentLinkTemplate {
   id: string;
   name: string;
   amount: number;
@@ -252,7 +252,7 @@ export interface PaymentPayload {
 export interface PaymentDefaultValues {
   total: string,
   currency: string,
-  isDefualt:boolean
+  isDefault:boolean
 }
 
 

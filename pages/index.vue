@@ -12,4 +12,5 @@
 .primary-custom-bg-color {
   background-color: #04383F;
 }
+
 </style>

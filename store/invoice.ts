@@ -21,9 +21,6 @@ export const useInvoiceStore = defineStore( "invoice", () => {
   const invoice = ref<Invoice | null>( null );
   const OTPCode = ref();
   const isOTPView = ref( false );
-  const isOTPSuccessfull = ref( false );
-  const isPayingmentLoading = ref( false );
-  const isPaymentSuccessfull = ref( false );
   const invoicePaymentForm = ref<InvoicePaymentForm>( {
     amount: "50",
     phone: "",
@@ -53,8 +50,5 @@ export const useInvoiceStore = defineStore( "invoice", () => {
     isOTPView,
     merchant,
     invoice,
-    isOTPSuccessfull,
-    isPayingmentLoading,
-    isPaymentSuccessfull,
   };
 } );

@@ -1,12 +1,10 @@
 <template>
   <div class="flex flex-col">
     <!-- Amount to be paid -->
-    <h2 class="text-2xl font-semibold text-black">{{ amount }} {{ currency }}</h2>
-    <p class="text-sm text-gray-400">{{ merchant?.name }}</p>
-
-    <hr class="my-5" />
+    <h2 class="text-2xl font-semibold text-black dark:text-white">{{ amount }} {{ currency }}</h2>
+    <p class="text-sm text-gray-400 dark:text-white mb-20">{{ merchant?.name }}</p>
     <el-form
-      ref="invoicePaymentPopupFormz"
+      ref="invoicePaymentPopupForms"
       style="max-width: 600px"
       :model="ruleForm"
       :rules="rules"
@@ -18,7 +16,7 @@
       <el-form-item prop="phone">
         <MazPhoneNumberInput
           color="warning"
-          label="Emter momo number"
+          label="Enter momo number"
           class="w-full"
           v-model="ruleForm.phone"
           show-code-on-list
@@ -45,7 +43,7 @@
         :loading="isSendOTPLoading"
         color="warning"
         size="sm"
-        @click="submitForm(invoicePaymentPopupFormz)"
+        @click="submitForm(invoicePaymentPopupForms)"
         class="w-full mt-5">
         Continue
       </MazBtn>
@@ -56,7 +54,7 @@
 <script setup lang="ts">
 import type { FormInstance, FormRules } from 'element-plus';
 import type { InvoicePaymentForm, Merchant, SelectCountryResult } from '~/types/index';
-
+import useSendOTP from '~/composables/useSendOTP'
 // props
 const props = defineProps<{
   countries: any[];
@@ -68,11 +66,12 @@ const props = defineProps<{
 
 // emit
 
-const emit = defineEmits(['send-otp', 'on-opt-successfull']);
+const emit = defineEmits(['send-otp', 'on-otp-successful']);
 
-const invoicePaymentPopupFormz = ref<FormInstance>();
+const invoicePaymentPopupForms = ref<FormInstance>();
 const phoneResult = ref<SelectCountryResult>();
-const { isOTPSuccessfull, isSendOTPLoading, sendOTP } = useSendOTP();
+const { isOTPSuccessful, isSendOTPLoading, sendOTP } = useSendOTP();
+
 
 // forms
 const ruleForm = ref({
@@ -87,21 +86,30 @@ const rules = reactive<FormRules<InvoicePaymentForm>>({
   email: [{ required: false, message: 'Please input  a valid email ', trigger: 'blur' }],
 });
 
-// Watch for changes in the 'isOTPSuccessfull' variable and assign it to the store var
-watch(isOTPSuccessfull, (newValue, oldValue) => {
+// Watch for changes in the 'isOTPSuccessful' variable and assign it to the store var
+watch(isOTPSuccessful, (newValue, oldValue) => {
   // Trigger something when the value changes
-  emit('on-opt-successfull', isOTPSuccessfull.value);
+  emit('on-otp-successful', isOTPSuccessful.value);
 });
 
+// initiate OTP
+function initiateOTPRequest() {
+  console.log('hit confirm')
+  console.log(phoneResult.value?.e164!)
+  console.log(props.paymentLink.toString()!)
+  sendOTP(phoneResult.value?.e164!, props.paymentLink.toString()!)
+}
+
+
 // submit form function
-function submitForm(invoicePaymentPopupFormz: any) {
-  invoicePaymentPopupFormz.validate((valid: any) => {
+function submitForm(invoicePaymentPopupForms: any) {
+  invoicePaymentPopupForms.validate((valid: any) => {
     if (valid) {
-      invoicePaymentPopupFormz;
 
       emit('send-otp', ruleForm.value);
+
       // send otp
-      sendOTP(phoneResult.value?.e164!, props.paymentLink.toString());
+      initiateOTPRequest()
     } else {
       return false;
     }

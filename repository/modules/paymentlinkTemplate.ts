@@ -8,7 +8,7 @@ import type { PaymentMethods } from '~/types/index';
 import FetchFactory from '../factory';
 
 class campaignModule extends FetchFactory<PaymentMethods[]> {
-  private RESOURCE = '/paymentlinktemplates/link';
+  private RESOURCE = '/paymentLinkTemplates/link';
 
   /**
    * Return the data as array 

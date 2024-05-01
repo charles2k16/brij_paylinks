@@ -2,12 +2,10 @@ import { defineStore } from "pinia";
 import type {
   PaymentOption,
   InvoicePaymentForm,
-  MerchantResponse,
-  PaymentLinkTemplate,
+  paymentLinkTemplate,
   Merchant,
 } from "~/types";
-import axios from "axios";
-import useSendOTP from '~/composables/useSendOTP';
+
 
 export const usePaymentLinkStore = defineStore( "paymentlink", () => {
 
@@ -20,11 +18,8 @@ export const usePaymentLinkStore = defineStore( "paymentlink", () => {
   const selectedPaymentOption = ref<PaymentOption | null>( null );
   const isOTPView = ref( false );
   const OTPCode = ref();
-  const isOTPSuccessfull = ref( false );
-  const isPaymentSuccessfull = ref( false );
-  const isPayingmentLoading = ref( false );
-  const isPaymentLinktemplate = ref( false );
-  const paymentLinktemplate = ref<PaymentLinkTemplate | null>()
+  const isPaymentLinkTemplate = ref( false );
+  const paymentLinkTemplate = ref<paymentLinkTemplate | null>()
   const invoicePaymentForm = ref<InvoicePaymentForm>( {
     amount: "0",
     phone: "",
@@ -50,10 +45,7 @@ export const usePaymentLinkStore = defineStore( "paymentlink", () => {
     OTPCode,
     isOTPView,
     merchant,
-    isOTPSuccessfull,
-    isPayingmentLoading,
-    isPaymentSuccessfull,
-    isPaymentLinktemplate,
-    paymentLinktemplate
+    isPaymentLinkTemplate,
+    paymentLinkTemplate
   };
 } );
