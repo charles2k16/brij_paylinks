@@ -3,7 +3,7 @@ export default defineNuxtConfig( {
   devtools: { enabled: true },
   runtimeConfig: {
     public: {
-      baseURL: 'https://uat-api.brij.money/api/v2',
+      baseURL: 'https://api.brij.money/api/v2',
     },
   },
   components: [
