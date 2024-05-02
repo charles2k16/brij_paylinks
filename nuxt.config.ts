@@ -3,7 +3,7 @@ export default defineNuxtConfig( {
   devtools: { enabled: true },
   runtimeConfig: {
     public: {
-      baseURL: 'https://api.brij.money/api/v2',
+      baseURL: 'https://uat-api.brij.money/api/v2',
     },
   },
   components: [
@@ -19,14 +19,14 @@ export default defineNuxtConfig( {
     '@nuxtjs/color-mode',
     '@nuxtjs/tailwindcss'
   ],
-  colorMode:{
-    classSuffix:'',
+  colorMode: {
+    classSuffix: '',
     preference: 'system',
     fallback: 'dark'
   },
   tailwindcss: {
     // cssPath: '~/assets/css/tailwind.css',
-    cssPath: ["~/assets/css/tailwind.css", { injectPosition: 0 }],
+    cssPath: [ "~/assets/css/tailwind.css", { injectPosition: 0 } ],
     configPath: 'tailwind.config',
     exposeConfig: false,
     config: {},
