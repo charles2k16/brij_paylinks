@@ -87,7 +87,7 @@
         v-if="!isOTPSuccessful"
         :merchant="merchant"
         @send-otp="handleSendOTP"
-        @on-otp-successful="handleOTPSuccess"/>
+        @on-otp-successful="handleOTPSuccess" />
 
       <div v-else class="flex flex-col items-center">
         <!-- OT Field -->
@@ -128,7 +128,7 @@
     </MazDialog>
 
     <!-- success payment modal -->
-    <MazDialog v-model="isPaymentSuccessful" width="400px" :on-close="handleClose">
+    <MazDialog v-model="isPaymentSuccessful" width="380px" :on-close="handleClose">
       <div class="flex flex-col justify-center items-center">
         <Icon class="text-6xl text-green-700" name="ri:send-plane-line" />
         <h2 class="text-2xl mt-3">Merchant Paid Successful</h2>
@@ -136,9 +136,11 @@
 
         <div class="w-full border border-gray-200 p-5 mt-5 rounded-md">
           <p class="text-lg">
-            You paid an amount of <span class="font-semibold">GHS 200 </span>to
-            <span class="font-semibold">Gentech Corp Ghana</span>'s on
-            <span>{{ formateDate(new Date(), 'Mo MMM YYYY h:ss a') }}</span>
+            You paid an amount of
+            <span class="font-semibold"
+              >{{ paymentForm.value.currency }} {{ paymentForm.value.amount }} </span
+            >to
+            <span class="font-semibold">{{ merchant?.name }}</span>
           </p>
         </div>
         <div class="mt-10"></div>
@@ -148,7 +150,7 @@
       </template>
     </MazDialog>
 
-    <MazDialog v-model="isPaymentFailed" width="400px" :on-close="handleClose">
+    <MazDialog v-model="isPaymentFailed" width="380px" :on-close="handleClose">
       <div class="flex flex-col justify-center items-center">
         <Icon class="text-6xl text-red-600" name="bxs:error-alt" />
         <h2 class="text-2xl mt-3">Payment failed</h2>
@@ -187,8 +189,6 @@ const { isSendOTPLoading, sendOTP } = useSendOTP();
 
 // togge dialog
 const dialogVisible = ref(false);
-
-
 
 watch(
   () => isPaymentSuccessful.value,
@@ -233,7 +233,6 @@ function handleOTPResend() {
 }
 
 // initiate otp
-
 
 // props
 const props = defineProps<{
