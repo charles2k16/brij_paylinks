@@ -17,7 +17,7 @@
         <MazPhoneNumberInput
           color="warning"
           label="Enter momo number"
-          class="w-full"
+          class="w-full dark:text-white"
           v-model="ruleForm.phone"
           show-code-on-list
           :only-countries="countries"

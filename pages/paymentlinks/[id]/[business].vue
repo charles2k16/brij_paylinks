@@ -11,7 +11,7 @@
       <div class="lg:w-[50%] w-full hidden lg:block pt-5 lg:pt-0">
         <div class="lg:max-w-md md:max-w-2xl w-full ring-2 ring-slate-100 dark:ring-slate-800 bg-white dark:bg-transparent p-5 rounded-md">
           <PaymentForm  :payment-methods=" paymentMethods || []" :paymentCode="paymentCode" :is-payment-methods-loading="isPaymentMethodDataLoading" :route-name="routeName"  :payment-link="route.params.id"
-              :countries="cty_abbr" :merchant="merchant!" :default-values="defaultValues"  :payment-link-template-link="paymentLinkTemplate!" @on-currency-change="handleCurrencyChange" />
+              :countries="cty_abbr" :merchant="merchant!"  :default-values="defaultValues"  :payment-link-template-link="paymentLinkTemplate!" @on-currency-change="handleCurrencyChange" />
         </div>
       </div>
     </div>
@@ -70,7 +70,7 @@ const isBottomSheetShow = ref(false);
 
 onMounted(() => {
   getPaymentMethod('GHS');
-
+  console.log(route.name)
   routeName.value = route.matched[0].name?.toString()!;
   paymentCode.value = route.params.id.toString();
   if (route.query.payment_template_link) {

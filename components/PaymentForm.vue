@@ -16,12 +16,14 @@
       <div class="flex h-fit">
         <el-form-item prop="currency">
           <MazSelect
+          class="dark:text-white"
             v-model="paymentForm.value.currency"
             :disabled="disableDefaultFields"
             label="Select currency"
             color="warning"
-            :options="['GHS', 'NGN', 'KSH']" />
+            :options="extractAbbr(merchant?.accepted_currencies!)"/>
         </el-form-item>
+        
       </div>
       <!-- Input for amount -->
       <div class="flex-1">
@@ -95,7 +97,7 @@
         <Loading v-if="isPaymentLoading" message="initiating payment authorizations" />
 
         <div v-else class="flex flex-col">
-          <h2 class="text-2xl text-center">Enter OTP Code</h2>
+          <h2 class="text-2xl text-center dark:text-white">Enter OTP Code</h2>
           <p class="mb-5 text-gray-400 text-center">
             OTP code has been sent to your momo number, please enter to continue
           </p>
@@ -103,15 +105,16 @@
             :code-length="6"
             size="xs"
             v-model="paymentForm.value.otp"
-            class="flex flex-wrap justify-center"
+            class="flex flex-wrap justify-center mt-10"
             @completed="handlePayment"
             color="warning" />
-          <el-button
+          <MazBtn
             :loading="isSendOTPLoading"
             @click="handleOTPResend()"
-            class="reset-btn"
+            color="transparent"
+            class="mt-15"
             link
-            >Resend code</el-button
+            >Resend code</MazBtn
           >
         </div>
 
@@ -131,7 +134,7 @@
     <MazDialog v-model="isPaymentSuccessful" width="400px" :on-close="handleClose">
       <div class="flex flex-col justify-center items-center">
         <Icon class="text-6xl text-green-700" name="ri:send-plane-line" />
-        <h2 class="text-2xl mt-3">Merchant Paid Successful</h2>
+        <h2 class="text-2xl mt-3">{{ paymentSuccessTitle }}</h2>
         <p class="text-center">You have successfully made payment to this merchant.</p>
 
         <div class="w-full border border-gray-200 p-5 mt-5 rounded-md">
@@ -168,6 +171,8 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue';
 import type { FormInstance, FormRules } from 'element-plus';
+import { extractAbbr } from '~/utils/index'
+
 import type {
   Invoice,
   InvoicePaymentForm,
@@ -187,6 +192,16 @@ const { isSendOTPLoading, sendOTP } = useSendOTP();
 
 // togge dialog
 const dialogVisible = ref(false);
+
+
+// payment success title
+const paymentSuccessTitle =  computed(() => {
+  if(props.routeName === 'paymentlinks-id-business'){
+    return 'Merchant paid Successfully'
+  }else{
+    return 'Invoice paid Successfully'
+  }
+})
 
 
 
@@ -227,10 +242,7 @@ function handleOTPSuccess(val: any) {
   isOTPSuccessful.value = val;
 }
 
-// opt re-send
-function handleOTPResend() {
-  sendOTP(paymentForm.value.value.phone, props.paymentLink?.toString()!);
-}
+
 
 // initiate otp
 
@@ -315,7 +327,14 @@ const handleClose = () => {
 
 function handleSendOTP(data: any) {
   paymentForm.value.value.phone = data.phone;
+  console.log(data.phone)
+  console.log(paymentForm.value.value.phone)
   paymentForm.value.value.email = data.email;
+}
+
+// opt re-send
+function handleOTPResend() {
+  sendOTP(paymentForm.value.value.phone, props.paymentLink?.toString()!);
 }
 
 // submit form function
@@ -341,7 +360,7 @@ function submitForm(invoicePaymentForm: any) {
 }
 
 function handlePayment() {
-  if (props.routeName === 'paymentlinks-id') {
+  if (props.routeName === 'paymentlinks-id-business') {
     if (props.paymentLinkTemplateLink) {
       handlePaymentLinksTemplatePayment();
     } else {
@@ -440,10 +459,4 @@ function handlePaymentInvoice() {
   color: #04383f;
 }
 
-.reset-btn {
-  font-weight: bold;
-  font-size: 14px;
-  margin-top: 15px;
-  color: var(--color-primary);
-}
 </style>

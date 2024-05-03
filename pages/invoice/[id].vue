@@ -69,6 +69,7 @@ const route = useRoute();
 // get payemnt method options
 onMounted(() => {
   console.log(invoice.value?.payment_code)
+  console.log(route.path)
   // get route name
   routeName.value = route.matched[0].name?.toString()!;
   // get pay methods
