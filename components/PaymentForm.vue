@@ -16,14 +16,13 @@
       <div class="flex h-fit">
         <el-form-item prop="currency">
           <MazSelect
-          class="dark:text-white"
+            class="dark:text-white"
             v-model="paymentForm.value.currency"
             :disabled="disableDefaultFields"
             label="Select currency"
             color="warning"
-            :options="extractAbbr(merchant?.accepted_currencies!)"/>
+            :options="extractAbbr(merchant?.accepted_currencies!)" />
         </el-form-item>
-        
       </div>
       <!-- Input for amount -->
       <div class="flex-1">
@@ -173,7 +172,7 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue';
 import type { FormInstance, FormRules } from 'element-plus';
-import { extractAbbr } from '~/utils/index'
+import { extractAbbr } from '~/utils/index';
 
 import type {
   Invoice,
@@ -195,21 +194,15 @@ const { isSendOTPLoading, sendOTP } = useSendOTP();
 // togge dialog
 const dialogVisible = ref(false);
 
-<<<<<<< HEAD
-=======
-
 // payment success title
-const paymentSuccessTitle =  computed(() => {
-  if(props.routeName === 'paymentlinks-id-business'){
-    return 'Merchant paid Successfully'
-  }else{
-    return 'Invoice paid Successfully'
+const paymentSuccessTitle = computed(() => {
+  if (props.routeName === 'paymentlinks-id-business') {
+    return 'Merchant paid Successfully';
+  } else {
+    return 'Invoice paid Successfully';
   }
-})
+});
 
-
-
->>>>>>> dev
 watch(
   () => isPaymentSuccessful.value,
   (newValue, oldValue) => {
@@ -246,8 +239,6 @@ const isOTPSuccessful = ref(false);
 function handleOTPSuccess(val: any) {
   isOTPSuccessful.value = val;
 }
-
-
 
 // initiate otp
 
@@ -331,8 +322,8 @@ const handleClose = () => {
 
 function handleSendOTP(data: any) {
   paymentForm.value.value.phone = data.phone;
-  console.log(data.phone)
-  console.log(paymentForm.value.value.phone)
+  console.log(data.phone);
+  console.log(paymentForm.value.value.phone);
   paymentForm.value.value.email = data.email;
 }
 
@@ -466,5 +457,4 @@ function handlePaymentInvoice() {
 .primary-custom-text-color {
   color: #04383f;
 }
-
 </style>
