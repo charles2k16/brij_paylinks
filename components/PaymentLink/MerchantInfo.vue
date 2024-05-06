@@ -59,7 +59,7 @@
         </div>
 
 
-        <div v-if="isPaymentLinkTemplate" class="border flex flex-col gap-y-5 border-gray-300 rounded-md mt-5 px-5 py-3">
+        <div v-if="isPaymentLinkTemplate" class="border flex flex-col gap-y-5 border-gray-300 dark:border-slate-800  rounded-md mt-5 px-5 py-3">
             <div class="flex items-center justify-between">
                 <div class="d-flex gap-x-3 items-center ">
                     <h2 class="font-medium text-xl dark:text-white">{{ paymentLinkTemplate?.name }}</h2>
