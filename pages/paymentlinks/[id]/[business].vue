@@ -70,7 +70,7 @@ const isBottomSheetShow = ref(false);
 
 onMounted(() => {
   getPaymentMethod('GHS');
-  console.log(route.name)
+  console.log(defaultValues.value)
   routeName.value = route.matched[0].name?.toString()!;
   paymentCode.value = route.params.id.toString();
   if (route.query.payment_template_link) {

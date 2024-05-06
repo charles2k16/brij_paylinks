@@ -402,7 +402,9 @@ function handlePaymentLinksTemplatePayment() {
       otp: paymentForm.value.value.otp,
       customer_firstname: 'john',
       customer_lastname: 'doe',
-      customer_email: paymentForm.value.value.email,
+      customer_email: paymentForm.value.value.email
+        ? paymentForm.value.value.email
+        : 'me@you.com',
     },
     meta: {
       payment_type: 'paymentLinkTemplate',
@@ -423,7 +425,9 @@ function handlePaymentInvoice() {
       otp: paymentForm.value.value.otp,
       customer_firstname: 'john',
       customer_lastname: 'doe',
-      customer_email: paymentForm.value.value.email,
+      customer_email: paymentForm.value.value.email
+        ? paymentForm.value.value.email
+        : 'me@you.com',
     },
     meta: {
       payment_type: 'invoice',
