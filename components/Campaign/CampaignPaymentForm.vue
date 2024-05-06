@@ -4,7 +4,7 @@
     <div class="flex w-full gap-x-2 mb-2">
       <div class="flex h-fit">
         <el-form-item prop="currency">
-          <MazSelect v-model="paymentForm.currency" label="Select currency" color="warning"
+          <MazSelect class="dark:text-white" v-model="paymentForm.currency" label="Select currency" color="warning"
             :options="extractAbbr(merchant?.accepted_currencies!)" />
         </el-form-item>
       </div>
@@ -34,7 +34,7 @@
       <!-- Input for amount -->
       <div class="flex-1">
         <el-form-item prop="phone">
-          <MazPhoneNumberInput color="warning" class="w-full" v-model="paymentForm.phone" show-code-on-list
+          <MazPhoneNumberInput color="warning" class="w-full dark:text-white"  v-model="paymentForm.phone" show-code-on-list
             :only-countries="countries" default-country-code="GH" :ignored-countries="['AC']"
             @update="phoneResult = $event" />
         </el-form-item>

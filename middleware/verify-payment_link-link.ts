@@ -3,6 +3,7 @@ import { usePaymentLinkStore } from "~/store/payment_links";
 export default defineNuxtRouteMiddleware( async ( to ) => {
   const paymentLinkStore = usePaymentLinkStore();
   const paymentLink = to.params.id;
+  console.log(paymentLink)
   const { $api } = useNuxtApp();
 
   async function getMerchnat ( payment_link: string | undefined ) {
