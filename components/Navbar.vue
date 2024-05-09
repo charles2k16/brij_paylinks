@@ -6,28 +6,29 @@
     </div>
 
     <!-- toggle buttom -->
-    <div class="ring-1 ring-slate-100 dark:ring-slate-800 p-10 rounded-md">
-      <MazSwitch
-    v-model="isDarkMode"
-    name="color_mode"
-  >
-   <div class="flex flex-row gap-x-2">
+    <div @click="toggleTheme" class="flex flex-row gap-x-2 ring-1 ring-slate-100 dark:ring-slate-800 p-10 rounded-md">
     <Icon v-if="isDarkMode" class="dark:text-white" name="material-symbols:wb-sunny-outline-rounded"/>
     <Icon  v-else  class="dark:text-white" name="ic:twotone-dark-mode"/>
    </div>
-
-  </MazSwitch>
-    </div>
 
 
 
   </nav>
 </template>
 <script setup lang="ts">
+
+onMounted(() => {
+  console.log('test here')
+})
 const colorMode = useColorMode()
 
 console.log(colorMode.preference)
 const isDarkMode = ref(false)
+
+function toggleTheme(){
+  isDarkMode.value = !isDarkMode.value
+}
+
 
 watch(isDarkMode, (newValue, oldValue) => {
   console.log(`${newValue} - ${oldValue}`)

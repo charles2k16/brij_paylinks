@@ -323,6 +323,8 @@ const handleClose = () => {
   isPaymentSuccessful.value = false;
   selectedPaymentOption.value = null;
   isPaymentFailed.value = false;
+  isPaymentLoading.value = false;
+  paymentForm.value.value.otp = ""
 };
 
 function handleSendOTP(data: any) {
