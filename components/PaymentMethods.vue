@@ -1,41 +1,33 @@
 <template>
-  <el-row
-    v-loading="pageLoading"
-    element-loading-text="Loading..."
-    class="mt-20"
-    :gutter="20"
-  >
-    <el-col
-      v-for="(method, index) in paymentMethods"
-      :key="index"
-      :md="8"
-      :sm="12"
-      :xs="12"
-      class="mb-20"
-    >
+  <div class="flex flex-col">
+    <div class="font-bold text-black dark:text-white  my-2 text-xl">Choose Payment Method</div>
+    <!-- options -->
+    <div class="flex flex-row w-[100%] justify-between flex-wrap gap-y-2 gap-x-1 mt-5">
       <div
-        :class="
-          isActive === method.channel ? 'active payment_div' : 'payment_div'
-        "
-        @click="selectedPayment(method)"
-      >
-        <div class="d-flex justify_end px-10 pt-10 vector">
-          <img
-            v-show="isActive == method.channel"
-            src="/img/check.svg"
-            alt="check"
-          />
+        v-for="(option, index) in options"
+        :key="index"
+        @click="onSelectPaymentMethod(option)"
+        :class="{
+          'border-teal-900 dark:border-amber-400 border-2': modelValue === option,
+          'border-gray-300 dark:border-slate-700': modelValue !== option,
+        }"
+        class="flex lg:w-[32%] w-[49%] h-28 flex-col items-center justify-center border rounded-lg py-3 px-2 cursor-pointer">
+        <input :id="option.channel" type="radio" :value="option.channel" class="hidden" />
+        <div class="flex w-full justify-end h-3">
+          <Icon
+            v-if="modelValue === option"
+            class="text-teal-900 dark:text-amber-400"
+            name="material-symbols:check-circle" />
         </div>
-
-        <div class="pay_img">
-          <img :src="method.icon_url" :alt="method.channel" />
-          <span class="d-block label mt-5">{{ method.name }}</span>
-        </div>
+        <label :for="option.channel" class="sr-only">{{ option.name }}</label>
+        <img :src="option.icon_url" alt="icon" class="h-10 w-10 rounded-full" />
+        <p class="mt-2 text-xs text-center font-bold text-gray-900 dark:text-white ">{{ option.name }}</p>
       </div>
-    </el-col>
-  </el-row>
+    </div>
+  </div>
 </template>
 
+<<<<<<< HEAD
 <script setup>
 import { ref, toRefs } from 'vue';
 
@@ -50,72 +42,45 @@ const props = defineProps({
 let pageLoading = ref(true);
 let isActive = ref('');
 let paymentMethods = [];
+=======
+<script setup lang="ts">
+import { type PaymentOption } from '~/types/index';
+>>>>>>> 65e1b93d03e4e746aaf5e4410e7303b6b5062c55
 
-const { currency: currencyRef } = toRefs(props);
+// props
+const props = defineProps<{
+  options: PaymentOption[] | null;
+  modelValue?: PaymentOption | null;
+}>();
 
-const selectedPayment = payMethod => {
-  isActive.value = payMethod.channel;
-  emit('onSelectMethods', payMethod);
-};
+// emit
+const emit = defineEmits(['update:modelValue']);
 
-const getPaymentMethods = async curr => {
-  pageLoading.value = true;
-  const { data } = await apiService('/paymentlinks/paymentmethods', {
-    method: 'GET',
-    query: { currency: curr },
-  });
-  paymentMethods = data._rawValue.data;
-  pageLoading.value = false;
-};
+const modelValue = ref(props.modelValue);
 
-onMounted(getPaymentMethods('GHS'));
-watch(currencyRef, newValue => {
-  getPaymentMethods(newValue);
-});
+watch(
+  () => props.modelValue,
+  newValue => {
+    modelValue.value = newValue;
+  }
+);
+
+// active payment option
+
+// on select
+function onSelectPaymentMethod(value: PaymentOption) {
+  modelValue.value = value;
+  emit('update:modelValue', value);
+}
 </script>
 
-<style lang="scss" scoped>
-.payment_div {
-  border: 1px solid #e6e6ea;
-  box-sizing: border-box;
-  border-radius: 8px;
-  height: 110px;
-  display: flex;
-  flex-direction: column;
-
-  .vector {
-    height: 25px;
-  }
-
-  .pay_img {
-    margin-top: -5px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
-    img {
-      width: 40px;
-    }
-
-    span {
-      line-height: 18px !important;
-      text-align: center;
-    }
-  }
-
-  .label {
-    font-family: var(--font-primary-light), sans-serif;
-    font-size: 14px;
-  }
-
-  &:hover {
-    border: 1px solid var(--color-primary);
-  }
+<style scoped>
+.secondary-custom-bg-color {
+  background-color: #f9ab10;
+  color: var(--color-primary);
 }
 
-.active {
-  border: 1px solid var(--color-primary);
-  background-color: rgb(223, 233, 236);
+.secondary-custom-bg-color:hover {
+  background-color: #f0af2c;
 }
 </style>
