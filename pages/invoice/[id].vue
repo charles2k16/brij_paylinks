@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full flex flex-col lg:px-20 lg:py-2  lg:bg-white dark:bg-gray-950  bg-gray-100">
+  <div class="w-full flex flex-col lg:px-20 lg:py-2  lg:bg-white dark:bg-gray-950  bg-gray-100 min-h-screen">
     <!-- Campaign Info & Payment -->
     <div class="flex flex-row justify-center md:space-x-4 section">
       <div class="lg:max-w-lg md:max-w-xl w-full bg-gray-100 dark:bg-gray-900 lg:p-5 md:p-5 pb-32 p-2 rounded-md">
