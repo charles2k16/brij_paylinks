@@ -28,8 +28,8 @@
       <!-- isBottomSheetShow for payment form on mobile -->
       <MazBottomSheet v-model="isBottomSheetShow" :no-close="true">
         <div class="h-screen">
-          <div class="h-full overflow-y-auto py-10">
-            <div class="flex justify-end items-center mt-8">
+          <div class="h-full overflow-y-auto py-16">
+            <div class="flex justify-end items-center mb-2">
               <MazBtn @click="toggleSheet" color="transparent">
                 <icon name="ic:sharp-close" />
               </MazBtn>

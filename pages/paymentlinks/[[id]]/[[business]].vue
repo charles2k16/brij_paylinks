@@ -23,9 +23,9 @@
         Make payments {{paymentLinkTemplate?.amount}}
       </MazBtn>
 
-      <MazBottomSheet v-model="isBottomSheetShow" :noClose="true" noPadding cl>
+      <MazBottomSheet v-model="isBottomSheetShow" :noClose="true" >
         <div class="h-screen w-full">
-          <div class="h-full overflow-y-auto py-10">
+          <div class="h-full overflow-y-auto py-16">
             <div class="flex justify-end items-center mb-2">
               <MazBtn @click="isBottomSheetShow = false" color="transparent">
                 <Icon name="ic:sharp-close" />
