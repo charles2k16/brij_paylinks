@@ -1,7 +1,7 @@
 import { usePaymentLinkStore } from "~/store/payment_links";
 
 export default defineNuxtRouteMiddleware( async ( to ) => {
-  const paymentLinkStore = usePaymentLinkStore();
+  const paymentLinkStore: any = usePaymentLinkStore();
   const paymentLink = to.params.id;
   console.log(paymentLink)
   const { $api } = useNuxtApp();
@@ -18,7 +18,6 @@ export default defineNuxtRouteMiddleware( async ( to ) => {
     } catch ( error: any ) {
 
       throw error;
-      // return error.response ? error.response.status : 500;
     }
   }
 
@@ -28,10 +27,9 @@ export default defineNuxtRouteMiddleware( async ( to ) => {
     if ( statusCode === 200 ) {
       return;
     } else {
-      // return navigateTo(`/error`);
       throw createError( {
         statusCode: 404,
-        statusMessage: 'Oooops, The link is invalid',
+        statusMessage: 'Oops, The link is invalid',
         data: {
           myCustomField: true
         }
@@ -39,11 +37,9 @@ export default defineNuxtRouteMiddleware( async ( to ) => {
 
     }
   } else {
-    // return navigateTo(`/error`);
-
     throw createError( {
       statusCode: 404,
-      statusMessage: "Oooops, The link is invalid ",
+      statusMessage: "Oops, The link is invalid ",
       data: {
         myCustomField: true,
       },

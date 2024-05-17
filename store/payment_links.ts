@@ -13,7 +13,6 @@ export const usePaymentLinkStore = defineStore( "paymentlink", () => {
   const runtimeConfig = useRuntimeConfig();
   const baseURL = runtimeConfig.public.baseURL;
 
-  // data
   const merchant = ref<Merchant | null>( null );
   const selectedPaymentOption = ref<PaymentOption | null>( null );
   const isOTPView = ref( false );
