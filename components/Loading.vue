@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full flex flex-col items-center gap-y-2">
+    <div class="w-full flex flex-col items-center gap-y-3">
         <p>{{message}}</p>
         <MazLoadingBar class="mb-5" color="warning" />
     </div>

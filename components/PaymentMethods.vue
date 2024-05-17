@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col">
-    <p class="font-bold text-base text-black">Choose Payment Method</p>
+    <div class="font-bold text-black dark:text-white  my-2 text-xl">Choose Payment Method</div>
     <!-- options -->
     <div class="flex flex-row w-[100%] justify-between flex-wrap gap-y-2 gap-x-1 mt-5">
       <div
@@ -8,20 +8,20 @@
         :key="index"
         @click="onSelectPaymentMethod(option)"
         :class="{
-          'border-teal-900 border-2': modelValue === option,
-          'border-gray-300': modelValue !== option,
+          'border-teal-900 dark:border-amber-400 border-2': modelValue === option,
+          'border-gray-300 dark:border-slate-700': modelValue !== option,
         }"
         class="flex lg:w-[32%] w-[49%] h-28 flex-col items-center justify-center border rounded-lg py-3 px-2 cursor-pointer">
         <input :id="option.channel" type="radio" :value="option.channel" class="hidden" />
         <div class="flex w-full justify-end h-3">
           <Icon
             v-if="modelValue === option"
-            class="text-teal-900"
+            class="text-teal-900 dark:text-amber-400"
             name="material-symbols:check-circle" />
         </div>
         <label :for="option.channel" class="sr-only">{{ option.name }}</label>
         <img :src="option.icon_url" alt="icon" class="h-10 w-10 rounded-full" />
-        <p class="mt-2 text-xs text-center font-bold text-gray-900">{{ option.name }}</p>
+        <p class="mt-2 text-xs text-center font-bold text-gray-900 dark:text-white ">{{ option.name }}</p>
       </div>
     </div>
   </div>

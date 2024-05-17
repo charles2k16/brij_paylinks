@@ -24,7 +24,7 @@ export default defineNuxtPlugin( ( nuxtApp ) => {
     invoice: new InvoiceModule( apiFecther ),
     campaign: new CampaignModule( apiFecther ),
     otp: new OTPModule( apiFecther ),
-    paymentlinkTemplate: new PaymentLinkTemplate( apiFecther )
+    paymentLinkTemplate: new PaymentLinkTemplate( apiFecther )
   };
 
   return {

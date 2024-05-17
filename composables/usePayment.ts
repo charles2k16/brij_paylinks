@@ -5,31 +5,31 @@ import Pusher from 'pusher-js'
 
 export default function useSendOTP () {
 
-
-  // instance of api
   const { $api } = useNuxtApp()
 
-  const isPayingmentLoading = ref( false )
-  const isPaymentSuccessfull = ref( false )
+  const isPaymentLoading = ref( false )
+  const isPaymentSuccessful = ref( false )
+  const isPaymentFailed = ref( false )
+  const statusText = ref( '' )
 
   async function pay ( payload: PaymentPayload | any, paymentLink: string ) {
     try {
-      isPayingmentLoading.value = true;
-
+      isPaymentLoading.value = true;
 
       const res = await $api.paymentLinks.payMerchant( paymentLink, payload )
 
-      // waiting for payment confirmation nortification
-      // completePayment( res );
+      statusText.value = 'waiting for payment confirmation notification';
+      completePayment( res );
 
     } catch ( error: any ) {
-      isPayingmentLoading.value = false;
-      isPaymentSuccessfull.value = false;
+      isPaymentLoading.value = false;
+      
 
+      statusText.value = '';
       ElNotification( {
         title: "Failed to make transactions ",
         message: `${ error.response._data.message }`,
-        duration: 0,
+        // duration: 0,
         type: "error",
       } );
     }
@@ -41,6 +41,7 @@ export default function useSendOTP () {
     const channel = socket_channel;
 
     // waiting to receive payment notification
+    statusText.value = 'waiting to receive payment notification';
 
     Pusher.logToConsole = true;
 
@@ -51,27 +52,30 @@ export default function useSendOTP () {
     pusher.subscribe( channel );
     pusher.bind( 'Domain\\PayMerchant\\Events\\MerchantPaidEvent', ( data: any ) => {
       if ( data.status == 200 ) {
-        isPaymentSuccessfull.value = true;
-        isPayingmentLoading.value = false;
-        console.log( 'paym', data )
+        isPaymentSuccessful.value = true;
+        isPaymentLoading.value = false;
+        statusText.value = '';
+
         ElNotification( {
           title: "Payment made successfully",
           message: `${ res.message }`,
-          duration: 0,
+          // duration: 0,
           type: "success",
         } );
 
       } else {
-        isPayingmentLoading.value = false;
-        //  show a failed pop up
+        isPaymentLoading.value = false;
+        statusText.value = '';
+        isPaymentFailed.value = true;
       }
     } );
 
   }
 
   return {
-    isPayingmentLoading,
-    isPaymentSuccessfull,
+    isPaymentLoading,
+     isPaymentSuccessful,
+    isPaymentFailed,
     pay
   }
 }
