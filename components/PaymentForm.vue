@@ -5,12 +5,9 @@
     :rules="rules"
     class="demo-ruleForm max-w-"
     size="default"
-    status-icon
-  >
+    status-icon>
     <h2 class="text-2xl dark:text-white">Make payment</h2>
-    <p class="mb-20 dark:text-white">
-      Enter amount to pay and select payment method
-    </p>
+    <p class="mb-20 dark:text-white">Enter amount to pay and select payment method</p>
 
     <!-- amount & currency -->
     <p class="mb-2 font-semibold dark:text-white">Amount to be paid</p>
@@ -24,12 +21,7 @@
             :disabled="disableDefaultFields"
             label="Select currency"
             color="warning"
-<<<<<<< HEAD
             :options="extractAbbr(merchant?.accepted_currencies!)" />
-=======
-            :options="extractAbbr(merchant?.accepted_currencies!)"
-          />
->>>>>>> 7b4f559bd657d708254c798d7b7f34e3ac48ac13
         </el-form-item>
       </div>
       <!-- Input for amount -->
@@ -42,8 +34,7 @@
             :disabled="disableDefaultFields"
             v-model="paymentForm.value.amount"
             label="Enter Amount"
-            size="md"
-          />
+            size="md" />
         </el-form-item>
       </div>
     </div>
@@ -58,14 +49,10 @@
         v-model="paymentForm.value.reference"
         label="Reference"
         placeholder="Pay for services"
-        size="md"
-      />
+        size="md" />
     </el-form-item>
 
-    <div
-      v-if="isPaymentMethodsLoading"
-      class="flex flex-col items-center w-full gap-y-3"
-    >
+    <div v-if="isPaymentMethodsLoading" class="flex flex-col items-center w-full gap-y-3">
       <Icon class="text-2xl text-amber-600" name="eos-icons:bubble-loading" />
       <p class="text-sm">Loading payment options</p>
     </div>
@@ -75,16 +62,14 @@
       v-else
       :options="paymentMethods || []"
       v-model="selectedPaymentOption"
-      class="flex-1"
-    />
+      class="flex-1" />
 
     <!-- submit button -->
     <MazBtn
       color="warning"
       size="sm"
       @click="submitForm(invoicePaymentForm)"
-      class="w-full mt-8"
-    >
+      class="w-full mt-8">
       Proceed to payment {{ defaultValues.total }}
     </MazBtn>
 
@@ -93,8 +78,7 @@
       v-model="dialogVisible"
       :persistent="false"
       width="400px"
-      scrollable
-    >
+      scrollable>
       <!-- <p class="text-lg">Confirm Payment</p> -->
       <PaymentConfirm
         :countries="countries"
@@ -104,16 +88,12 @@
         v-if="!isOTPSuccessful"
         :merchant="merchant"
         @send-otp="handleSendOTP"
-        @on-otp-successful="handleOTPSuccess"
-      />
+        @on-otp-successful="handleOTPSuccess" />
 
       <div v-else class="flex flex-col items-center">
         <!-- OT Field -->
 
-        <Loading
-          v-if="isPaymentLoading"
-          message="initiating payment authorizations"
-        />
+        <Loading v-if="isPaymentLoading" message="initiating payment authorizations" />
 
         <div v-else class="flex flex-col">
           <h2 class="text-2xl text-center dark:text-white">Enter OTP Code</h2>
@@ -126,8 +106,7 @@
             v-model="paymentForm.value.otp"
             class="flex flex-wrap justify-center mt-10"
             @completed="handlePayment"
-            color="warning"
-          />
+            color="warning" />
           <MazBtn
             :loading="isSendOTPLoading"
             @click="handleOTPResend()"
@@ -142,43 +121,26 @@
       </div>
       <template #footer>
         <div
-          class="w-full flex justify-center items-center gap-x-4 bg-gray-100 dark:bg-gray-900 p-3 rounded-md"
-        >
-          <Icon
-            class="text-xl text-teal-950 dark:text-white"
-            name="tdesign:secured"
-          />
-          <p class="text-gray-600 font-bold text-sm dark:text-white">
-            Secured by Brij
-          </p>
-          <img
-            src="/img/logo-dark.png"
-            alt="logo"
-            class="w-6 dark:text-white"
-          />
+          class="w-full flex justify-center items-center gap-x-4 bg-gray-100 dark:bg-gray-900 p-3 rounded-md">
+          <Icon class="text-xl text-teal-950 dark:text-white" name="tdesign:secured" />
+          <p class="text-gray-600 font-bold text-sm dark:text-white">Secured by Brij</p>
+          <img src="/img/logo-dark.png" alt="logo" class="w-6 dark:text-white" />
         </div>
       </template>
     </MazDialog>
 
     <!-- success payment modal -->
-    <MazDialog
-      v-model="isPaymentSuccessful"
-      width="380px"
-      :on-close="handleClose"
-    >
+    <MazDialog v-model="isPaymentSuccessful" width="380px" :on-close="handleClose">
       <div class="flex flex-col justify-center items-center">
         <Icon class="text-6xl text-green-700" name="ri:send-plane-line" />
         <h2 class="text-2xl mt-3">{{ paymentSuccessTitle }}</h2>
-        <p class="text-center">
-          You have successfully made payment to this merchant.
-        </p>
+        <p class="text-center">You have successfully made payment to this merchant.</p>
 
         <div class="w-full border border-gray-200 p-5 mt-5 rounded-md">
           <p class="text-lg">
             You paid an amount of
             <span class="font-semibold"
-              >{{ paymentForm.value.currency }}
-              {{ paymentForm.value.amount }} </span
+              >{{ paymentForm.value.currency }} {{ paymentForm.value.amount }} </span
             >to
             <span class="font-semibold">{{ merchant?.name }}</span>
           </p>
@@ -195,8 +157,8 @@
         <Icon class="text-6xl text-red-600" name="bxs:error-alt" />
         <h2 class="text-2xl mt-3">Payment failed</h2>
         <p class="text-center">
-          Oops! It seems there was an issue processing your payment. Please
-          check your payment details and try again..
+          Oops! It seems there was an issue processing your payment. Please check your
+          payment details and try again..
         </p>
         <div class="mt-10"></div>
       </div>
@@ -224,8 +186,7 @@ import { ElMessage } from 'element-plus';
 import usePayment from '~/composables/usePayment';
 
 // instance of pay
-const { isPaymentLoading, isPaymentFailed, isPaymentSuccessful, pay } =
-  usePayment();
+const { isPaymentLoading, isPaymentFailed, isPaymentSuccessful, pay } = usePayment();
 
 // instance of otp
 const { isSendOTPLoading, sendOTP } = useSendOTP();
@@ -328,12 +289,8 @@ const paymentFormWithoutDefaultValues = ref({
 
 // validation rules
 const rules = reactive<FormRules<InvoicePaymentForm>>({
-  amount: [
-    { required: true, message: 'Please input Amount to pay ', trigger: 'blur' },
-  ],
-  reference: [
-    { required: true, message: 'Please input Reference ', trigger: 'blur' },
-  ],
+  amount: [{ required: true, message: 'Please input Amount to pay ', trigger: 'blur' }],
+  reference: [{ required: true, message: 'Please input Reference ', trigger: 'blur' }],
   currency: [
     {
       required: true,
@@ -362,7 +319,7 @@ const handleClose = () => {
   selectedPaymentOption.value = null;
   isPaymentFailed.value = false;
   isPaymentLoading.value = false;
-  paymentForm.value.value.otp = ""
+  paymentForm.value.value.otp = '';
 };
 
 function handleSendOTP(data: any) {
