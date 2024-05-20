@@ -1,13 +1,13 @@
 <template>
   <div class="w-full flex flex-col lg:px-20 lg:py-2  lg:bg-white dark:bg-gray-950  bg-gray-100 min-h-screen">
-    <!-- Campaign Info & Payment -->
+    <!-- Invoice Info & Payment -->
     <div class="flex flex-row justify-center md:space-x-4 section">
       <div class="lg:max-w-lg md:max-w-xl w-full bg-gray-100 dark:bg-gray-900 lg:p-5 md:p-5 pb-32 p-2 rounded-md">
-        <!-- Campaign Info -->
+        <!-- Invoice Info -->
         <InvoicePaymentInfo :merchant="merchant!" :invoice="invoice" :countries="cty_abbr" />
       </div>
 
-      <!-- Campaign Info -->
+      <!-- Invoice Form -->
       <div class="lg:max-w-md w-full h-fit p-5 hidden lg:block ring-2 ring-slate-100 dark:ring-slate-800 rounded-md">
         <!-- content here -->
         <PaymentForm :payment-methods="paymentMethods || []" :paymentCode="invoice?.payment_code"
@@ -19,7 +19,7 @@
 
     <div
       class="lg:hidden fixed bottom-0 left-0 right-0 flex gap-x-2 items-center justify-center bg-white dark:bg-gray-950  p-4 shadow-lg">
-      <!-- Donate  -->
+      <!-- Pay  -->
 
       <MazBtn @click="toggleSheet" color="warning" size="sm" class="w-full">
         Pay Invoice {{ invoice?.total }}
