@@ -1,16 +1,19 @@
 <template>
-  <div class="w-full bg-slate-100 dark:bg-gray-950  min-h-screen">
+  <div class="w-full bg-slate-100 dark:bg-gray-950 min-h-screen">
     <div class="w-full flex flex-col section h-screen">
-    <div class="flex lg:flex-row flex-col justify-center md:space-x-4 h-full lg:mt-10">
-      <div class="lg:w-[50%] w-full h-fit rounded-md flex lg:justify-end justify-center">
-        <div class="lg:max-w-md md:max-w-2xl w-full flex justify-center lg:m-0 md:m-0 m-3">
-          <PaymentLinkMerchantInfo :merchant="merchant!" />
+      <div class="flex lg:flex-row flex-col justify-center md:space-x-4 h-full lg:mt-10">
+        <div
+          class="lg:w-[50%] w-full h-fit rounded-md flex lg:justify-end justify-center">
+          <div
+            class="lg:max-w-md md:max-w-2xl w-full flex justify-center lg:m-0 md:m-0 m-3">
+            <MerchantInfo :merchant="merchant!" />
+          </div>
         </div>
-      </div>
 
-      <div class="lg:w-[50%] w-full hidden lg:block pt-5 lg:pt-0">
-        <div class="lg:max-w-md md:max-w-2xl w-full ring-2 ring-slate-100 dark:ring-slate-800 bg-white dark:bg-transparent p-5 rounded-md">
-          <PaymentForm
+        <div class="lg:w-[50%] w-full hidden lg:block pt-5 lg:pt-0">
+          <div
+            class="lg:max-w-md md:max-w-2xl w-full ring-2 ring-slate-100 dark:ring-slate-800 bg-white dark:bg-transparent p-5 rounded-md">
+            <PaymentForm
               :payment-methods="paymentMethods || []"
               :paymentCode="paymentCode"
               :is-payment-method-data-loading="isPaymentMethodDataLoading"
@@ -21,20 +24,25 @@
               :default-values="defaultValues"
               :invoice="null"
               @on-currency-change="handleCurrencyChange" />
+          </div>
         </div>
       </div>
-    </div>
 
-    <div
-      class="lg:hidden fixed bottom-0 left-0 right-0 flex gap-x-2 items-center justify-center bg-white dark:bg-gray-950 p-4 shadow-lg">
-      <!-- Pay  -->
-      <MazBtn color="warning" size="sm" @click="isBottomSheetShow = true" rounded class="w-full mt-5">
-        Make payments {{paymentLinkTemplate?.amount}}
-      </MazBtn>
+      <div
+        class="lg:hidden fixed bottom-0 left-0 right-0 flex gap-x-2 items-center justify-center bg-white dark:bg-gray-950 p-4 shadow-lg">
+        <!-- Pay  -->
+        <MazBtn
+          color="warning"
+          size="sm"
+          @click="isBottomSheetShow = true"
+          rounded
+          class="w-full mt-5">
+          Make payments {{ paymentLinkTemplate?.amount }}
+        </MazBtn>
 
-      <MazBottomSheet v-model="isBottomSheetShow" :noClose="true" >
-        <div class="max-h-[90vh] overflow-y-auto">
-          <div class="flex justify-end items-center mb-2">
+        <MazBottomSheet v-model="isBottomSheetShow" :noClose="true">
+          <div class="max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-end items-center mb-2">
               <MazBtn @click="isBottomSheetShow = false" color="transparent">
                 <Icon name="ic:sharp-close" />
               </MazBtn>
@@ -51,13 +59,11 @@
               :default-values="defaultValues"
               :invoice="null"
               @on-currency-change="handleCurrencyChange" />
-        </div>
-
-      </MazBottomSheet>
+          </div>
+        </MazBottomSheet>
+      </div>
     </div>
   </div>
-  </div>
-
 </template>
 
 <script setup lang="ts">
@@ -69,7 +75,7 @@ import type { PaymentDefaultValues } from '~/types';
 const route = useRoute();
 const paymentLinkStore = usePaymentLinkStore();
 const paymentForm = usePaymentForm();
-const { merchant, paymentLinkTemplate, } = storeToRefs(paymentLinkStore);
+const { merchant, paymentLinkTemplate } = storeToRefs(paymentLinkStore);
 const { general_form_data } = storeToRefs(paymentForm);
 const { $api } = useNuxtApp();
 const { getPaymentMethod, paymentMethods, isPaymentMethodDataLoading } =
@@ -111,15 +117,14 @@ async function getPaymentLinkTemplateInfo(template_link: string) {
     paymentLinkStore.paymentLinkTemplate = res.data;
 
     // and then assign their default values to the form
-    general_form_data.value.amount= res.data.amount.toString();
-    general_form_data.value.currency= res.data.currency.toString();
+    general_form_data.value.amount = res.data.amount.toString();
+    general_form_data.value.currency = res.data.currency.toString();
 
     // this would be as a checker to display amount payment title
     paymentLinkStore.isPaymentLinkTemplate = true;
 
     // and then we will make isDefault trye
     defaultValues.value.isDefault = true;
-
   } catch (error: any) {
     console.log(error);
   }
@@ -132,7 +137,6 @@ const defaultValues = ref<PaymentDefaultValues>({
 definePageMeta({
   middleware: ['verify-payment-link-link'],
   layout: 'campaign-layout',
-
 });
 </script>
 

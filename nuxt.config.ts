@@ -7,7 +7,7 @@ export default defineNuxtConfig( {
     },
   },
   components: [
-    { path: '~/components', pathPrefix: true }
+    { path: '~/components', pathPrefix: false }
   ],
   modules: [
     '@element-plus/nuxt',
