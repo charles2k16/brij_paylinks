@@ -16,11 +16,11 @@ export interface Currency {
   flag_url: string
 }
 
-export interface CampaignPaymentForm {
-  amount: string
-  phone: string,
-  currency: string
-}
+// export interface CampaignPaymentForm {
+//   amount: string
+//   phone: string,
+//   currency: string
+// }
 
 export interface InvoicePaymentForm {
   amount: string,
@@ -223,7 +223,7 @@ export interface Tax {
   created_at: string;
 }
 
-export interface paymentLinkTemplate {
+export interface PaymentLinkTemplate {
   id: string;
   name: string;
   amount: number;
@@ -250,9 +250,25 @@ export interface PaymentPayload {
 
 
 export interface PaymentDefaultValues {
-  total: string,
+  total?: string,
+  currency?: string,
+  isDefault?:boolean
+}
+
+
+export interface GeneralFormData {
   currency: string,
-  isDefault:boolean
+  amount:string,
+  reference:string,
+  paymentOption:PaymentOption | null,
+  isDefaultValues?: boolean
+}
+
+export interface MomoFormData {
+  phone: string,
+  phoneResult?:string,
+  email:string,
+  otp?:string
 }
 
 

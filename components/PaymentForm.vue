@@ -1,12 +1,12 @@
 <template>
   <el-form
-    ref="invoicePaymentForm"
-    :model="paymentForm"
+    ref="ruleForm"
+    :model="general_form_data"
     :rules="rules"
     class="demo-ruleForm max-w-"
     size="default"
     status-icon>
-    <h2 class="text-2xl dark:text-white">Make payment</h2>
+    <h2 class="text-2xl dark:text-white">Make payment</h2> 
     <p class="mb-20 dark:text-white">Enter amount to pay and select payment method</p>
 
     <!-- amount & currency -->
@@ -17,10 +17,10 @@
         <el-form-item prop="currency">
           <MazSelect
             class="dark:text-white"
-            v-model="paymentForm.value.currency"
-            :disabled="disableDefaultFields"
+            v-model="general_form_data.currency"
             label="Select currency"
             color="warning"
+            :disabled="defaultValues?.isDefault"
             :options="extractAbbr(merchant?.accepted_currencies!)" />
         </el-form-item>
       </div>
@@ -31,8 +31,8 @@
             class="w-full"
             key="lg"
             color="warning"
-            :disabled="disableDefaultFields"
-            v-model="paymentForm.value.amount"
+            :disabled="defaultValues?.isDefault"
+            v-model="general_form_data.amount"
             label="Enter Amount"
             size="md" />
         </el-form-item>
@@ -46,13 +46,13 @@
         class="w-full"
         key="lg"
         color="warning"
-        v-model="paymentForm.value.reference"
+        v-model="general_form_data.reference"
         label="Reference"
         placeholder="Pay for services"
         size="md" />
     </el-form-item>
 
-    <div v-if="isPaymentMethodsLoading" class="flex flex-col items-center w-full gap-y-3">
+    <div v-if="isPaymentMethodDataLoading" class="flex flex-col items-center w-full gap-y-3">
       <Icon class="text-2xl text-amber-600" name="eos-icons:bubble-loading" />
       <p class="text-sm">Loading payment options</p>
     </div>
@@ -61,64 +61,46 @@
     <PaymentMethods
       v-else
       :options="paymentMethods || []"
-      v-model="selectedPaymentOption"
+      v-model="general_form_data.paymentOption"
       class="flex-1" />
 
     <!-- submit button -->
     <MazBtn
       color="warning"
       size="sm"
-      @click="submitForm(invoicePaymentForm)"
+      @click="submitForm(ruleForm)"
       class="w-full mt-8">
-      Proceed to payment {{ defaultValues.total }}
+      Proceed to payment {{ general_form_data.amount }}
     </MazBtn>
 
     <MazDialog
       @close="handleClose"
       v-model="dialogVisible"
       :persistent="false"
-      width="400px"
+      width="500px"
       scrollable>
-      <!-- <p class="text-lg">Confirm Payment</p> -->
-      <PaymentConfirm
+      
+      <!-- momo pay form -->
+
+      <MomoPayForm v-if="general_form_data.paymentOption?.fund_type == 'momo' || general_form_data.paymentOption?.fund_type == 'nigeriaussd' "
         :countries="countries"
-        :paymentLink="paymentCode!"
-        :amount="paymentForm.value.amount"
-        :currency="paymentForm.value.currency"
-        v-if="!isOTPSuccessful"
+        :payment-code="paymentCode"
         :merchant="merchant"
-        @send-otp="handleSendOTP"
-        @on-otp-successful="handleOTPSuccess" />
+        :invoice="props.invoice"
+        :payment-link-template="paymentLinkTemplate"
+        :route-name="routeName"
+    />
+      <NigeriaBankTransferForm v-if="general_form_data.paymentOption?.fund_type == 'ngbanktransfer' "
+        :countries="countries"
+        :payment-code="paymentCode"
+        :merchant="merchant"
+        :invoice="props.invoice"
+        :payment-link-template="paymentLinkTemplate"
+        :route-name="routeName"
+    />
 
-      <div v-else class="flex flex-col items-center">
-        <!-- OT Field -->
 
-        <Loading v-if="isPaymentLoading" message="initiating payment authorizations" />
-
-        <div v-else class="flex flex-col">
-          <h2 class="text-2xl text-center dark:text-white">Enter OTP Code</h2>
-          <p class="mb-5 text-gray-400 text-center">
-            OTP code has been sent to your momo number, please enter to continue
-          </p>
-          <MazInputCode
-            :code-length="6"
-            size="xs"
-            v-model="paymentForm.value.otp"
-            class="flex flex-wrap justify-center mt-10"
-            @completed="handlePayment"
-            color="warning" />
-          <MazBtn
-            :loading="isSendOTPLoading"
-            @click="handleOTPResend()"
-            color="transparent"
-            class="mt-15"
-            link
-            >Resend code</MazBtn
-          >
-        </div>
-
-        <!-- Resend button -->
-      </div>
+    <!-- nigeria bank transfer fpr -->
       <template #footer>
         <div
           class="w-full flex justify-center items-center gap-x-4 bg-gray-100 dark:bg-gray-900 p-3 rounded-md">
@@ -130,7 +112,7 @@
     </MazDialog>
 
     <!-- success payment modal -->
-    <MazDialog v-model="isPaymentSuccessful" width="380px" :on-close="handleClose">
+    <!-- <MazDialog v-model="isPaymentSuccessful" width="380px" :on-close="handleClose">
       <div class="flex flex-col justify-center items-center">
         <Icon class="text-6xl text-green-700" name="ri:send-plane-line" />
         <h2 class="text-2xl mt-3">{{ paymentSuccessTitle }}</h2>
@@ -140,7 +122,7 @@
           <p class="text-lg">
             You paid an amount of
             <span class="font-semibold"
-              >{{ paymentForm.value.currency }} {{ paymentForm.value.amount }} </span
+              >{{ general_form_data.currency }} {{ general_form_data.amount }} </span
             >to
             <span class="font-semibold">{{ merchant?.name }}</span>
           </p>
@@ -150,9 +132,9 @@
       <template #footer="{ close }">
         <MazBtn color="warning" @click="close"> Go back </MazBtn>
       </template>
-    </MazDialog>
+    </MazDialog> -->
 
-    <MazDialog v-model="isPaymentFailed" width="380px" :on-close="handleClose">
+    <!-- <MazDialog v-model="isPaymentFailed" width="380px" :on-close="handleClose">
       <div class="flex flex-col justify-center items-center">
         <Icon class="text-6xl text-red-600" name="bxs:error-alt" />
         <h2 class="text-2xl mt-3">Payment failed</h2>
@@ -165,7 +147,7 @@
       <!-- <template #footer="{ close }">
         <MazBtn color="warning" @click="close"> Go back </MazBtn>
       </template> -->
-    </MazDialog>
+    <!-- </MazDialog> -->
   </el-form>
 </template>
 
@@ -179,113 +161,44 @@ import type {
   InvoicePaymentForm,
   Merchant,
   PaymentDefaultValues,
-  paymentLinkTemplate,
+  PaymentLinkTemplate,
   PaymentOption,
 } from '~/types/index';
 import { ElMessage } from 'element-plus';
-import usePayment from '~/composables/usePayment';
+import useMomoPayment from '~/composables/useMomoPayment';
+import {usePaymentForm} from '~/store/payment_forms';
+// instance of payment forms
+const paymentForm = usePaymentForm()
 
-// instance of pay
-const { isPaymentLoading, isPaymentFailed, isPaymentSuccessful, pay } = usePayment();
+const {general_form_data} = storeToRefs(paymentForm)
 
-// instance of otp
-const { isSendOTPLoading, sendOTP } = useSendOTP();
+// instance of momo pay
+const { isPaymentFailed, isPaymentLoading, isPaymentSuccessful } = useMomoPayment()
 
-// togge dialog
+
+// toggle dialog
 const dialogVisible = ref(false);
 
-// payment success title
-const paymentSuccessTitle = computed(() => {
-  if (props.routeName === 'paymentlinks-id-business') {
-    return 'Merchant paid Successfully';
-  } else {
-    return 'Invoice paid Successfully';
-  }
-});
-
-watch(
-  () => isPaymentSuccessful.value,
-  (newValue, oldValue) => {
-    isPaymentSuccessful.value = newValue;
-  }
-);
-
-watch(
-  () => isPaymentFailed.value,
-  (newValue, oldValue) => {
-    isPaymentFailed.value = newValue;
-  }
-);
 
 // form instance
-const invoicePaymentForm = ref<FormInstance>();
+const ruleForm = ref<FormInstance>();
 
-// disable default fields
-const disableDefaultFields = computed(() => {
-  if (props.defaultValues.currency) {
-    return true;
-  } else {
-    return false;
-  }
-});
 
-// selected payment option
-const selectedPaymentOption = ref<PaymentOption | null>(null);
-
-// is OTP Successful
-const isOTPSuccessful = ref(false);
-
-// on otp successful
-function handleOTPSuccess(val: any) {
-  isOTPSuccessful.value = val;
-}
-
-// initiate otp
 
 // props
 const props = defineProps<{
   paymentMethods: PaymentOption[];
-  isPaymentMethodsLoading: boolean;
+  isPaymentMethodDataLoading: boolean;
   countries: any[];
-  paymentLink?: string | string[];
-  merchant: Merchant | undefined;
+  merchant: Merchant | null;
   routeName: string | null;
-  invoice?: Invoice | undefined;
-  paymentLinkTemplateLink?: paymentLinkTemplate | undefined;
-  paymentCode: string | undefined;
-  defaultValues: PaymentDefaultValues;
+  invoice: Invoice | null;
+  paymentLinkTemplate: PaymentLinkTemplate | null;
+  paymentCode: string | null;
+  defaultValues: PaymentDefaultValues | null;
 }>();
 
 const emit = defineEmits(['on-currency-change']);
-
-const paymentForm = computed(() => {
-  if (props.defaultValues.currency) {
-    return paymentFormWithDefaultValues;
-  } else {
-    return paymentFormWithoutDefaultValues;
-  }
-});
-const paymentFormWithDefaultValues = ref({
-  amount: props.defaultValues.total,
-  reference: '',
-  currency: props.defaultValues.currency,
-  payment_method: '',
-  otp: '',
-  phone: '',
-  email: '',
-  phoneResult: '',
-});
-
-const paymentFormWithoutDefaultValues = ref({
-  amount: '',
-  reference: '',
-  currency: 'GHS',
-  payment_method: '',
-  otp: '',
-  phone: '',
-  email: '',
-  phoneResult: '',
-});
 
 // validation rules
 const rules = reactive<FormRules<InvoicePaymentForm>>({
@@ -301,47 +214,44 @@ const rules = reactive<FormRules<InvoicePaymentForm>>({
 });
 
 watch(
-  () => paymentForm.value.value.currency,
+  () => general_form_data.value.currency,
   (newValue, oldValue) => {
     emit('on-currency-change', newValue);
   }
 );
 
-watch(isOTPSuccessful, (newValue, oldValue) => {
-  // Trigger something when the value changes
-  isOTPSuccessful.value = newValue;
-});
+
+
+const isDefaultValues = computed(() => {
+  if(props.defaultValues?.currency){
+    return true;
+  }else{
+    return false
+  }
+})
+
 
 // ** Dialogue **//
 const handleClose = () => {
-  isOTPSuccessful.value = false;
   isPaymentSuccessful.value = false;
-  selectedPaymentOption.value = null;
+  general_form_data.value.paymentOption  = null;
   isPaymentFailed.value = false;
   isPaymentLoading.value = false;
-  paymentForm.value.value.otp = '';
+  // paymentForm.value.value.otp = '';
 };
 
-function handleSendOTP(data: any) {
-  paymentForm.value.value.phone = data.phone;
-  console.log(data.phone);
-  console.log(paymentForm.value.value.phone);
-  paymentForm.value.value.email = data.email;
-}
 
-// opt re-send
-function handleOTPResend() {
-  sendOTP(paymentForm.value.value.phone, props.paymentLink?.toString()!);
-}
 
 // submit form function
-function submitForm(invoicePaymentForm: any) {
-  invoicePaymentForm.validate((valid: any) => {
+function submitForm(ruleForm: any) {
+  ruleForm.validate((valid: any) => {
     if (valid) {
-      if (selectedPaymentOption.value !== null) {
+      if (general_form_data.value.paymentOption !== null) {
         // show popup
-        dialogVisible.value = true;
+      dialogVisible.value = true;
+
         // alert('success')
+        console.log(dialogVisible)
       } else {
         ElMessage({
           message: 'Please select a payment method to continue.',
@@ -356,84 +266,7 @@ function submitForm(invoicePaymentForm: any) {
   });
 }
 
-function handlePayment() {
-  if (props.routeName === 'paymentlinks-id-business') {
-    if (props.paymentLinkTemplateLink) {
-      handlePaymentLinksTemplatePayment();
-    } else {
-      handlePaymentLinksPayment();
-    }
-  } else {
-    handlePaymentInvoice();
-  }
-}
 
-function handlePaymentLinksPayment() {
-  const payload = {
-    payment_method_id: selectedPaymentOption.value?.id,
-    payment_details: {
-      momo_number: paymentForm.value.value.phone,
-      description: 'Payment link transaction',
-      amount: paymentForm.value.value.amount,
-      currency: paymentForm.value.value.currency,
-      otp: paymentForm.value.value.otp,
-      customer_firstname: 'john',
-      customer_lastname: 'doe',
-      customer_email: paymentForm.value.value.email
-        ? paymentForm.value.value.email
-        : 'me@you.com',
-    },
-  };
-
-  pay(payload!, props.paymentCode?.toString()!);
-}
-
-function handlePaymentLinksTemplatePayment() {
-  const payload = {
-    payment_method_id: selectedPaymentOption.value?.id,
-    payment_details: {
-      momo_number: paymentForm.value.value.phone,
-      description: 'Payment link transaction',
-      amount: paymentForm.value.value.amount,
-      currency: paymentForm.value.value.currency,
-      otp: paymentForm.value.value.otp,
-      customer_firstname: 'john',
-      customer_lastname: 'doe',
-      customer_email: paymentForm.value.value.email
-        ? paymentForm.value.value.email
-        : 'me@you.com',
-    },
-    meta: {
-      payment_type: 'paymentLinkTemplate',
-    },
-  };
-
-  pay(payload!, props.paymentCode?.toString()!);
-}
-
-function handlePaymentInvoice() {
-  const payload = {
-    payment_method_id: selectedPaymentOption.value?.id,
-    payment_details: {
-      momo_number: paymentForm.value.value.phone,
-      description: 'Payment link transaction',
-      amount: paymentForm.value.value.amount,
-      currency: paymentForm.value.value.currency,
-      otp: paymentForm.value.value.otp,
-      customer_firstname: 'john',
-      customer_lastname: 'doe',
-      customer_email: paymentForm.value.value.email
-        ? paymentForm.value.value.email
-        : 'me@you.com',
-    },
-    meta: {
-      payment_type: 'invoice',
-      payment_type_id: `${props.invoice?.id}`,
-    },
-  };
-
-  pay(payload!, props.paymentCode?.toString()!);
-}
 
 // make payment
 </script>

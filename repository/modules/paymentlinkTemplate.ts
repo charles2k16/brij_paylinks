@@ -7,7 +7,7 @@ import type { PaymentMethods } from '~/types/index';
 // locals
 import FetchFactory from '../factory';
 
-class campaignModule extends FetchFactory<PaymentMethods[]> {
+class PaymentLinkTemplateModule extends FetchFactory<PaymentMethods[]> {
   private RESOURCE = '/paymentlinktemplates/link';
 
   /**
@@ -25,4 +25,4 @@ class campaignModule extends FetchFactory<PaymentMethods[]> {
   }
 }
 
-export default campaignModule;
+export default PaymentLinkTemplateModule;

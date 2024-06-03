@@ -16,38 +16,14 @@ export const useInvoiceStore = defineStore( "invoice", () => {
 
 
   // Data
-  const SelectedPaymentOption = ref<PaymentOption | null>( null );
   const merchant = ref<Merchant | null>( null );
   const invoice = ref<Invoice | null>( null );
-  const OTPCode = ref();
-  const isOTPView = ref( false );
-  const invoicePaymentForm = ref<InvoicePaymentForm>( {
-    amount: "50",
-    phone: "",
-    currency: "GHS",
-    reference: "",
-    email: "",
-  } );
 
-
-  // computed
-  const isPaymentMethodSelected = computed( () => {
-    if ( SelectedPaymentOption.value === null ) {
-      return false;
-    } else {
-      return true;
-    }
-  } );
 
 
 
 
   return {
-    invoicePaymentForm,
-    isPaymentMethodSelected,
-    SelectedPaymentOption,
-    OTPCode,
-    isOTPView,
     merchant,
     invoice,
   };

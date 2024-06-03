@@ -10,10 +10,17 @@
       <!-- Invoice Form -->
       <div class="lg:max-w-md w-full h-fit p-5 hidden lg:block ring-2 ring-slate-100 dark:ring-slate-800 rounded-md">
         <!-- content here -->
-        <PaymentForm :payment-methods="paymentMethods || []" :paymentCode="invoice?.payment_code"
-          :is-payment-methods-loading="isPaymentMethodDataLoading" :invoice="invoice!" :route-name="routeName"
-          :payment-link="route.params.id" :countries="cty_abbr" :merchant="merchant!" :default-values="defaultValues"
-          :payment-link-template-link="undefined" @on-currency-change="handleCurrencyChange" />
+        <PaymentForm
+              :payment-methods="paymentMethods || []"
+              :paymentCode="invoice?.payment_code!"
+              :is-payment-method-data-loading="isPaymentMethodDataLoading"
+              :route-name="routeName"
+              :countries="cty_abbr"
+              :merchant="merchant!"
+              :payment-link-template="null!"
+              :default-values="defaultValues"
+              :invoice="invoice!"
+              @on-currency-change="handleCurrencyChange" />
       </div>
     </div>
 
@@ -27,21 +34,31 @@
 
       <!-- isBottomSheetShow for payment form on mobile -->
       <MazBottomSheet v-model="isBottomSheetShow" :no-close="true">
-        <div class="h-screen">
-          <div class="h-full overflow-y-auto py-16">
-            <div class="flex justify-end items-center mb-2">
+
+        <div class="max-h-[90vh] overflow-y-auto">
+          <div class="flex justify-end items-center mb-2">
               <MazBtn @click="toggleSheet" color="transparent">
                 <icon name="ic:sharp-close" />
               </MazBtn>
             </div>
             <!-- content here -->
-            <PaymentForm :payment-methods="paymentMethods || []" :paymentCode="invoice?.payment_code"
-              :is-payment-methods-loading="isPaymentMethodDataLoading" :invoice="invoice!"  :route-name="routeName"
-              :payment-link="route.params.id" :countries="cty_abbr" :merchant="merchant!"
-              :default-values="defaultValues" :payment-link-template-link="undefined"
+              <PaymentForm
+              :payment-methods="paymentMethods || []"
+              :paymentCode="invoice?.payment_code!"
+              :is-payment-method-data-loading="isPaymentMethodDataLoading"
+              :route-name="routeName"
+              :countries="cty_abbr"
+              :merchant="merchant!"
+              :payment-link-template="null!"
+              :default-values="defaultValues"
+              :invoice="invoice!"
               @on-currency-change="handleCurrencyChange" />
-          </div>
         </div>
+        <!-- <div class="h-screen">
+          <div class="h-full overflow-y-auto py-16">
+   
+          </div>
+        </div> -->
       </MazBottomSheet>
 
       <!-- pledge -->
@@ -56,15 +73,20 @@
 
 <script setup lang="ts">
 import { useInvoiceStore } from '~/store/invoice';
-const invoiceStore = useInvoiceStore();
-const { invoice, merchant } = storeToRefs(invoiceStore);
+import { usePaymentForm } from '~/store/payment_forms';
+
 import { supportedCountries } from '~/assets/data';
 import usePaymentMethods from '~/composables/usePaymentMethods';
 import type { PaymentDefaultValues } from '~/types';
 
-const { getPaymentMethod, paymentMethods, isPaymentMethodDataLoading } =
-  usePaymentMethods();
-const route = useRoute();
+const { getPaymentMethod, paymentMethods, isPaymentMethodDataLoading } = usePaymentMethods();
+
+const invoiceStore = useInvoiceStore();
+const paymentForm = usePaymentForm();
+
+const { invoice, merchant } = storeToRefs(invoiceStore);
+const { general_form_data } = storeToRefs(paymentForm);
+const route = useRoute(); 
 
 // get payemnt method options
 onMounted(() => {
@@ -75,11 +97,11 @@ onMounted(() => {
   // get pay methods
   getPaymentMethod(invoice.value?.currency!);
 
-  isDefaultValues.value = true;
 
   //  assign currency and total to store
-  invoiceStore.invoicePaymentForm.currency = invoice.value?.currency!;
-  invoiceStore.invoicePaymentForm.amount = invoice.value?.total!;
+  general_form_data.value.currency = invoice.value?.currency!;
+  general_form_data.value.amount = invoice.value?.total!;
+  defaultValues.value.isDefault = true;
 
   // get countries
   getCountriesAsync();
@@ -104,13 +126,10 @@ function toggleSheet() {
   isBottomSheetShow.value = !isBottomSheetShow.value;
 }
 
-// is there default values
-const isDefaultValues = ref(false);
+
 
 const defaultValues = ref<PaymentDefaultValues>({
-  currency: invoice.value?.currency!,
-  total: invoice.value?.total!,
-  isDefault: true,
+  isDefault: false,
 });
 
 function handleCurrencyChange(val: any) {
