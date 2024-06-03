@@ -1,4 +1,5 @@
 <template>
+  <!-- commet -->
   <div
     class="w-full flex flex-col lg:px-20 lg:py-2 lg:bg-white dark:bg-gray-950 bg-gray-100 min-h-screen">
     <div class="flex flex-row justify-center md:space-x-4 section">
