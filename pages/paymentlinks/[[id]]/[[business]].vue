@@ -10,8 +10,17 @@
 
       <div class="lg:w-[50%] w-full hidden lg:block pt-5 lg:pt-0">
         <div class="lg:max-w-md md:max-w-2xl w-full ring-2 ring-slate-100 dark:ring-slate-800 bg-white dark:bg-transparent p-5 rounded-md">
-          <PaymentForm  :payment-methods=" paymentMethods || []" :paymentCode="paymentCode" :is-payment-methods-loading="isPaymentMethodDataLoading" :route-name="routeName"  :payment-link="route.params.id"
-              :countries="cty_abbr" :merchant="merchant!"  :default-values="defaultValues"  :payment-link-template-link="paymentLinkTemplate!" @on-currency-change="handleCurrencyChange" />
+          <PaymentForm
+              :payment-methods="paymentMethods || []"
+              :paymentCode="paymentCode"
+              :is-payment-method-data-loading="isPaymentMethodDataLoading"
+              :route-name="routeName"
+              :countries="cty_abbr"
+              :merchant="merchant!"
+              :payment-link-template="paymentLinkTemplate!"
+              :default-values="defaultValues"
+              :invoice="null"
+              @on-currency-change="handleCurrencyChange" />
         </div>
       </div>
     </div>
@@ -24,9 +33,8 @@
       </MazBtn>
 
       <MazBottomSheet v-model="isBottomSheetShow" :noClose="true" >
-        <div class="h-screen w-full">
-          <div class="h-full overflow-y-auto py-16">
-            <div class="flex justify-end items-center mb-2">
+        <div class="max-h-[90vh] overflow-y-auto">
+          <div class="flex justify-end items-center mb-2">
               <MazBtn @click="isBottomSheetShow = false" color="transparent">
                 <Icon name="ic:sharp-close" />
               </MazBtn>
@@ -35,16 +43,16 @@
             <PaymentForm
               :payment-methods="paymentMethods || []"
               :paymentCode="paymentCode"
-              :is-payment-methods-loading="isPaymentMethodDataLoading"
+              :is-payment-method-data-loading="isPaymentMethodDataLoading"
               :route-name="routeName"
-              :payment-link="route.params.id"
               :countries="cty_abbr"
               :merchant="merchant!"
+              :payment-link-template="paymentLinkTemplate!"
               :default-values="defaultValues"
-              :payment-link-template-link="paymentLinkTemplate!"
+              :invoice="null"
               @on-currency-change="handleCurrencyChange" />
-          </div>
         </div>
+
       </MazBottomSheet>
     </div>
   </div>
@@ -54,12 +62,15 @@
 
 <script setup lang="ts">
 import { usePaymentLinkStore } from '~/store/payment_links';
+import { usePaymentForm } from '~/store/payment_forms';
 import { supportedCountries } from '~/assets/data';
 import usePaymentMethods from '~/composables/usePaymentMethods';
 import type { PaymentDefaultValues } from '~/types';
 const route = useRoute();
 const paymentLinkStore = usePaymentLinkStore();
-const { merchant, paymentLinkTemplate } = storeToRefs(paymentLinkStore);
+const paymentForm = usePaymentForm();
+const { merchant, paymentLinkTemplate, } = storeToRefs(paymentLinkStore);
+const { general_form_data } = storeToRefs(paymentForm);
 const { $api } = useNuxtApp();
 const { getPaymentMethod, paymentMethods, isPaymentMethodDataLoading } =
   usePaymentMethods();
@@ -70,7 +81,7 @@ const isBottomSheetShow = ref(false);
 
 onMounted(() => {
   getPaymentMethod('GHS');
-  console.log(defaultValues.value)
+  // console.log(defaultValues.value)
   routeName.value = route.matched[0].name?.toString()!;
   paymentCode.value = route.params.id.toString();
   if (route.query.payment_template_link) {
@@ -96,19 +107,26 @@ function handleCurrencyChange(val: any) {
 async function getPaymentLinkTemplateInfo(template_link: string) {
   try {
     const res = await $api.paymentLinkTemplate.getPaymentLinksTemplate(template_link);
+    // assign payment-link-template
     paymentLinkStore.paymentLinkTemplate = res.data;
-    paymentLinkStore.invoicePaymentForm.amount = res.data.amount.toString();
-    paymentLinkStore.invoicePaymentForm.currency = res.data.currency.toString();
+
+    // and then assign their default values to the form
+    general_form_data.value.amount= res.data.amount.toString();
+    general_form_data.value.currency= res.data.currency.toString();
+
+    // this would be as a checker to display amount payment title
     paymentLinkStore.isPaymentLinkTemplate = true;
+
+    // and then we will make isDefault trye
+    defaultValues.value.isDefault = true;
+
   } catch (error: any) {
     console.log(error);
   }
 }
 
 const defaultValues = ref<PaymentDefaultValues>({
-  currency: paymentLinkTemplate.value?.currency!,
-  total: paymentLinkTemplate.value?.amount.toString()!,
-  isDefault: true,
+  isDefault: false,
 });
 
 definePageMeta({

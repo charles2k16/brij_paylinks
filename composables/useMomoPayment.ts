@@ -3,7 +3,7 @@ import type { PaymentPayload } from '~/types';
 import Pusher from 'pusher-js'
 
 
-export default function useSendOTP () {
+export default function useMomoPay () {
 
   const { $api } = useNuxtApp()
 
@@ -11,6 +11,7 @@ export default function useSendOTP () {
   const isPaymentSuccessful = ref( false )
   const isPaymentFailed = ref( false )
   const statusText = ref( '' )
+  const isPaymentPromptInitiated = ref(false)
 
   async function pay ( payload: PaymentPayload | any, paymentLink: string ) {
     try {
@@ -18,7 +19,7 @@ export default function useSendOTP () {
 
       const res = await $api.paymentLinks.payMerchant( paymentLink, payload )
 
-      statusText.value = 'waiting for payment confirmation notification';
+      statusText.value = 'Waiting for payment confirmation notification';
       completePayment( res );
 
     } catch ( error: any ) {
@@ -37,11 +38,14 @@ export default function useSendOTP () {
 
   const completePayment = ( res: any ) => {
 
+    // prompt initated
+    isPaymentPromptInitiated.value = true;
+
     const { socket_channel } = res.data;
     const channel = socket_channel;
 
     // waiting to receive payment notification
-    statusText.value = 'waiting to receive payment notification';
+    statusText.value = 'Enter your PIN to make payment';
 
     Pusher.logToConsole = true;
 
@@ -76,6 +80,8 @@ export default function useSendOTP () {
     isPaymentLoading,
      isPaymentSuccessful,
     isPaymentFailed,
+    isPaymentPromptInitiated,
+    statusText,
     pay
   }
 }

@@ -7,9 +7,9 @@ import type { PaymentMethods } from '~/types/index';
 // locals
 import FetchFactory from '../factory';
 
-class OtpModule extends FetchFactory<PaymentMethods[]> {
+class NigeriaBankTransferModule extends FetchFactory<PaymentMethods[]> {
 
-  private OTP_RESOURCE = '/pwb/send-otp';
+  private NIGERIA_BANK_TRANSFER_RESOURCE = '/paymentlinks/confirmpayment';
   
   /**
    * Return the data as array 
@@ -17,12 +17,14 @@ class OtpModule extends FetchFactory<PaymentMethods[]> {
    * @returns 
    */
   
-  async sendOTP ( paylaod: {} ) {
+  // confirm nigeria bank transfer payment
+  async confirmNigerianBankTransfer ( paylaod: {} ) {
     return await this.call(
       'POST',
-      `${ this.OTP_RESOURCE }/`, paylaod
+      `${ this.NIGERIA_BANK_TRANSFER_RESOURCE }`, paylaod
     )
   }
+
 }
 
-export default OtpModule;
+export default NigeriaBankTransferModule;

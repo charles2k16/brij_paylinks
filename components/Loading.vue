@@ -1,7 +1,8 @@
 <template>
     <div class="w-full flex flex-col items-center gap-y-3">
-        <p>{{message}}</p>
-        <MazLoadingBar class="mb-5" color="warning" />
+        <Icon class="text-amber-400 text-4xl" name="line-md:loading-alt-loop"/>
+        <h3 class="">{{message}}</h3>
+
     </div>
 </template>
 <script setup lang="ts">

@@ -29,6 +29,8 @@ class PaymentLinksModule extends FetchFactory<PaymentMethods[]> {
       `${ this.RESOURCE }/${ payment_link }`, paylaod
     )
   }
+
+
 }
 
 export default PaymentLinksModule;

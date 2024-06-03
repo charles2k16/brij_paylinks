@@ -176,7 +176,7 @@ import { extractAbbr } from '~/utils/index'
 
 // instance of sentOTP composable
 const { isOTPSuccessful, isSendOTPLoading, sendOTP } = useSendOTP();
-const { isPaymentLoading, isPaymentFailed, isPaymentSuccessful, pay } = usePayment();
+const { isPaymentLoading, isPaymentFailed, isPaymentSuccessful, pay } = useMomoPayment();
 
 
 
