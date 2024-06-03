@@ -6,10 +6,7 @@
       <div
         class="lg:max-w-lg md:max-w-xl w-full bg-gray-100 dark:bg-gray-900 lg:p-5 md:p-5 pb-32 p-2 rounded-md">
         <!-- Invoice Info -->
-        <InvoicePaymentInfo
-          :merchant="merchant!"
-          :invoice="invoice"
-          :countries="cty_abbr" />
+        <InvoiceInfo :merchant="merchant!" :invoice="invoice" :countries="cty_abbr" />
       </div>
 
       <!-- Invoice Form -->
