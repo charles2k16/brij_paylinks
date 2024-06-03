@@ -1,19 +1,14 @@
 <template>
   <div
     class="w-full flex flex-col lg:px-20 lg:py-2 lg:bg-white dark:bg-gray-950 bg-gray-100 min-h-screen">
-    <!-- Invoice Info & Payment -->
     <div class="flex flex-row justify-center md:space-x-4 section">
       <div
         class="lg:max-w-lg md:max-w-xl w-full bg-gray-100 dark:bg-gray-900 lg:p-5 md:p-5 pb-32 p-2 rounded-md">
-        <!-- Invoice Info -->
         <InvoiceInfo :merchant="merchant!" :invoice="invoice" :countries="cty_abbr" />
       </div>
 
-      <!-- Invoice Form -->
       <div
         class="lg:max-w-md w-full h-fit p-5 hidden lg:block ring-2 ring-slate-100 dark:ring-slate-800 rounded-md">
-        <!-- content here -->
-
         <PaymentForm
           :payment-methods="paymentMethods || []"
           :paymentCode="invoice?.payment_code!"
@@ -30,13 +25,10 @@
 
     <div
       class="lg:hidden fixed bottom-0 left-0 right-0 flex gap-x-2 items-center justify-center bg-white dark:bg-gray-950 p-4 shadow-lg">
-      <!-- Pay  -->
-
       <MazBtn @click="toggleSheet" color="warning" size="sm" class="w-full">
         Pay Invoice {{ invoice?.total }}
       </MazBtn>
 
-      <!-- isBottomSheetShow for payment form on mobile -->
       <MazBottomSheet v-model="isBottomSheetShow" :no-close="true">
         <div class="max-h-[90vh] overflow-y-auto">
           <div class="flex justify-end items-center mb-2">
@@ -44,7 +36,7 @@
               <icon name="ic:sharp-close" />
             </MazBtn>
           </div>
-          <!-- content here -->
+
           <PaymentForm
             :payment-methods="paymentMethods || []"
             :paymentCode="invoice?.payment_code!"
@@ -57,19 +49,7 @@
             :invoice="invoice!"
             @on-currency-change="handleCurrencyChange" />
         </div>
-        <!-- <div class="h-screen">
-          <div class="h-full overflow-y-auto py-16">
-   
-          </div>
-        </div> -->
       </MazBottomSheet>
-
-      <!-- pledge -->
-      <!-- <button type="button"
-        class="flex-1 border border-teal-900 px-4 flex flex-row py-2 justify-center items-center gap-x-3 rounded-full hover:bg-teal-900 hover:text-white text-teal-900">
-        <p class="font-medium">I Pledge</p>
-        <Icon name="majesticons:money-hand" size="25" />
-      </button> -->
     </div>
   </div>
 </template>
@@ -92,21 +72,15 @@ const { invoice, merchant } = storeToRefs(invoiceStore);
 const { general_form_data } = storeToRefs(paymentForm);
 const route = useRoute();
 
-// get payemnt method options
 onMounted(() => {
-  console.log(invoice.value?.payment_code);
-  console.log(route.path);
-  // get route name
   routeName.value = route.matched[0].name?.toString()!;
-  // get pay methods
+
   getPaymentMethod(invoice.value?.currency!);
 
-  //  assign currency and total to store
   general_form_data.value.currency = invoice.value?.currency!;
   general_form_data.value.amount = invoice.value?.total!;
   defaultValues.value.isDefault = true;
 
-  // get countries
   getCountriesAsync();
 });
 

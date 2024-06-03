@@ -9,7 +9,6 @@
             <MerchantInfo :merchant="merchant!" />
           </div>
         </div>
-
         <div class="lg:w-[50%] w-full hidden lg:block pt-5 lg:pt-0">
           <div
             class="lg:max-w-md md:max-w-2xl w-full ring-2 ring-slate-100 dark:ring-slate-800 bg-white dark:bg-transparent p-5 rounded-md">

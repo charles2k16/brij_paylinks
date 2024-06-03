@@ -7,7 +7,7 @@
     </div>
     <div class="flex flex-col rounded-md gap-y-2">
       <div class="my-4 border-b border-gray-100 dark:border-slate-800"></div>
-      <!-- toggle contact btn -->
+
       <h2 class="text-lg dark:text-white">{{ merchant?.name }}</h2>
       <div class="flex items-center justify-between">
         <div class="items-center d-flex gap-x-3">
@@ -25,10 +25,9 @@
           <Icon class="text-teal-950 dark:text-white" name="tdesign:location-1" />
           <p class="text-base dark:text-white">{{ merchant?.address }}</p>
         </div>
-        <!-- <el-button type="warning" circle><Icon class="text-teal-950" name="mdi:content-copy"/></el-button> -->
       </div>
     </div>
-    <!-- Invoice list -->
+
     <div class="flex flex-col">
       <div class="my-4 border-b border-gray-100 dark:border-slate-800 m"></div>
       <!-- invoice items control header -->
@@ -118,7 +117,7 @@
           {{ invoice?.currency }} {{ invoice?.amount_after_discount }}
         </h2>
       </div>
-      <!-- tax -->
+
       <div class="flex items-center justify-center my-2 gap-x-3">
         <div class="w-5 border-b border-gray-200 dark:border-white m"></div>
         <p class="text-xs text-gray-600 dark:text-white">Tax</p>
@@ -137,7 +136,7 @@
           {{ invoice?.currency }} {{ invoice?.tax_amount }}
         </h2>
       </div>
-      <!-- total -->
+
       <div class="flex items-center justify-center my-2 gap-x-3">
         <div class="w-5 border-b border-gray-200 dark:border-white m"></div>
         <p class="text-xs text-gray-600 dark:text-white">Total amount to be paid</p>
@@ -164,7 +163,6 @@ const { merchant, invoice } = storeToRefs(invoiceStore);
 const source = ref(`${merchant.value?.contact}`);
 const { copy, copied } = useClipboard({ source });
 
-// props
 const props = defineProps<{
   invoice: Invoice | null;
   merchant: Merchant;
