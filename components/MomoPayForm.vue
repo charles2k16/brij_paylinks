@@ -6,9 +6,9 @@
       <h2 class="text-2xl font-semibold text-black dark:text-white">
         {{ general_form_data.amount }} {{ general_form_data.currency }}
       </h2>
-      <div class="flex flex-wrap gap-x-3 items-center mb-20">
+      <div class="flex flex-wrap items-center mb-20 gap-x-3">
         <p class="text-sm text-gray-400 dark:text-white ">{{ merchant?.name }}</p>
-        <div class="h-1 w-1 rounded-full bg-black dark:bg-gray-400"></div>
+        <div class="w-1 h-1 bg-black rounded-full dark:bg-gray-400"></div>
         <p class="text-sm text-gray-400 dark:text-white">{{ general_form_data.paymentOption?.description }}</p>
 
       </div>
@@ -51,13 +51,13 @@
 
 
       <template #title-2>
-        Enter OPT Code
+        Enter OTP Code
       </template>
       <template #subtitle-2>
         Initiate payment.
       </template>
       <template v-if="isPaymentLoading" #title-info-2>
-        <Icon class="text-amber-400 text-4xl" name="line-md:loading-alt-loop" />
+        <Icon class="text-4xl text-amber-400" name="line-md:loading-alt-loop" />
       </template>
       <template #content-2="{ nextStep, previousStep }">
 
@@ -83,11 +83,11 @@
       <template #content-3="{ nextStep, previousStep }">
         <div>
           <Loading :message="statusText" v-if="isPaymentLoading" />
-          <div class="momo-fo w-full border border-gray-100 rounded-md flex flex-col p-6">
-            <h3 class="text-base mb-4">What you will do :</h3>
+          <div class="flex flex-col w-full p-6 border border-gray-100 rounded-md momo-fo">
+            <h3 class="mb-4 text-base">What you will do :</h3>
 
             <div class="flex gap-x-4 ">
-              <div class="w-5 h-5 rounded-full flex justify-center items-center bg-amber-400 text-black">
+              <div class="flex items-center justify-center w-5 h-5 text-black rounded-full bg-amber-400">
                 <h3 class="text-base">-</h3>
               </div>
               <h3 class="text-sm w-[90%]">A payment prompt will popup on your phone. Enter your PIN to complete the
@@ -95,12 +95,12 @@
               </h3>
             </div>
 
-            <div class="flex gap-x-4 mt-6">
-              <div class="w-5 h-5 rounded-full flex justify-center items-center bg-amber-400 text-black">
+            <div class="flex mt-6 gap-x-4">
+              <div class="flex items-center justify-center w-5 h-5 text-black rounded-full bg-amber-400">
                 <h3 class="text-base">-</h3>
               </div>
               <h3 class="text-sm w-[90%]">Incase you don't cancel the prompt, Go to <span
-                  class="text-amber-500 text-sm">my
+                  class="text-sm text-amber-500">my
                   approvals</span> to and complete the step.</h3>
             </div>
           </div>
