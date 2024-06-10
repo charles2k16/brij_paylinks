@@ -26,7 +26,7 @@ export default defineNuxtPlugin( ( nuxtApp ) => {
     campaign: new CampaignModule( apiFecther ),
     otp: new OtpModule( apiFecther ),
     paymentLinkTemplate: new PaymentLinkTemplateModule( apiFecther ),
-    nigeriaBankTransferModule: new NigeriaBankTransferModule( apiFecther )
+    nigeriaBankTransfer: new NigeriaBankTransferModule( apiFecther )
   };
 
   return {

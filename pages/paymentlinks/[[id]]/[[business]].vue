@@ -1,17 +1,17 @@
 <template>
-  <div class="w-full bg-slate-100 dark:bg-gray-950 min-h-screen">
-    <div class="w-full flex flex-col section h-screen">
-      <div class="flex lg:flex-row flex-col justify-center md:space-x-4 h-full lg:mt-10">
+  <div class="w-full min-h-screen bg-slate-100 dark:bg-gray-950">
+    <div class="flex flex-col w-full h-screen section">
+      <div class="flex flex-col justify-center h-full lg:flex-row md:space-x-4 lg:mt-10">
         <div
           class="lg:w-[50%] w-full h-fit rounded-md flex lg:justify-end justify-center">
           <div
-            class="lg:max-w-md md:max-w-2xl w-full flex justify-center lg:m-0 md:m-0 m-3">
+            class="flex justify-center w-full m-3 lg:max-w-md md:max-w-2xl lg:m-0 md:m-0">
             <MerchantInfo :merchant="merchant!" />
           </div>
         </div>
         <div class="lg:w-[50%] w-full hidden lg:block pt-5 lg:pt-0">
           <div
-            class="lg:max-w-md md:max-w-2xl w-full ring-2 ring-slate-100 dark:ring-slate-800 bg-white dark:bg-transparent p-5 rounded-md">
+            class="w-full p-5 bg-white rounded-md lg:max-w-md md:max-w-2xl ring-2 ring-slate-100 dark:ring-slate-800 dark:bg-transparent">
             <PaymentForm
               :payment-methods="paymentMethods || []"
               :paymentCode="paymentCode"
@@ -28,7 +28,7 @@
       </div>
 
       <div
-        class="lg:hidden fixed bottom-0 left-0 right-0 flex gap-x-2 items-center justify-center bg-white dark:bg-gray-950 p-4 shadow-lg">
+        class="fixed bottom-0 left-0 right-0 flex items-center justify-center p-4 bg-white shadow-lg lg:hidden gap-x-2 dark:bg-gray-950">
         <!-- Pay  -->
         <MazBtn
           color="warning"
@@ -41,7 +41,7 @@
 
         <MazBottomSheet v-model="isBottomSheetShow" :noClose="true">
           <div class="max-h-[90vh] overflow-y-auto">
-            <div class="flex justify-end items-center mb-2">
+            <div class="flex items-center justify-end mb-2">
               <MazBtn @click="isBottomSheetShow = false" color="transparent">
                 <Icon name="ic:sharp-close" />
               </MazBtn>
