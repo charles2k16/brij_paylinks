@@ -31,6 +31,7 @@ export const supportedCountries = [
     currency_symbol: 'NGN',
     dialing_code: '+234',
     flag_url: 'https://api.brij.money/media/icons/flags/nigeria_flag.png',
+    icon_url: 'https://api.brij.money/media/icons/flags/nigeria_flag.png',
     abbreviation: 'NG',
   },
   {
@@ -41,6 +42,7 @@ export const supportedCountries = [
     currency_symbol: 'GHS',
     dialing_code: '+233',
     flag_url: 'https://api.brij.money/media/icons/flags/ghana_flag.png',
+    icon_url: 'https://api.brij.money/media/icons/flags/ghana_flag.png',
     abbreviation: 'GH',
   },
   {
@@ -51,9 +53,44 @@ export const supportedCountries = [
     currency_symbol: 'KSH',
     dialing_code: '+254',
     flag_url: 'https://api.brij.money/media/icons/flags/kenya_flag.png',
+    icon_url: 'https://api.brij.money/media/icons/flags/kenya_flag.png',
     abbreviation: 'KE',
   },
+  {
+    id: 'your-uuid-for-uganda',
+    name: 'Uganda',
+    code: '+256',
+    currency: 'Ugandan Shilling',
+    currency_symbol: 'UGX',
+    dialing_code: '+256',
+    flag_url: 'https://api.brij.money/media/icons/flags/uganda_flag.png',
+    icon_url: 'https://api.brij.money/media/icons/flags/uganda_flag.png',
+    abbreviation: 'UG',
+  },
+  {
+    id: 'your-uuid-for-tanzania',
+    name: 'Tanzania',
+    code: '+255',
+    currency: 'Tanzanian Shilling',
+    currency_symbol: 'TZS',
+    dialing_code: '+255',
+    flag_url: 'https://api.brij.money/media/icons/flags/tanzania_flag.png',
+    icon_url: 'https://api.brij.money/media/icons/flags/tanzania_flag.png',
+    abbreviation: 'TZ',
+  },
+  {
+    id: 'your-uuid-for-south-africa',
+    name: 'South Africa',
+    code: '+27',
+    currency: 'Rand',
+    currency_symbol: 'ZAR',
+    dialing_code: '+27',
+    flag_url: 'https://api.brij.money/media/icons/flags/south_africa_flag.png',
+    icon_url: 'https://api.brij.money/media/icons/flags/south_africa_flag.png',
+    abbreviation: 'ZA',
+  },
 ]
+
 
 export const categoryMappings = {
   Agency: 'account_balance',

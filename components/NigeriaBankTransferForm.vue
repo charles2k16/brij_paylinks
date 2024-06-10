@@ -4,11 +4,12 @@
     <div class="flex flex-col">
       <!-- Amount to be paid -->
       <h2 class="text-2xl font-semibold text-black dark:text-white">
-        {{ general_form_data.amount }} {{ general_form_data.currency }}  
+        {{ general_form_data.amount }} {{ general_form_data.currency }}
       </h2>
-      <div class="flex flex-wrap gap-x-3 items-center mb-20">
+
+      <div class="flex flex-wrap items-center mb-20 gap-x-3">
         <p class="text-sm text-gray-400 dark:text-white ">{{ merchant?.name }}</p>
-         <div class="h-1 w-1 rounded-full bg-black dark:bg-gray-400"></div>
+        <div class="w-1 h-1 bg-black rounded-full dark:bg-gray-400"></div>
         <p class="text-sm text-gray-400 dark:text-white">{{ general_form_data.paymentOption?.description }}</p>
 
       </div>
@@ -24,7 +25,7 @@
       <!-- <template #title-info-1>
         Required
       </template> -->
-      <template #content-1="{ nextStep, previousStep  }">
+      <template #content-1="{ nextStep, previousStep }">
 
         <el-form ref="ruleFormRef" :model="ruleForm" :rules="rules" label-width="auto" class="demo-ruleForm"
           size="default" status-icon>
@@ -41,7 +42,7 @@
           </el-form-item>
 
           <!-- submit button -->
-          <MazBtn :loading="isSendOTPLoading" color="warning" size="sm" @click="submitForm(ruleFormRef)"
+          <MazBtn :loading="isPaymentInitiatedLoading" color="warning" size="sm" @click="submitForm(ruleFormRef)"
             class="w-full mt-5">
             Continue
           </MazBtn>
@@ -50,14 +51,14 @@
 
 
 
-      <template #title-2>
-        Enter OPT Code
+      <!-- <template #title-2>
+        Enter OTP Code
       </template>
       <template #subtitle-2>
         Initiate payment.
       </template>
       <template v-if="isPaymentLoading" #title-info-2>
-        <Icon class="text-amber-400 text-4xl" name="line-md:loading-alt-loop"/>
+        <Icon class="text-4xl text-amber-400" name="line-md:loading-alt-loop"/>
       </template>
       <template #content-2="{ nextStep, previousStep }">
   
@@ -67,22 +68,22 @@
           <MazBtn color="warning" size="sm" @click="initiateOTPRequest" :loading="isSendOTPLoading" class="w-1/2">Resend code</MazBtn>
 
         </div>
-      </template>
+      </template> -->
 
-      <template #title-3>
+      <template #title-2>
         Complete payment
       </template>
-      <template #subtitle-3>
+      <template #subtitle-2>
         Visit your internet banking app
-        </template>
-      <template #content-3="{ nextStep, previousStep }">
+      </template>
+      <template #content-2="{ nextStep, previousStep }">
         <div>
-          <Loading :message="statusText" v-if="isPaymentConfirmationLoading" />
-          <div class="momo-fo w-full border border-gray-100 dark:border-gray-700  rounded-md flex flex-col p-6">
-            <h3 class="text-base mb-4">What you will do :</h3>
+          <Loading :message="statusText" v-if="isPaymentPromptInitiatedLoading" />
+          <div class="flex flex-col w-full p-6 border border-gray-100 rounded-md momo-fo dark:border-gray-700">
+            <h3 class="mb-4 text-base">What you will do :</h3>
 
             <div class="flex gap-x-4 ">
-              <div class="w-5 h-5 rounded-full flex justify-center items-center bg-amber-400 text-black">
+              <div class="flex items-center justify-center w-5 h-5 text-black rounded-full bg-amber-400">
                 <h3 class="text-base">-</h3>
               </div>
               <h3 class="text-sm w-[90%]">Please proceed to your internet banking app to complete this transaction.
@@ -90,16 +91,30 @@
             </div>
 
 
-            <div class="w-full p-4 border border-gray-100 dark:border-gray-700 flex gap-y-3 flex-col rounded-md mt-10">
-              <div v-for="(transaction, index) in transactionDetail" :key="index" class="flex justify-between">
-                <p class="text-sm">{{ transaction.name }}</p>
-                <h3 class="text-sm">{{ transaction.value }}</h3>
+            <div v-if="transactionDetail" class="flex flex-col w-full p-4 mt-10 border border-gray-100 rounded-md dark:border-gray-700 gap-y-3">
+              <div class="flex justify-between">
+                <p class="text-sm">Amount</p>
+                <h3 class="text-sm">{{ transactionDetail.amount}}</h3>
               </div>
-            </div>
+              <div class="flex justify-between">
+                <p class="text-sm">Bank Name</p>
+                <h3 class="text-sm">{{ transactionDetail.bank_name}}</h3>
+              </div>
+              <div class="flex justify-between">
+                <p class="text-sm">Account Number</p>
+                <h3 class="text-sm">{{ transactionDetail.account_number}}</h3>
+              </div>
+              <div class="flex justify-between">
+                <p class="text-sm">currency</p>
+                <h3 class="text-sm">{{ transactionDetail.currency}}</h3>
+              </div>
 
-            <MazBtn color="warning" size="sm" :loading="isPaymentConfirmationLoading" @click="confirmNigeriaBankTransferPayment(general_form_data.paymentOption?.id!)" class="w-full mt-10">Confirm payment</MazBtn>
+            <MazBtn color="warning" size="sm" :loading="isPaymentConfirmationLoading"
+              @click="confirmNigeriaBankTransferPayment(general_form_data.paymentOption?.id!)" class="w-full mt-10">
+              Confirm payment</MazBtn>
 
           </div>
+        </div>
         </div>
       </template>
 
@@ -121,7 +136,7 @@ const { general_form_data } = storeToRefs(paymentForm)
 // use otp
 const { isOTPSuccessful, isSendOTPLoading, sendOTP } = useSendOTP();
 // use Momo payment
-const { isPaymentFailed, isPaymentLoading, isPaymentSuccessful, transactionDetail, confirmNigeriaBankTransferPayment, failedReceiptData, isPaymentConfirmationLoading, successReceiptData, isPaymentPromptInitiated, pay, statusText } = useNigeriaBankTransferPayment()
+const { isPaymentFailed, isPaymentInitiatedLoading, isPaymentInitiated, isPaymentPromptInitiatedLoading, isPaymentSuccessful, transactionDetail, confirmNigeriaBankTransferPayment, failedReceiptData, isPaymentConfirmationLoading, successReceiptData, isPaymentPromptInitiated, pay, statusText } = useNigeriaBankTransferPayment()
 
 // props
 
@@ -154,22 +169,19 @@ const rules = reactive<FormRules<MomoFormData>>({
 
 
 // initiate OTP
-function initiateOTPRequest() {
-  console.log('hit confirm');
-  console.log(props.paymentCode!.toString()!);
-  sendOTP(ruleForm.phone!, props.paymentCode!.toString()!);
-}
+// function initiateOTPRequest() {
+//   console.log('hit confirm');
+//   console.log(props.paymentCode!.toString()!);
+//   sendOTP(ruleForm.phone!, props.paymentCode!.toString()!);
+// }
 
 // submit form function
 function submitForm(ruleFormRef: any) {
   ruleFormRef.validate((valid: any) => {
     if (valid) {
       // send otp
-      initiateOTPRequest();
-
-      if(isOTPSuccessful.value === true){
-        next()
-      }
+      console.log('success')
+      handlePayment();
 
     } else {
       return false;
@@ -177,20 +189,24 @@ function submitForm(ruleFormRef: any) {
   });
 }
 
-// get +233****** from entered number
-function onPhoneUpdate(val:any){
-  ruleForm.phone = val.e164
-}
-
-
+watch(
+  () => isPaymentInitiated.value,
+  (newValue, oldValue) => {
+    console.log(newValue)
+    console.log(oldValue)
+    if (newValue === true) {
+      next()
+    }
+  }
+);
 
 function next() {
-  return step.value ++;
+  return step.value++;
 }
 
 function previous() {
   isOTPSuccessful.value = false;
-  return step.value --;
+  return step.value--;
 }
 
 
@@ -206,10 +222,9 @@ function handlePayment() {
     handlePaymentInvoice();
   }
 
-  if(isPaymentPromptInitiated.value === true){
-    next()
-  }
 }
+
+
 
 function handlePaymentLinksPayment() {
   const payload = {
@@ -219,7 +234,7 @@ function handlePaymentLinksPayment() {
       description: 'Payment link transaction',
       amount: general_form_data.value.amount,
       currency: general_form_data.value.currency,
-      otp: ruleForm.otp,
+      // otp: ruleForm.otp,
       customer_firstname: 'john',
       customer_lastname: 'doe',
       customer_email: ruleForm.email
@@ -241,7 +256,7 @@ function handlePaymentLinksTemplatePayment() {
       description: 'Payment link transaction',
       amount: general_form_data.value.amount,
       currency: general_form_data.value.currency,
-      otp: ruleForm.otp,
+      // otp: ruleForm.otp,
       customer_firstname: 'john',
       customer_lastname: 'doe',
       customer_email: ruleForm.email
@@ -264,7 +279,7 @@ function handlePaymentInvoice() {
       description: 'Payment link transaction',
       amount: general_form_data.value.amount,
       currency: general_form_data.value.currency,
-      otp: ruleForm.otp,
+      // otp: ruleForm.otp,
       customer_firstname: 'john',
       customer_lastname: 'doe',
       customer_email: ruleForm.email
@@ -293,6 +308,4 @@ watch(isOTPSuccessful, (newValue, oldValue) => {
   }
 });
 </script>
-<style>
-  
-</style>
+<style></style>

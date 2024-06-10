@@ -21,7 +21,7 @@ export default function useSendOTP(){
        
           
           ElNotification({
-            title: "OPT Sent Successfully",
+            title: "OTP Sent Successfully",
             message: `${res.message}`,
             type: "success",
           });

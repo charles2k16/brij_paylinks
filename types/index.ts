@@ -271,6 +271,14 @@ export interface MomoFormData {
   otp?:string
 }
 
+export interface  NGNBankTxDetails {
+  amount: string,
+  bank_name: string,
+  account_number: string,
+  beneficiary: string,
+  currency: string
+}
+
 
 
 
