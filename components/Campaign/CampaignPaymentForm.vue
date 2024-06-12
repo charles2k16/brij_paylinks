@@ -271,7 +271,7 @@ function submitForm(ruleFormRef: any) {
 }
 // initiate OTP
 function initiateOTPRequest() {
-  sendOTP(paymentForm.phone, campaign.value?.payment_link!, 'johndoe@gmail.com')
+  sendOTP(paymentForm.phone, campaign.value?.payment_link!, 'jamesdoe@gmail.com')
 }
 
 
