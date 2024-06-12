@@ -134,7 +134,7 @@ import MazInputCode from 'maz-ui/components/MazInputCode'
 const paymentForm = usePaymentForm();
 const { general_form_data } = storeToRefs(paymentForm)
 // use otp
-const { isOTPSuccessful, isSendOTPLoading, sendOTP } = useSendOTP();
+// const { isOTPSuccessful, isSendOTPLoading, sendOTP } = useSendOTP();
 // use Momo payment
 const { isPaymentFailed, isPaymentInitiatedLoading, isPaymentInitiated, isPaymentPromptInitiatedLoading, isPaymentSuccessful, transactionDetail, confirmNigeriaBankTransferPayment, failedReceiptData, isPaymentConfirmationLoading, successReceiptData, isPaymentPromptInitiated, pay, statusText } = useNigeriaBankTransferPayment()
 
@@ -204,10 +204,10 @@ function next() {
   return step.value++;
 }
 
-function previous() {
-  isOTPSuccessful.value = false;
-  return step.value--;
-}
+// function previous() {
+//   isOTPSuccessful.value = false;
+//   return step.value--;
+// }
 
 
 // handle payment
@@ -301,11 +301,11 @@ function handlePaymentInvoice() {
 
 
 // next 
-watch(isOTPSuccessful, (newValue, oldValue) => {
-  console.log(newValue, oldValue)
-  if (isOTPSuccessful.value === true) {
-    next();
-  }
-});
+// watch(isOTPSuccessful, (newValue, oldValue) => {
+//   console.log(newValue, oldValue)
+//   if (isOTPSuccessful.value === true) {
+//     next();
+//   }
+// });
 </script>
 <style></style>
