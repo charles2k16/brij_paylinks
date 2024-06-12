@@ -166,7 +166,7 @@ const rules = reactive<FormRules<MomoFormData>>({
 function initiateOTPRequest() {
   console.log('hit confirm');
   console.log(props.paymentCode!.toString()!);
-  sendOTP(ruleForm.phone!, props.paymentCode!.toString()!);
+  sendOTP(ruleForm.phone!, props.paymentCode!.toString()!, ruleForm.email);
 }
 
 // submit form function

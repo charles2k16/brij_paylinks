@@ -1,7 +1,7 @@
 <template>
   <el-form ref="ruleFormRef" :model="paymentForm" :rules="rules">
-    <p class="text-gray-700 dark:text-white text-sm mt-5 mb-2">Amount to donate</p>
-    <div class="flex w-full gap-x-2 mb-2">
+    <p class="mt-5 mb-2 text-sm text-gray-700 dark:text-white">Amount to donate</p>
+    <div class="flex w-full mb-2 gap-x-2">
       <div class="flex h-fit">
         <el-form-item prop="currency">
           <MazSelect class="dark:text-white" v-model="paymentForm.currency" label="Select currency" color="warning"
@@ -18,10 +18,10 @@
     </div>
 
     <!-- chips -->
-    <div class="flex flex-wrap rounded-md mt-1">
+    <div class="flex flex-wrap mt-1 rounded-md">
       <div v-for="(chip, index) in amountChips" :key="index" class="group">
         <button type="button" class="border me-2 mb-2 border-teal-900 dark:border-gray-800 group-hover:bg-teal-900 py-0.5 px-3 rounded-md">
-          <p class="text-teal-950 dark:text-white  font-bold text-sm group-hover:text-white" @click="onChipClick(chip.amount)">
+          <p class="text-sm font-bold text-teal-950 dark:text-white group-hover:text-white" @click="onChipClick(chip.amount)">
             {{ chip.amount }}
           </p>
         </button>
@@ -29,8 +29,8 @@
     </div>
 
     <!--Phone number field-->
-    <p class="text-gray-700 dark:text-white  text-sm mt-10 mb-2">Phone number</p>
-    <div class="flex w-full gap-x-2 mb-2">
+    <p class="mt-10 mb-2 text-sm text-gray-700 dark:text-white">Phone number</p>
+    <div class="flex w-full mb-2 gap-x-2">
       <!-- Input for amount -->
       <div class="flex-1">
         <el-form-item prop="phone">
@@ -44,7 +44,7 @@
 
     <!-- Make payment & pledge button -->
     <!-- Buttons -->
-    <div class="flex flex-row gap-y-2 md:flex-col gap-x-3 mt-3">
+    <div class="flex flex-row mt-3 gap-y-2 md:flex-col gap-x-3">
       <!-- Make paymnet button -->
       <MazBtn @click="submitForm(ruleFormRef)" size="sm" color="warning" class="w-full">
         <Icon name="ep:money" size="25" />
@@ -67,7 +67,7 @@
             </div>
           </MazBtn>
 
-          <div v-else class="text-sm text-gray-500 mt-5 text-center">
+          <div v-else class="mt-5 text-sm text-center text-gray-500">
             Select payment to continue
           </div>
         </div>
@@ -82,7 +82,7 @@
           <!-- OT Field -->
           <div v-else class="flex flex-col">
             <h2 class="text-2xl text-center">Enter OTP Code</h2>
-            <p class="mb-10 text-gray-400 dark:text-white text-center">
+            <p class="mb-10 text-center text-gray-400 dark:text-white">
               OTP code has been sent to your momo number, please enter to continue
             </p>
             <MazInputCode :code-length="6" size="xs" v-model="otpCode" class="flex flex-wrap justify-center mt-10"
@@ -105,7 +105,7 @@
     </div>
 
     <!-- footer text -->
-    <p class="text-center mt-10 text-gray-400 text-sm">{{ props.campaign?.footnote }}</p>
+    <p class="mt-10 text-sm text-center text-gray-400">{{ props.campaign?.footnote }}</p>
 
     <!-- success payment modal -->
 
@@ -119,13 +119,13 @@
     <!-- success payment modal -->
 
     <MazDialog v-model="isPaymentSuccessful" width="400px" :on-close="handleClose">
-      <div class="flex flex-col justify-center items-center">
+      <div class="flex flex-col items-center justify-center">
         <Icon class="text-6xl text-green-700" name="ri:send-plane-line" />
-        <h2 class="text-2xl mt-3 dark:text-white">Donation Made Successful</h2>
+        <h2 class="mt-3 text-2xl dark:text-white">Donation Made Successful</h2>
         <p class="text-center dark:text-white">You have successfully made donated to this campaign. Share this campaign by copy
           the URL below.</p>
 
-        <div class="w-full border border-gray-200 p-5 mt-5 rounded-md">
+        <div class="w-full p-5 mt-5 border border-gray-200 rounded-md">
           <p class="text-lg dark:text-white">You donated an amount of <span class="font-semibold">GHS 200 </span>to <span
               class="font-semibold dark:text-white">Fund Raising for new School Build in Newton</span>'s Campaign on
             <span>{{ formateDate(new Date, 'Mo MMM YYYY h:ss a') }}</span>
@@ -146,9 +146,9 @@
     </MazDialog>
 
     <MazDialog v-model="isPaymentFailed" width="400px" :on-close="handleClose">
-      <div class="flex flex-col justify-center items-center">
+      <div class="flex flex-col items-center justify-center">
         <Icon class="text-6xl text-red-600" name="bxs:error-alt" />
-        <h2 class="text-2xl mt-3 dark:text-white">Payment failed</h2>
+        <h2 class="mt-3 text-2xl dark:text-white">Payment failed</h2>
         <p class="text-center dark:text-white">Oops! It seems there was an issue processing your payment. Please check your payment
           details and try again..</p>
         <div class="mt-10"></div>
@@ -170,8 +170,8 @@ import {
   type SelectCountryResult,
 } from '~/types/index';
 import { useCampaignStore } from '~/store/campaign';
-import MazPhoneNumberInput from 'maz-ui/components/MazPhoneNumberInput'
-import { extractAbbr } from '~/utils/index'
+import MazPhoneNumberInput from 'maz-ui/components/MazPhoneNumberInput';
+import { extractAbbr } from '~/utils/index';
 
 
 // instance of sentOTP composable
@@ -271,7 +271,7 @@ function submitForm(ruleFormRef: any) {
 }
 // initiate OTP
 function initiateOTPRequest() {
-  sendOTP(paymentForm.phone, campaign.value?.payment_link!)
+  sendOTP(paymentForm.phone, campaign.value?.payment_link!, 'johndoe@gmail.com')
 }
 
 

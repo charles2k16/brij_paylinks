@@ -16,11 +16,11 @@ export interface Currency {
   flag_url: string
 }
 
-// export interface CampaignPaymentForm {
-//   amount: string
-//   phone: string,
-//   currency: string
-// }
+export interface CampaignPaymentForm {
+  amount: string
+  phone: string,
+  currency: string
+}
 
 export interface InvoicePaymentForm {
   amount: string,
